@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FadeUp, RevealText } from '../components/ScrollReveal'
 
-/* ── Scroll-driven portrait: starts matte/small, clears + expands on scroll ── */
+/* ── Scroll-driven portrait: starts small + faint, expands on scroll — full colour always ── */
 function ScrollPortrait() {
   const ref = useRef(null)
   useEffect(() => {
@@ -12,17 +12,14 @@ function ScrollPortrait() {
       if (!ref.current) return
       // Progress 0→1 over the first 600px of scroll
       const p = Math.min(window.scrollY / 600, 1)
-      const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p // ease-in-out
-      const scale   = 0.82 + ease * 0.18          // 0.82 → 1.0
-      const gray    = Math.round(100 - ease * 100) // 100% → 0%
-      const blur    = (1 - ease) * 6              // 6px → 0px
-      const opacity = 0.45 + ease * 0.55          // 0.45 → 1.0
+      const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p
+      const scale   = 0.84 + ease * 0.16   // 0.84 → 1.0
+      const opacity = 0.55 + ease * 0.45   // 0.55 → 1.0
       ref.current.style.transform = `scale(${scale})`
-      ref.current.style.filter    = `grayscale(${gray}%) blur(${blur}px)`
       ref.current.style.opacity   = opacity
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll() // apply initial state
+    onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -36,8 +33,8 @@ function ScrollPortrait() {
         className="absolute inset-0"
         style={{
           transformOrigin: 'right center',
-          willChange: 'transform, filter, opacity',
-          transition: 'transform 0.05s linear, filter 0.05s linear, opacity 0.05s linear',
+          willChange: 'transform, opacity',
+          transition: 'transform 0.05s linear, opacity 0.05s linear',
         }}
       >
         <Image
@@ -378,25 +375,25 @@ export default function Home() {
             <br /><RevealText delay={110}>in mind?</RevealText>
           </h2>
           <FadeUp delay={200}>
-            {/* Icon row */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginBottom: 36 }}>
+            {/* Icon row — enlarged */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 44 }}>
               <a href="mailto:zhengsherina@gmail.com"
-                style={{ width: 44, height: 44, borderRadius: '50%', border: '1px solid rgba(12,12,10,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(12,12,10,0.3)', textDecoration: 'none', transition: 'all 0.3s', background: 'transparent' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.borderColor = '#B8D4BC'; e.currentTarget.style.transform = 'scale(1.15)' }}
+                style={{ width: 60, height: 60, borderRadius: '50%', border: '1px solid rgba(12,12,10,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(12,12,10,0.3)', textDecoration: 'none', transition: 'all 0.3s', background: 'transparent' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.borderColor = '#B8D4BC'; e.currentTarget.style.transform = 'scale(1.12)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(12,12,10,0.3)'; e.currentTarget.style.borderColor = 'rgba(12,12,10,0.12)'; e.currentTarget.style.transform = 'scale(1)' }}
                 aria-label="Email"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                 </svg>
               </a>
               <a href="https://www.linkedin.com/in/sherina-zheng-48b287224/" target="_blank" rel="noreferrer"
-                style={{ width: 44, height: 44, borderRadius: '50%', border: '1px solid rgba(12,12,10,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(12,12,10,0.3)', textDecoration: 'none', transition: 'all 0.3s', background: 'transparent' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.borderColor = '#B8D4BC'; e.currentTarget.style.transform = 'scale(1.15)' }}
+                style={{ width: 60, height: 60, borderRadius: '50%', border: '1px solid rgba(12,12,10,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(12,12,10,0.3)', textDecoration: 'none', transition: 'all 0.3s', background: 'transparent' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.borderColor = '#B8D4BC'; e.currentTarget.style.transform = 'scale(1.12)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(12,12,10,0.3)'; e.currentTarget.style.borderColor = 'rgba(12,12,10,0.12)'; e.currentTarget.style.transform = 'scale(1)' }}
                 aria-label="LinkedIn"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/>
                 </svg>
               </a>
@@ -404,12 +401,13 @@ export default function Home() {
           </FadeUp>
 
           <FadeUp delay={320}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+            {/* Both links same size, bigger */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               <a
                 href="mailto:zhengsherina@gmail.com"
-                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.3rem,2.5vw,2rem)', color: 'rgba(12,12,10,0.35)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
+                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.transform = 'scale(1.04)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.35)'; e.currentTarget.style.transform = 'scale(1)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.4)'; e.currentTarget.style.transform = 'scale(1)' }}
               >
                 zhengsherina@gmail.com ↗
               </a>
@@ -417,9 +415,9 @@ export default function Home() {
                 href="https://www.linkedin.com/in/sherina-zheng-48b287224/"
                 target="_blank"
                 rel="noreferrer"
-                style={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(0.8rem,1.4vw,1rem)', color: 'rgba(12,12,10,0.25)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.3s', letterSpacing: '0.04em' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.transform = 'scale(1.06)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.25)'; e.currentTarget.style.transform = 'scale(1)' }}
+                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.transform = 'scale(1.04)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.4)'; e.currentTarget.style.transform = 'scale(1)' }}
               >
                 linkedin.com/in/sherina-zheng ↗
               </a>

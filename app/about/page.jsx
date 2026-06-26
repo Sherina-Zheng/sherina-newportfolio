@@ -33,11 +33,8 @@ export default function AboutPage() {
   return (
     <>
       {/* Header */}
-      <section className="px-8 md:px-14 pt-40 pb-16">
+      <section className="px-8 md:px-14 pt-52 pb-16" style={{ paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5vw,3.5rem)' }}>
         <div className="max-w-7xl mx-auto">
-          <FadeUp>
-            <span className="text-[11px] tracking-[0.22em] uppercase mb-4 block font-sans" style={{ color: '#7A9E7E' }}>About</span>
-          </FadeUp>
           <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem, 7vw, 6.5rem)', lineHeight: 1.05, color: '#0C0C0A' }}>
             <RevealText>The person</RevealText>
             <br /><RevealText delay={100}>behind the work.</RevealText>

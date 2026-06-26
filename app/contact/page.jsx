@@ -29,7 +29,7 @@ export default function ContactPage() {
   return (
     <>
       {/* Header */}
-      <section className="px-8 md:px-14 pt-40 pb-20">
+      <section className="pt-52 pb-20" style={{ paddingLeft: "clamp(2rem,5vw,3.5rem)", paddingRight: "clamp(2rem,5vw,3.5rem)" }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span className="text-[11px] tracking-[0.22em] uppercase mb-4 block font-sans" style={{ color: '#7A9E7E' }}>Contact</span>

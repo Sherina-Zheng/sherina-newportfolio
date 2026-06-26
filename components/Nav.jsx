@@ -16,43 +16,55 @@ export default function Nav() {
 
   useEffect(() => setMenuOpen(false), [pathname])
 
+  const navLinks = [
+    { href: '/about',   label: 'About' },
+    { href: '/work',    label: 'Work' },
+    { href: '/contact', label: 'Contact' },
+  ]
+
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 px-8 md:px-14 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? 'py-4 nav-blur bg-[#E8E3D5]/80 border-b border-[#D5CFC0]' : 'py-7'
         }`}
+        /* Match section horizontal padding exactly */
+        style={{ paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-          {/* Left: Icon → About → Work */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="group">
+          {/* Left: SZ icon | divider | About · Work · Contact */}
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/" className="group flex-shrink-0">
               <span
-                className="w-8 h-8 rounded-full bg-[#7A9E7E] flex items-center justify-center text-[#E8E3D5] text-xs font-medium tracking-wider transition-transform duration-300 group-hover:scale-110"
+                className="w-9 h-9 rounded-full bg-[#7A9E7E] flex items-center justify-center text-[#E8E3D5] text-xs font-medium tracking-wider transition-transform duration-300 group-hover:scale-110"
                 style={{ fontFamily: 'var(--font-inter)' }}
               >
                 SZ
               </span>
             </Link>
-            {[{ href: '/about', label: 'About' }, { href: '/work', label: 'Work' }].map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm tracking-wide hover-line transition-colors duration-200 ${
-                  pathname === href ? 'text-[#7A9E7E]' : 'text-[#0C0C0A]/70 hover:text-[#0C0C0A]'
-                }`}
-                style={{ fontFamily: 'var(--font-inter)' }}
-              >
-                {label}
-              </Link>
-            ))}
+            {/* thin separator */}
+            <span className="w-px h-4 bg-[#0C0C0A]/15 flex-shrink-0" />
+            <div className="flex items-center gap-8">
+              {navLinks.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-sm tracking-wide hover-line transition-colors duration-200 ${
+                    pathname === href ? 'text-[#7A9E7E]' : 'text-[#0C0C0A]/65 hover:text-[#0C0C0A]'
+                  }`}
+                  style={{ fontFamily: 'var(--font-inter)' }}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Right: Say hello */}
           <a
             href="mailto:zhengsherina@gmail.com"
-            className="hidden md:inline-flex px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/80 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
+            className="hidden md:inline-flex px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/75 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
             style={{ fontFamily: 'var(--font-inter)' }}
           >
             Say hello →
@@ -78,7 +90,7 @@ export default function Nav() {
         }`}
       >
         <ul className="flex flex-col gap-8">
-          {[{ href: '/', label: 'Home' }, { href: '/about', label: 'About' }, { href: '/work', label: 'Work' }].map(({ href, label }, i) => (
+          {[{ href: '/', label: 'Home' }, ...navLinks].map(({ href, label }, i) => (
             <li key={href} style={{ transitionDelay: `${i * 60}ms` }}>
               <Link
                 href={href}
