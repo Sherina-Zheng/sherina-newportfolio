@@ -26,7 +26,7 @@ function ScrollPortrait() {
   return (
     <div
       className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none"
-      style={{ zIndex: 0, transformOrigin: 'right center' }}
+      style={{ zIndex: 1, transformOrigin: 'right center' }}
     >
       <div
         ref={ref}
@@ -182,14 +182,13 @@ export default function Home() {
       >
         <ScrollPortrait />
 
-        {/* ── Cartoon rainbow arc between portrait and name ── */}
-        <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 1 }}>
+        {/* ── Cartoon rainbow arc — behind portrait (z-index 0) ── */}
+        <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0 }}>
           <svg
             viewBox="0 0 900 600"
             preserveAspectRatio="xMidYMid meet"
-            style={{ position: 'absolute', right: 0, bottom: 0, width: '75%', height: '90%', opacity: 0.82 }}
+            style={{ position: 'absolute', right: 0, bottom: 0, width: '75%', height: '90%', opacity: 0.72 }}
           >
-            {/* Rainbow bands — outermost to innermost, big cartoon arcs */}
             {[
               { r: 420, color: '#FF6B6B', w: 18 },
               { r: 396, color: '#FF9F43', w: 18 },
@@ -429,26 +428,26 @@ export default function Home() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: 'clamp(4rem,8vw,7rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
+      <section style={{ padding: 'clamp(2.5rem,5vw,4rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative' }}>
 
-          {/* Spinning badge — behind everything */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none' }}>
+          {/* Spinning badge — large, behind everything, covers full section */}
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none', width: 560, height: 560, marginLeft: -280, marginTop: -280 }}>
             <svg
-              viewBox="0 0 280 280"
-              width="280"
-              height="280"
-              style={{ animation: 'spinBadge 22s linear infinite', display: 'block', opacity: 0.13 }}
+              viewBox="0 0 560 560"
+              width="560"
+              height="560"
+              style={{ animation: 'spinBadge 22s linear infinite', display: 'block', opacity: 0.11 }}
             >
               <defs>
-                <path id="circlePath" d="M 140,140 m -110,0 a 110,110 0 1,1 220,0 a 110,110 0 1,1 -220,0" />
+                <path id="circlePath" d="M 280,280 m -230,0 a 230,230 0 1,1 460,0 a 230,230 0 1,1 -460,0" />
               </defs>
-              <text style={{ fontFamily: 'var(--font-inter)', fontSize: 13.5, fill: '#7A9E7E', letterSpacing: '0.22em' }}>
+              <text style={{ fontFamily: 'var(--font-inter)', fontSize: 18, fill: '#7A9E7E', letterSpacing: '0.28em' }}>
                 <textPath href="#circlePath">
                   ✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;
                 </textPath>
               </text>
-              <circle cx="140" cy="140" r="5" fill="#7A9E7E" />
+              <circle cx="280" cy="280" r="6" fill="#7A9E7E" opacity="0.6" />
             </svg>
           </div>
 
@@ -459,13 +458,13 @@ export default function Home() {
                 Let's Connect
               </span>
             </FadeUp>
-            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 16 }}>
+            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 10 }}>
               <RevealText>Have a project</RevealText>
               <br /><RevealText delay={110}>in mind?</RevealText>
             </h2>
             {/* Personal one-liner */}
             <FadeUp delay={80}>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 40, lineHeight: 1.6 }}>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 24, lineHeight: 1.6 }}>
                 Data brain. Design heart. Ships things that actually work.
               </p>
             </FadeUp>
