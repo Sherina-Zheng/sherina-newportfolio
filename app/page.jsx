@@ -115,6 +115,54 @@ function RoleRotator() {
   )
 }
 
+const bentoRoles = ['Product Designer', 'UI/UX Designer', 'Product Manager']
+
+function RoleBentoCard() {
+  const [active, setActive] = useState(0)
+  useEffect(() => {
+    const t = setInterval(() => setActive(i => (i + 1) % bentoRoles.length), 1800)
+    return () => clearInterval(t)
+  }, [])
+  return (
+    <div style={{ gridColumn: 'span 5', background: '#0C0C0A', borderRadius: 28, padding: 'clamp(2rem,3vw,2.8rem)', minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(184,212,188,0.5)', textTransform: 'uppercase' }}>I am a</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {bentoRoles.map((role, i) => (
+          <div
+            key={role}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
+              padding: '10px 16px',
+              borderRadius: 14,
+              background: active === i ? 'rgba(122,158,126,0.2)' : 'transparent',
+              border: active === i ? '1px solid rgba(122,158,126,0.35)' : '1px solid transparent',
+              transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
+            }}
+          >
+            <span style={{
+              width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
+              background: active === i ? '#7A9E7E' : 'rgba(122,158,126,0.2)',
+              boxShadow: active === i ? '0 0 8px #7A9E7E' : 'none',
+              transition: 'all 0.5s ease',
+            }} />
+            <span style={{
+              fontFamily: 'var(--font-dm-serif)',
+              fontSize: 'clamp(1.3rem,2.2vw,1.8rem)',
+              color: active === i ? '#E8E3D5' : 'rgba(232,227,213,0.25)',
+              transition: 'color 0.5s ease',
+            }}>
+              {role}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(232,227,213,0.25)', lineHeight: 1.6 }}>NYC-based · FinTech · Data → Design</p>
+    </div>
+  )
+}
+
 const projects = [
   { num: '01', title: 'Salon Connect',       tags: ['UX Design', 'FinTech', 'Mobile'] },
   { num: '02', title: 'FinFlow Dashboard',   tags: ['Data Analytics', 'Dashboard', 'B2B'] },
@@ -133,6 +181,35 @@ export default function Home() {
         style={{ paddingBottom: '6rem', paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
       >
         <ScrollPortrait />
+
+        {/* ── Cartoon rainbow arc between portrait and name ── */}
+        <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 1 }}>
+          <svg
+            viewBox="0 0 900 600"
+            preserveAspectRatio="xMidYMid meet"
+            style={{ position: 'absolute', right: 0, bottom: 0, width: '75%', height: '90%', opacity: 0.82 }}
+          >
+            {/* Rainbow bands — outermost to innermost, big cartoon arcs */}
+            {[
+              { r: 420, color: '#FF6B6B', w: 18 },
+              { r: 396, color: '#FF9F43', w: 18 },
+              { r: 372, color: '#FFEAA7', w: 18 },
+              { r: 348, color: '#A8E6CF', w: 18 },
+              { r: 324, color: '#74B9FF', w: 18 },
+              { r: 300, color: '#A29BFE', w: 18 },
+            ].map(({ r, color, w }) => (
+              <path
+                key={r}
+                d={`M ${450 - r} 580 A ${r} ${r} 0 0 1 ${450 + r} 580`}
+                fill="none"
+                stroke={color}
+                strokeWidth={w}
+                strokeLinecap="round"
+                opacity="0.75"
+              />
+            ))}
+          </svg>
+        </div>
 
         {/* Content sits above photo */}
         <div className="relative z-10 max-w-7xl w-full mx-auto">
@@ -313,20 +390,9 @@ export default function Home() {
               </div>
             </FadeUp>
 
-            {/* Role stack card */}
+            {/* Role stack card — rolling highlight */}
             <FadeUp delay={80} className="col-span-12 md:col-span-5">
-              <div style={{ gridColumn: 'span 5', background: '#0C0C0A', borderRadius: 28, padding: 'clamp(2rem,3vw,2.8rem)', minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(184,212,188,0.5)', textTransform: 'uppercase' }}>I am a</span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['Product Designer', 'UI/UX Designer', 'Product Manager'].map((role, i) => (
-                    <div key={role} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: i === 0 ? '#7A9E7E' : 'rgba(122,158,126,0.3)', flexShrink: 0 }} />
-                      <span style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.3rem,2.2vw,1.8rem)', color: i === 0 ? '#E8E3D5' : 'rgba(232,227,213,0.3)' }}>{role}</span>
-                    </div>
-                  ))}
-                </div>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(232,227,213,0.3)', lineHeight: 1.6 }}>NYC-based · FinTech · Data → Design</p>
-              </div>
+              <RoleBentoCard />
             </FadeUp>
 
             {/* Skills pill card */}
@@ -363,49 +429,49 @@ export default function Home() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: 'clamp(5rem,10vw,9rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <FadeUp>
-            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: 24 }}>
-              Let's Connect
-            </span>
-          </FadeUp>
-          <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 48 }}>
-            <RevealText>Have a project</RevealText>
-            <br /><RevealText delay={110}>in mind?</RevealText>
-          </h2>
-          {/* ── Rotating badge + personal line ── */}
-          <FadeUp delay={100}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, marginBottom: 52 }}>
+      <section style={{ padding: 'clamp(4rem,8vw,7rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative' }}>
 
-              {/* Spinning circular text badge */}
-              <div style={{ position: 'relative', width: 150, height: 150 }}>
-                <svg
-                  viewBox="0 0 150 150"
-                  width="150"
-                  height="150"
-                  style={{ animation: 'spinBadge 18s linear infinite', display: 'block' }}
-                >
-                  <defs>
-                    <path id="circlePath" d="M 75,75 m -52,0 a 52,52 0 1,1 104,0 a 52,52 0 1,1 -104,0" />
-                  </defs>
-                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 11.5, fill: '#7A9E7E', letterSpacing: '0.18em' }}>
-                    <textPath href="#circlePath">
-                      ✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;
-                    </textPath>
-                  </text>
-                  {/* Centre dot */}
-                  <circle cx="75" cy="75" r="4" fill="#7A9E7E" opacity="0.5" />
-                </svg>
-              </div>
+          {/* Spinning badge — behind everything */}
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none' }}>
+            <svg
+              viewBox="0 0 280 280"
+              width="280"
+              height="280"
+              style={{ animation: 'spinBadge 22s linear infinite', display: 'block', opacity: 0.13 }}
+            >
+              <defs>
+                <path id="circlePath" d="M 140,140 m -110,0 a 110,110 0 1,1 220,0 a 110,110 0 1,1 -220,0" />
+              </defs>
+              <text style={{ fontFamily: 'var(--font-inter)', fontSize: 13.5, fill: '#7A9E7E', letterSpacing: '0.22em' }}>
+                <textPath href="#circlePath">
+                  ✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;
+                </textPath>
+              </text>
+              <circle cx="140" cy="140" r="5" fill="#7A9E7E" />
+            </svg>
+          </div>
 
-              {/* Personal one-liner */}
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.3rem)', color: 'rgba(12,12,10,0.4)', fontStyle: 'italic', textAlign: 'center', maxWidth: 380, lineHeight: 1.6 }}>
+          {/* Foreground content */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <FadeUp>
+              <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: 20 }}>
+                Let's Connect
+              </span>
+            </FadeUp>
+            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 16 }}>
+              <RevealText>Have a project</RevealText>
+              <br /><RevealText delay={110}>in mind?</RevealText>
+            </h2>
+            {/* Personal one-liner */}
+            <FadeUp delay={80}>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 40, lineHeight: 1.6 }}>
                 Data brain. Design heart. Ships things that actually work.
               </p>
-            </div>
-          </FadeUp>
+            </FadeUp>
+          </div>
 
+          <div style={{ position: 'relative', zIndex: 1 }}>
           <FadeUp delay={200}>
             {/* Icon row — enlarged */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 44 }}>
@@ -455,6 +521,7 @@ export default function Home() {
               </a>
             </div>
           </FadeUp>
+          </div>
         </div>
       </section>
 
