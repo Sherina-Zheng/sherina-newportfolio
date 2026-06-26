@@ -16,11 +16,6 @@ export default function Nav() {
 
   useEffect(() => setMenuOpen(false), [pathname])
 
-  const links = [
-    { href: '/work', label: 'Work' },
-    { href: '/about', label: 'About' },
-  ]
-
   return (
     <>
       <nav
@@ -29,26 +24,10 @@ export default function Nav() {
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left: page links only */}
-          <ul className="hidden md:flex items-center gap-10">
-            {links.map(({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`text-sm tracking-wide hover-line transition-colors duration-200 ${
-                    pathname === href ? 'text-[#7A9E7E]' : 'text-[#0C0C0A]/70 hover:text-[#0C0C0A]'
-                  }`}
-                  style={{ fontFamily: 'var(--font-inter)' }}
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
 
-          {/* Right: SZ monogram + Say hello grouped together */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/" className="group flex items-center gap-2">
+          {/* Left: Icon → About → Work */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="/" className="group">
               <span
                 className="w-8 h-8 rounded-full bg-[#7A9E7E] flex items-center justify-center text-[#E8E3D5] text-xs font-medium tracking-wider transition-transform duration-300 group-hover:scale-110"
                 style={{ fontFamily: 'var(--font-inter)' }}
@@ -56,14 +35,28 @@ export default function Nav() {
                 SZ
               </span>
             </Link>
-            <a
-              href="mailto:zhengsherina@gmail.com"
-              className="px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/80 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
-              style={{ fontFamily: 'var(--font-inter)' }}
-            >
-              Say hello →
-            </a>
+            {[{ href: '/about', label: 'About' }, { href: '/work', label: 'Work' }].map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`text-sm tracking-wide hover-line transition-colors duration-200 ${
+                  pathname === href ? 'text-[#7A9E7E]' : 'text-[#0C0C0A]/70 hover:text-[#0C0C0A]'
+                }`}
+                style={{ fontFamily: 'var(--font-inter)' }}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
+
+          {/* Right: Say hello */}
+          <a
+            href="mailto:zhengsherina@gmail.com"
+            className="hidden md:inline-flex px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/80 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
+            style={{ fontFamily: 'var(--font-inter)' }}
+          >
+            Say hello →
+          </a>
 
           {/* Mobile hamburger */}
           <button
@@ -85,7 +78,7 @@ export default function Nav() {
         }`}
       >
         <ul className="flex flex-col gap-8">
-          {[...links, { href: '/', label: 'Home' }].map(({ href, label }, i) => (
+          {[{ href: '/', label: 'Home' }, { href: '/about', label: 'About' }, { href: '/work', label: 'Work' }].map(({ href, label }, i) => (
             <li key={href} style={{ transitionDelay: `${i * 60}ms` }}>
               <Link
                 href={href}
