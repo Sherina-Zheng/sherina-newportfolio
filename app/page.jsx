@@ -178,9 +178,9 @@ export default function Home() {
   const bentoRow2 = [2, 3, 4]
   function getBentoScale(i) {
     if (hoveredBento === null) return 'scale(1)'
-    if (hoveredBento === i) return 'scale(1.03)'
+    if (hoveredBento === i) return 'scale(1.07)'
     const row = bentoRow1.includes(i) ? bentoRow1 : bentoRow2
-    if (row.includes(hoveredBento)) return 'scale(0.975)'
+    if (row.includes(hoveredBento)) return 'scale(0.93)'
     return 'scale(1)'
   }
   const bentoTransition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease'
@@ -321,7 +321,7 @@ export default function Home() {
       </div>
 
       {/* ── SELECTED WORK ── */}
-      <section style={{ padding: 'clamp(5rem,8vw,7rem) clamp(2rem,5vw,3.5rem)' }}>
+      <section style={{ padding: 'clamp(3.5rem,6vw,5rem) clamp(2rem,5vw,3.5rem)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '4rem' }}>
             <div>
@@ -373,7 +373,7 @@ export default function Home() {
       </section>
 
       {/* ── ABOUT — vibrant bento grid ── */}
-      <section style={{ padding: 'clamp(5rem,8vw,7rem) clamp(2rem,5vw,3.5rem)', background: '#E0DDD0' }}>
+      <section style={{ padding: 'clamp(3.5rem,6vw,5rem) clamp(2rem,5vw,3.5rem)', background: '#E0DDD0' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: 40 }}>About</span>
@@ -387,7 +387,7 @@ export default function Home() {
               <div
                 onMouseEnter={() => setHoveredBento(0)}
                 onMouseLeave={() => setHoveredBento(null)}
-                style={{ gridColumn: 'span 7', background: '#7A9E7E', borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320, transform: getBentoScale(0), transition: bentoTransition, boxShadow: hoveredBento === 0 ? '0 20px 60px rgba(122,158,126,0.35)' : 'none' }}>
+                style={{ gridColumn: 'span 7', background: '#7A9E7E', borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320, transform: getBentoScale(0), transition: bentoTransition, boxShadow: hoveredBento === 0 ? '0 28px 80px rgba(122,158,126,0.5)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(232,227,213,0.6)', textTransform: 'uppercase' }}>Philosophy</span>
                 <div>
                   <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.8rem,3.5vw,3rem)', color: '#E8E3D5', lineHeight: 1.25, marginBottom: 24 }}>
@@ -410,7 +410,7 @@ export default function Home() {
               <div
                 onMouseEnter={() => setHoveredBento(1)}
                 onMouseLeave={() => setHoveredBento(null)}
-                style={{ height: '100%', transform: getBentoScale(1), transition: bentoTransition, boxShadow: hoveredBento === 1 ? '0 20px 60px rgba(12,12,10,0.25)' : 'none', borderRadius: 28 }}
+                style={{ height: '100%', transform: getBentoScale(1), transition: bentoTransition, boxShadow: hoveredBento === 1 ? '0 28px 80px rgba(12,12,10,0.35)' : 'none', borderRadius: 28 }}
               >
                 <RoleBentoCard />
               </div>
@@ -421,7 +421,7 @@ export default function Home() {
               <div
                 onMouseEnter={() => setHoveredBento(2)}
                 onMouseLeave={() => setHoveredBento(null)}
-                style={{ gridColumn: 'span 4', background: '#B8D4BC', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, transform: getBentoScale(2), transition: bentoTransition, boxShadow: hoveredBento === 2 ? '0 16px 50px rgba(122,158,126,0.3)' : 'none' }}>
+                style={{ gridColumn: 'span 4', background: '#B8D4BC', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, transform: getBentoScale(2), transition: bentoTransition, boxShadow: hoveredBento === 2 ? '0 28px 80px rgba(122,158,126,0.45)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.45)', textTransform: 'uppercase', display: 'block', marginBottom: 20 }}>Toolkit</span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {['Figma', 'UX Research', 'SQL', 'React', 'Prototyping', 'Jira', 'Design Systems'].map(s => (
@@ -436,7 +436,7 @@ export default function Home() {
               <div
                 onMouseEnter={() => setHoveredBento(3)}
                 onMouseLeave={() => setHoveredBento(null)}
-                style={{ gridColumn: 'span 4', background: '#E8E3D5', border: '1px solid #D5CFC0', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(3), transition: bentoTransition, boxShadow: hoveredBento === 3 ? '0 16px 50px rgba(12,12,10,0.1)' : 'none' }}>
+                style={{ gridColumn: 'span 4', background: '#E8E3D5', border: '1px solid #D5CFC0', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(3), transition: bentoTransition, boxShadow: hoveredBento === 3 ? '0 28px 80px rgba(12,12,10,0.18)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Background</span>
                 <div>
                   <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.5rem,4vw,3.5rem)', color: '#7A9E7E', lineHeight: 1 }}>3×</p>
@@ -449,7 +449,7 @@ export default function Home() {
               <div
                 onMouseEnter={() => setHoveredBento(4)}
                 onMouseLeave={() => setHoveredBento(null)}
-                style={{ gridColumn: 'span 4', background: '#E8F0E9', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(4), transition: bentoTransition, boxShadow: hoveredBento === 4 ? '0 16px 50px rgba(122,158,126,0.2)' : 'none' }}>
+                style={{ gridColumn: 'span 4', background: '#E8F0E9', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(4), transition: bentoTransition, boxShadow: hoveredBento === 4 ? '0 28px 80px rgba(122,158,126,0.35)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Driven by</span>
                 <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.1rem,2vw,1.5rem)', color: '#0C0C0A', lineHeight: 1.4 }}>Building systems from the ground up.</p>
               </div>
@@ -459,7 +459,7 @@ export default function Home() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: 'clamp(2.5rem,5vw,4rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
+      <section style={{ padding: 'clamp(1rem,3vw,2rem) clamp(2rem,5vw,3.5rem) clamp(2rem,4vw,3rem)', textAlign: 'center' }}>
         <div style={{ maxWidth: 700, margin: '0 auto' }}>
 
           {/* Foreground content */}
@@ -472,15 +472,15 @@ export default function Home() {
             {/* Wheel wraps heading + slogan */}
             <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
               {/* Spinning badge — centered on heading+slogan */}
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 0, pointerEvents: 'none', width: 480, height: 480, marginLeft: -240, marginTop: -240 }}>
-                <svg viewBox="0 0 480 480" width="480" height="480" style={{ animation: 'spinBadge 18s linear infinite', display: 'block', opacity: 0.28 }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 0, pointerEvents: 'none', width: 640, height: 640, marginLeft: -320, marginTop: -320 }}>
+                <svg viewBox="0 0 640 640" width="640" height="640" style={{ animation: 'spinBadge 18s linear infinite', display: 'block', opacity: 0.32 }}>
                   <defs>
-                    <path id="circlePath" d="M 240,240 m -200,0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" />
+                    <path id="circlePath" d="M 320,320 m -280,0 a 280,280 0 1,1 560,0 a 280,280 0 1,1 -560,0" />
                   </defs>
-                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 16, fill: '#7A9E7E', letterSpacing: '0.3em' }}>
+                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 22, fill: '#7A9E7E', letterSpacing: '0.26em' }}>
                     <textPath href="#circlePath">✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;</textPath>
                   </text>
-                  <circle cx="240" cy="240" r="5" fill="#7A9E7E" opacity="0.5" />
+                  <circle cx="320" cy="320" r="6" fill="#7A9E7E" opacity="0.5" />
                 </svg>
               </div>
               <div style={{ position: 'relative', zIndex: 1 }}>
@@ -490,18 +490,18 @@ export default function Home() {
                 </h2>
                 {/* Personal one-liner */}
                 <FadeUp delay={80}>
-                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 24, lineHeight: 1.6 }}>
+                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.6 }}>
                     Data brain. Design heart. Ships things that actually work.
                   </p>
                 </FadeUp>
+
               </div>
             </div>
           </div>
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
           <FadeUp delay={200}>
             {/* Icon row — enlarged */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 44 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 24 }}>
               <a href="mailto:zhengsherina@gmail.com"
                 style={{ width: 60, height: 60, borderRadius: '50%', border: '1px solid rgba(12,12,10,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(12,12,10,0.3)', textDecoration: 'none', transition: 'all 0.3s', background: 'transparent' }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.borderColor = '#B8D4BC'; e.currentTarget.style.transform = 'scale(1.12)' }}
@@ -548,7 +548,6 @@ export default function Home() {
               </a>
             </div>
           </FadeUp>
-          </div>
         </div>
       </section>
 
