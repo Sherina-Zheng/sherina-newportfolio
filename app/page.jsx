@@ -478,7 +478,7 @@ export default function Home() {
                     <path id="circlePath" d="M 320,320 m -280,0 a 280,280 0 1,1 560,0 a 280,280 0 1,1 -560,0" />
                   </defs>
                   <text style={{ fontFamily: 'var(--font-inter)', fontSize: 30, fill: '#7A9E7E', letterSpacing: '0.22em' }}>
-                    <textPath href="#circlePath">✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;</textPath>
+                    <textPath href="#circlePath">✦ OnenOnlyShereena ✦ OnenOnlyShereena ✦ OnenOnlyShereena ✦&nbsp;</textPath>
                   </text>
                   <circle cx="320" cy="320" r="6" fill="#7A9E7E" opacity="0.5" />
                 </svg>
@@ -490,7 +490,7 @@ export default function Home() {
                 </h2>
                 {/* Personal one-liner */}
                 <FadeUp delay={80}>
-                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.6 }}>
+                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.6 }}>
                     Data brain. Design heart. Ships things that actually work.
                   </p>
                 </FadeUp>
@@ -530,7 +530,7 @@ export default function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               <a
                 href="mailto:zhengsherina@gmail.com"
-                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
+                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.transform = 'scale(1.04)' }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.4)'; e.currentTarget.style.transform = 'scale(1)' }}
               >
@@ -540,7 +540,7 @@ export default function Home() {
                 href="https://www.linkedin.com/in/sherina-zheng-48b287224/"
                 target="_blank"
                 rel="noreferrer"
-                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
+                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.4)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, transition: 'all 0.3s' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#7A9E7E'; e.currentTarget.style.transform = 'scale(1.04)' }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(12,12,10,0.4)'; e.currentTarget.style.transform = 'scale(1)' }}
               >
