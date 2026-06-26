@@ -173,6 +173,18 @@ export default function Home() {
   const [ready, setReady] = useState(false)
   useEffect(() => { const t = setTimeout(() => setReady(true), 80); return () => clearTimeout(t) }, [])
 
+  const [hoveredBento, setHoveredBento] = useState(null)
+  const bentoRow1 = [0, 1]
+  const bentoRow2 = [2, 3, 4]
+  function getBentoScale(i) {
+    if (hoveredBento === null) return 'scale(1)'
+    if (hoveredBento === i) return 'scale(1.03)'
+    const row = bentoRow1.includes(i) ? bentoRow1 : bentoRow2
+    if (row.includes(hoveredBento)) return 'scale(0.975)'
+    return 'scale(1)'
+  }
+  const bentoTransition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease'
+
   return (
     <>
       {/* ── HERO ── */}
@@ -180,10 +192,8 @@ export default function Home() {
         className="relative min-h-screen flex flex-col justify-end overflow-hidden"
         style={{ paddingBottom: '6rem', paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
       >
-        <ScrollPortrait />
-
-        {/* ── Cartoon rainbow arc — behind portrait (z-index 0) ── */}
-        <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0 }}>
+        {/* ── Cartoon rainbow arc — z-index -1 so it's always behind portrait ── */}
+        <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: -1 }}>
           <svg
             viewBox="0 0 900 600"
             preserveAspectRatio="xMidYMid meet"
@@ -209,6 +219,9 @@ export default function Home() {
             ))}
           </svg>
         </div>
+
+        {/* Portrait — rendered after rainbow so it's always in front */}
+        <ScrollPortrait />
 
         {/* Content sits above photo */}
         <div className="relative z-10 max-w-7xl w-full mx-auto">
@@ -371,7 +384,10 @@ export default function Home() {
 
             {/* Big quote card */}
             <FadeUp delay={0} className="col-span-12 md:col-span-7">
-              <div style={{ gridColumn: 'span 7', background: '#7A9E7E', borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320 }}>
+              <div
+                onMouseEnter={() => setHoveredBento(0)}
+                onMouseLeave={() => setHoveredBento(null)}
+                style={{ gridColumn: 'span 7', background: '#7A9E7E', borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320, transform: getBentoScale(0), transition: bentoTransition, boxShadow: hoveredBento === 0 ? '0 20px 60px rgba(122,158,126,0.35)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(232,227,213,0.6)', textTransform: 'uppercase' }}>Philosophy</span>
                 <div>
                   <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.8rem,3.5vw,3rem)', color: '#E8E3D5', lineHeight: 1.25, marginBottom: 24 }}>
@@ -391,12 +407,21 @@ export default function Home() {
 
             {/* Role stack card — rolling highlight */}
             <FadeUp delay={80} className="col-span-12 md:col-span-5">
-              <RoleBentoCard />
+              <div
+                onMouseEnter={() => setHoveredBento(1)}
+                onMouseLeave={() => setHoveredBento(null)}
+                style={{ height: '100%', transform: getBentoScale(1), transition: bentoTransition, boxShadow: hoveredBento === 1 ? '0 20px 60px rgba(12,12,10,0.25)' : 'none', borderRadius: 28 }}
+              >
+                <RoleBentoCard />
+              </div>
             </FadeUp>
 
             {/* Skills pill card */}
             <FadeUp delay={140} className="col-span-12 md:col-span-4">
-              <div style={{ gridColumn: 'span 4', background: '#B8D4BC', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200 }}>
+              <div
+                onMouseEnter={() => setHoveredBento(2)}
+                onMouseLeave={() => setHoveredBento(null)}
+                style={{ gridColumn: 'span 4', background: '#B8D4BC', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, transform: getBentoScale(2), transition: bentoTransition, boxShadow: hoveredBento === 2 ? '0 16px 50px rgba(122,158,126,0.3)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.45)', textTransform: 'uppercase', display: 'block', marginBottom: 20 }}>Toolkit</span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {['Figma', 'UX Research', 'SQL', 'React', 'Prototyping', 'Jira', 'Design Systems'].map(s => (
@@ -408,7 +433,10 @@ export default function Home() {
 
             {/* Stat cards */}
             <FadeUp delay={180} className="col-span-6 md:col-span-4">
-              <div style={{ gridColumn: 'span 4', background: '#E8E3D5', border: '1px solid #D5CFC0', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div
+                onMouseEnter={() => setHoveredBento(3)}
+                onMouseLeave={() => setHoveredBento(null)}
+                style={{ gridColumn: 'span 4', background: '#E8E3D5', border: '1px solid #D5CFC0', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(3), transition: bentoTransition, boxShadow: hoveredBento === 3 ? '0 16px 50px rgba(12,12,10,0.1)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Background</span>
                 <div>
                   <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.5rem,4vw,3.5rem)', color: '#7A9E7E', lineHeight: 1 }}>3×</p>
@@ -418,7 +446,10 @@ export default function Home() {
             </FadeUp>
 
             <FadeUp delay={220} className="col-span-6 md:col-span-4">
-              <div style={{ gridColumn: 'span 4', background: '#E8F0E9', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div
+                onMouseEnter={() => setHoveredBento(4)}
+                onMouseLeave={() => setHoveredBento(null)}
+                style={{ gridColumn: 'span 4', background: '#E8F0E9', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: getBentoScale(4), transition: bentoTransition, boxShadow: hoveredBento === 4 ? '0 16px 50px rgba(122,158,126,0.2)' : 'none' }}>
                 <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Driven by</span>
                 <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.1rem,2vw,1.5rem)', color: '#0C0C0A', lineHeight: 1.4 }}>Building systems from the ground up.</p>
               </div>
@@ -429,27 +460,7 @@ export default function Home() {
 
       {/* ── CTA ── */}
       <section style={{ padding: 'clamp(2.5rem,5vw,4rem) clamp(2rem,5vw,3.5rem)', textAlign: 'center' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative' }}>
-
-          {/* Spinning badge — large, behind everything, covers full section */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, pointerEvents: 'none', width: 560, height: 560, marginLeft: -280, marginTop: -280 }}>
-            <svg
-              viewBox="0 0 560 560"
-              width="560"
-              height="560"
-              style={{ animation: 'spinBadge 22s linear infinite', display: 'block', opacity: 0.11 }}
-            >
-              <defs>
-                <path id="circlePath" d="M 280,280 m -230,0 a 230,230 0 1,1 460,0 a 230,230 0 1,1 -460,0" />
-              </defs>
-              <text style={{ fontFamily: 'var(--font-inter)', fontSize: 18, fill: '#7A9E7E', letterSpacing: '0.28em' }}>
-                <textPath href="#circlePath">
-                  ✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;
-                </textPath>
-              </text>
-              <circle cx="280" cy="280" r="6" fill="#7A9E7E" opacity="0.6" />
-            </svg>
-          </div>
+        <div style={{ maxWidth: 700, margin: '0 auto' }}>
 
           {/* Foreground content */}
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -458,16 +469,33 @@ export default function Home() {
                 Let's Connect
               </span>
             </FadeUp>
-            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 10 }}>
-              <RevealText>Have a project</RevealText>
-              <br /><RevealText delay={110}>in mind?</RevealText>
-            </h2>
-            {/* Personal one-liner */}
-            <FadeUp delay={80}>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 24, lineHeight: 1.6 }}>
-                Data brain. Design heart. Ships things that actually work.
-              </p>
-            </FadeUp>
+            {/* Wheel wraps heading + slogan */}
+            <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
+              {/* Spinning badge — centered on heading+slogan */}
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 0, pointerEvents: 'none', width: 480, height: 480, marginLeft: -240, marginTop: -240 }}>
+                <svg viewBox="0 0 480 480" width="480" height="480" style={{ animation: 'spinBadge 18s linear infinite', display: 'block', opacity: 0.28 }}>
+                  <defs>
+                    <path id="circlePath" d="M 240,240 m -200,0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" />
+                  </defs>
+                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 16, fill: '#7A9E7E', letterSpacing: '0.3em' }}>
+                    <textPath href="#circlePath">✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;</textPath>
+                  </text>
+                  <circle cx="240" cy="240" r="5" fill="#7A9E7E" opacity="0.5" />
+                </svg>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 10 }}>
+                  <RevealText>Have a project</RevealText>
+                  <br /><RevealText delay={110}>in mind?</RevealText>
+                </h2>
+                {/* Personal one-liner */}
+                <FadeUp delay={80}>
+                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.25rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 24, lineHeight: 1.6 }}>
+                    Data brain. Design heart. Ships things that actually work.
+                  </p>
+                </FadeUp>
+              </div>
+            </div>
           </div>
 
           <div style={{ position: 'relative', zIndex: 1 }}>
