@@ -29,11 +29,8 @@ export default function ContactPage() {
   return (
     <>
       {/* Header */}
-      <section className="pt-52 pb-20" style={{ paddingLeft: "clamp(2rem,5vw,3.5rem)", paddingRight: "clamp(2rem,5vw,3.5rem)" }}>
+      <section className="pt-56 pb-20" style={{ paddingLeft: "clamp(2rem,5vw,3.5rem)", paddingRight: "clamp(2rem,5vw,3.5rem)" }}>
         <div className="max-w-7xl mx-auto">
-          <FadeUp>
-            <span className="text-[11px] tracking-[0.22em] uppercase mb-4 block font-sans" style={{ color: '#7A9E7E' }}>Contact</span>
-          </FadeUp>
           <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem, 7vw, 6.5rem)', lineHeight: 1.05, color: '#0C0C0A' }}>
             <RevealText>Let's talk.</RevealText>
           </h1>

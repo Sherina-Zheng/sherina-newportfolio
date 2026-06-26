@@ -374,6 +374,38 @@ export default function Home() {
             <RevealText>Have a project</RevealText>
             <br /><RevealText delay={110}>in mind?</RevealText>
           </h2>
+          {/* ── Rotating badge + personal line ── */}
+          <FadeUp delay={100}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, marginBottom: 52 }}>
+
+              {/* Spinning circular text badge */}
+              <div style={{ position: 'relative', width: 150, height: 150 }}>
+                <svg
+                  viewBox="0 0 150 150"
+                  width="150"
+                  height="150"
+                  style={{ animation: 'spinBadge 18s linear infinite', display: 'block' }}
+                >
+                  <defs>
+                    <path id="circlePath" d="M 75,75 m -52,0 a 52,52 0 1,1 104,0 a 52,52 0 1,1 -104,0" />
+                  </defs>
+                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 11.5, fill: '#7A9E7E', letterSpacing: '0.18em' }}>
+                    <textPath href="#circlePath">
+                      ✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;
+                    </textPath>
+                  </text>
+                  {/* Centre dot */}
+                  <circle cx="75" cy="75" r="4" fill="#7A9E7E" opacity="0.5" />
+                </svg>
+              </div>
+
+              {/* Personal one-liner */}
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1rem,1.8vw,1.3rem)', color: 'rgba(12,12,10,0.4)', fontStyle: 'italic', textAlign: 'center', maxWidth: 380, lineHeight: 1.6 }}>
+                Data brain. Design heart. Ships things that actually work.
+              </p>
+            </div>
+          </FadeUp>
+
           <FadeUp delay={200}>
             {/* Icon row — enlarged */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 44 }}>
@@ -430,6 +462,7 @@ export default function Home() {
         @keyframes scrollLine { 0%{transform:translateY(-100%)} 100%{transform:translateY(200%)} }
         @keyframes marquee   { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:0.35} }
+        @keyframes spinBadge { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
       `}</style>
     </>
   )
