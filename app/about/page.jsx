@@ -52,7 +52,7 @@ export default function AboutPage() {
           <FadeUp className="md:w-80 lg:w-96 flex-shrink-0">
             <div className="w-full aspect-[3/4] rounded-3xl relative overflow-hidden"
               style={{ background: 'linear-gradient(160deg, #C8DEC9 0%, #A8C9AA 50%, #7A9E7E 100%)' }}>
-              <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 70% 20%, #F7F7F230 0%, transparent 55%)' }} />
+              <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 70% 20%, #E8E3D530 0%, transparent 55%)' }} />
               <div className="absolute top-6 left-6 w-24 h-24 rounded-full border border-white/20" />
               <div className="absolute bottom-0 left-0 right-0 p-8" style={{ background: 'linear-gradient(to top, #0C0C0A60, transparent)' }}>
                 <p className="text-white/80 text-sm font-sans tracking-wide">Sherina Zheng</p>
@@ -145,18 +145,18 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="px-8 md:px-14 py-28 bg-[#0C0C0A] text-center">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-6xl text-[#F7F7F2] mb-10" style={{ fontFamily: 'var(--font-dm-serif)' }}>
+          <h2 className="text-4xl md:text-6xl text-[#E8E3D5] mb-10" style={{ fontFamily: 'var(--font-dm-serif)' }}>
             <RevealText>Let's make</RevealText>
             <br /><RevealText delay={100}>something great.</RevealText>
           </h2>
           <FadeUp delay={200}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/contact"
-                className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#F7F7F2] text-[#0C0C0A] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] hover:text-[#F7F7F2] transition-all duration-300 font-sans">
+                className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#E8E3D5] text-[#0C0C0A] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] hover:text-[#E8E3D5] transition-all duration-300 font-sans">
                 Work with me <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </Link>
               <Link href="/work"
-                className="inline-flex items-center gap-3 px-7 py-3.5 border border-[#F7F7F2]/20 text-[#F7F7F2]/60 rounded-full text-sm tracking-wide hover:border-[#F7F7F2]/40 hover:text-[#F7F7F2]/80 transition-all duration-300 font-sans">
+                className="inline-flex items-center gap-3 px-7 py-3.5 border border-[#E8E3D5]/20 text-[#E8E3D5]/60 rounded-full text-sm tracking-wide hover:border-[#E8E3D5]/40 hover:text-[#E8E3D5]/80 transition-all duration-300 font-sans">
                 See my work
               </Link>
             </div>

@@ -119,7 +119,7 @@ export default function ContactPage() {
                 <FadeUp delay={280}>
                   <button
                     type="submit"
-                    className="group mt-10 inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#F7F7F2] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans self-start"
+                    className="group mt-10 inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#E8E3D5] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans self-start"
                   >
                     Send message
                     <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>

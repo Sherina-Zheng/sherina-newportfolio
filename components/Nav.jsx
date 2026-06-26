@@ -26,13 +26,13 @@ export default function Nav() {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 px-8 md:px-14 transition-all duration-500 ${
-          scrolled ? 'py-4 nav-blur bg-[#F7F7F2]/80 border-b border-[#E8F0E9]' : 'py-7'
+          scrolled ? 'py-4 nav-blur bg-[#E8E3D5]/80 border-b border-[#E8F0E9]' : 'py-7'
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="group flex items-center gap-3">
             <span
-              className="w-8 h-8 rounded-full bg-[#7A9E7E] flex items-center justify-center text-[#F7F7F2] text-xs font-medium tracking-wider transition-transform duration-300 group-hover:scale-110"
+              className="w-8 h-8 rounded-full bg-[#7A9E7E] flex items-center justify-center text-[#E8E3D5] text-xs font-medium tracking-wider transition-transform duration-300 group-hover:scale-110"
               style={{ fontFamily: 'var(--font-inter)' }}
             >
               SZ
@@ -63,7 +63,7 @@ export default function Nav() {
             <li>
               <Link
                 href="/contact"
-                className="px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/80 hover:bg-[#0C0C0A] hover:text-[#F7F7F2] hover:border-[#0C0C0A] transition-all duration-300"
+                className="px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/80 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
                 style={{ fontFamily: 'var(--font-inter)' }}
               >
                 Say hello →
@@ -86,7 +86,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-40 bg-[#F7F7F2] flex flex-col justify-center px-10 transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-40 bg-[#E8E3D5] flex flex-col justify-center px-10 transition-all duration-500 md:hidden ${
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >

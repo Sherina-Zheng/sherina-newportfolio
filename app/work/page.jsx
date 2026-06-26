@@ -122,7 +122,7 @@ export default function WorkPage() {
           </h2>
           <FadeUp delay={150}>
             <Link href="/contact"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#F7F7F2] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans">
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#E8E3D5] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans">
               Get in touch <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </Link>
           </FadeUp>
