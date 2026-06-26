@@ -360,7 +360,7 @@ export default function Home() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                       {tags.map(tag => (
-                        <span key={tag} style={{ padding: '4px 12px', borderRadius: 9999, border: '1px solid #D5CFC0', fontSize: 11, color: '#6B7B6C', fontFamily: 'var(--font-inter)' }}>{tag}</span>
+                        <span key={tag} style={{ padding: '4px 12px', borderRadius: 9999, border: '1px solid #8B8578', fontSize: 11, color: '#4A4540', fontFamily: 'var(--font-inter)' }}>{tag}</span>
                       ))}
                     </div>
                     <span style={{ color: 'rgba(12,12,10,0.25)', fontSize: 18 }}>→</span>
@@ -477,14 +477,14 @@ export default function Home() {
                   <defs>
                     <path id="circlePath" d="M 320,320 m -280,0 a 280,280 0 1,1 560,0 a 280,280 0 1,1 -560,0" />
                   </defs>
-                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 22, fill: '#7A9E7E', letterSpacing: '0.26em' }}>
+                  <text style={{ fontFamily: 'var(--font-inter)', fontSize: 30, fill: '#7A9E7E', letterSpacing: '0.22em' }}>
                     <textPath href="#circlePath">✦ OnenOnlyShereena ✦ Designer ✦ Builder ✦&nbsp;</textPath>
                   </text>
                   <circle cx="320" cy="320" r="6" fill="#7A9E7E" opacity="0.5" />
                 </svg>
               </div>
               <div style={{ position: 'relative', zIndex: 1 }}>
-                <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 10 }}>
+                <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6vw,5.5rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: 2 }}>
                   <RevealText>Have a project</RevealText>
                   <br /><RevealText delay={110}>in mind?</RevealText>
                 </h2>
