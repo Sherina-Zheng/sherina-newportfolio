@@ -82,9 +82,9 @@ export default function Home() {
         className="relative min-h-screen flex flex-col justify-end overflow-hidden"
         style={{ paddingBottom: '6rem', paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
       >
-        {/* Photo — blended right side */}
+        {/* Photo — blended right side, face fully visible */}
         <div
-          className="absolute inset-y-0 right-0 w-[55%] md:w-[48%] pointer-events-none select-none"
+          className="absolute inset-y-0 right-0 w-[52%] md:w-[44%] pointer-events-none select-none"
           style={{ zIndex: 0 }}
         >
           <Image
@@ -92,13 +92,11 @@ export default function Home() {
             alt="Sherina Zheng"
             fill
             priority
-            className="object-contain object-right-bottom"
+            className="object-contain object-right-top"
             style={{
               mixBlendMode: 'multiply',
-              maskImage: 'linear-gradient(to left, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0) 100%), linear-gradient(to top, rgba(0,0,0,0.6) 10%, rgba(0,0,0,0) 55%)',
-              WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0) 100%), linear-gradient(to top, rgba(0,0,0,0.6) 10%, rgba(0,0,0,0) 55%)',
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'source-in',
+              maskImage: 'linear-gradient(to left, rgba(0,0,0,0.9) 40%, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,0.9) 40%, rgba(0,0,0,0) 100%)',
             }}
           />
         </div>
@@ -106,32 +104,12 @@ export default function Home() {
         {/* Content sits above photo */}
         <div className="relative z-10 max-w-7xl w-full mx-auto">
 
-          {/* Credential badge — top left */}
+          {/* Available badge — top left, below nav */}
           <div
             className="absolute"
             style={{
               top: 'calc(-100vh + 7rem)',
               left: 0,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.6rem',
-              opacity: ready ? 1 : 0,
-              transform: ready ? 'none' : 'translateY(-8px)',
-              transition: 'all 0.7s ease 0.5s',
-            }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7A9E7E', display: 'inline-block' }} />
-            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>
-              OnenOnlyShereena 2026
-            </span>
-          </div>
-
-          {/* Available badge — top right */}
-          <div
-            className="absolute"
-            style={{
-              top: 'calc(-100vh + 7rem)',
-              right: 0,
               display: 'flex',
               alignItems: 'center',
               gap: 8,
@@ -272,45 +250,81 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── ABOUT DARK SECTION ── */}
-      <section style={{ background: '#0C0C0A', padding: 'clamp(5rem,8vw,7rem) clamp(2rem,5vw,3.5rem)' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: '5rem', alignItems: 'center' }}>
-          <div style={{ flex: 1, minWidth: 280 }}>
-            <FadeUp>
-              <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: 24 }}>About</span>
-            </FadeUp>
-            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2rem,4vw,3.2rem)', color: '#E8E3D5', lineHeight: 1.2, marginBottom: 28 }}>
-              <RevealText>Progress begins</RevealText>
-              <br /><RevealText delay={100}>with bare bones.</RevealText>
-            </h2>
-            <FadeUp delay={200}>
-              <p style={{ fontFamily: 'var(--font-inter)', fontWeight: 300, fontSize: 15, color: 'rgba(232,227,213,0.45)', lineHeight: 1.8, maxWidth: 400, marginBottom: 36 }}>
-                A designer who moves between data and design — building systems that are both rigorous and deeply human.
-              </p>
-            </FadeUp>
-            <FadeUp delay={300}>
-              <Link
-                href="/about"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 12, padding: '14px 28px', border: '1px solid rgba(232,227,213,0.2)', color: 'rgba(232,227,213,0.65)', borderRadius: 9999, fontSize: 14, fontFamily: 'var(--font-inter)', textDecoration: 'none', transition: 'all 0.3s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#E8E3D5'; e.currentTarget.style.color = '#0C0C0A' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(232,227,213,0.65)' }}
-              >
-                My story →
-              </Link>
-            </FadeUp>
-          </div>
+      {/* ── ABOUT — vibrant bento grid ── */}
+      <section style={{ padding: 'clamp(5rem,8vw,7rem) clamp(2rem,5vw,3.5rem)', background: '#E0DDD0' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <FadeUp>
+            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: 40 }}>About</span>
+          </FadeUp>
 
-          {/* Decorative card */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 260, height: 340, borderRadius: 24, background: 'linear-gradient(135deg, #1E2D20 0%, #141F15 100%)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 60% 30%, rgba(122,158,126,0.12) 0%, transparent 65%)' }} />
-              <div style={{ position: 'absolute', top: 28, right: 28, width: 72, height: 72, borderRadius: '50%', border: '1px solid rgba(122,158,126,0.15)' }} />
-              <div style={{ position: 'absolute', top: 42, right: 42, width: 36, height: 36, borderRadius: '50%', border: '1px solid rgba(122,158,126,0.25)' }} />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 24, borderTop: '1px solid rgba(122,158,126,0.1)' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#B8D4BC', marginBottom: 4 }}>Sherina Zheng</p>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: 'rgba(232,227,213,0.3)' }}>Designer & PM</p>
+          {/* Bento grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gridTemplateRows: 'auto', gap: 16 }}>
+
+            {/* Big quote card */}
+            <FadeUp delay={0} className="col-span-12 md:col-span-7">
+              <div style={{ gridColumn: 'span 7', background: '#7A9E7E', borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320 }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(232,227,213,0.6)', textTransform: 'uppercase' }}>Philosophy</span>
+                <div>
+                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.8rem,3.5vw,3rem)', color: '#E8E3D5', lineHeight: 1.25, marginBottom: 24 }}>
+                    "Progress begins<br />with bare bones."
+                  </p>
+                  <Link
+                    href="/about"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', background: 'rgba(232,227,213,0.15)', border: '1px solid rgba(232,227,213,0.25)', color: '#E8E3D5', borderRadius: 9999, fontSize: 13, fontFamily: 'var(--font-inter)', textDecoration: 'none', backdropFilter: 'blur(8px)', transition: 'all 0.3s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#E8E3D5'; e.currentTarget.style.color = '#0C0C0A' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(232,227,213,0.15)'; e.currentTarget.style.color = '#E8E3D5' }}
+                  >
+                    Read my story →
+                  </Link>
+                </div>
               </div>
-            </div>
+            </FadeUp>
+
+            {/* Role stack card */}
+            <FadeUp delay={80} className="col-span-12 md:col-span-5">
+              <div style={{ gridColumn: 'span 5', background: '#0C0C0A', borderRadius: 28, padding: 'clamp(2rem,3vw,2.8rem)', minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(184,212,188,0.5)', textTransform: 'uppercase' }}>I am a</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {['Product Designer', 'UI/UX Designer', 'Product Manager'].map((role, i) => (
+                    <div key={role} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: i === 0 ? '#7A9E7E' : 'rgba(122,158,126,0.3)', flexShrink: 0 }} />
+                      <span style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.3rem,2.2vw,1.8rem)', color: i === 0 ? '#E8E3D5' : 'rgba(232,227,213,0.3)' }}>{role}</span>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(232,227,213,0.3)', lineHeight: 1.6 }}>NYC-based · FinTech · Data → Design</p>
+              </div>
+            </FadeUp>
+
+            {/* Skills pill card */}
+            <FadeUp delay={140} className="col-span-12 md:col-span-4">
+              <div style={{ gridColumn: 'span 4', background: '#B8D4BC', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200 }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.45)', textTransform: 'uppercase', display: 'block', marginBottom: 20 }}>Toolkit</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {['Figma', 'UX Research', 'SQL', 'React', 'Prototyping', 'Jira', 'Design Systems'].map(s => (
+                    <span key={s} style={{ padding: '6px 14px', borderRadius: 9999, background: 'rgba(12,12,10,0.08)', fontSize: 12, fontFamily: 'var(--font-inter)', color: '#0C0C0A' }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+            </FadeUp>
+
+            {/* Stat cards */}
+            <FadeUp delay={180} className="col-span-6 md:col-span-4">
+              <div style={{ gridColumn: 'span 4', background: '#E8E3D5', border: '1px solid #D5CFC0', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Background</span>
+                <div>
+                  <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.5rem,4vw,3.5rem)', color: '#7A9E7E', lineHeight: 1 }}>3×</p>
+                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.5)', marginTop: 6 }}>disciplines combined into one practice</p>
+                </div>
+              </div>
+            </FadeUp>
+
+            <FadeUp delay={220} className="col-span-6 md:col-span-4">
+              <div style={{ gridColumn: 'span 4', background: '#E8F0E9', borderRadius: 28, padding: 'clamp(1.8rem,3vw,2.5rem)', minHeight: 200, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase' }}>Driven by</span>
+                <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.1rem,2vw,1.5rem)', color: '#0C0C0A', lineHeight: 1.4 }}>Building systems from the ground up.</p>
+              </div>
+            </FadeUp>
           </div>
         </div>
       </section>
@@ -328,15 +342,28 @@ export default function Home() {
             <br /><RevealText delay={110}>in mind?</RevealText>
           </h2>
           <FadeUp delay={250}>
-            <a
-              href="mailto:zhengsherina@gmail.com"
-              className="hover-line"
-              style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.3rem,2.5vw,2rem)', color: 'rgba(12,12,10,0.35)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 12, transition: 'color 0.3s' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#7A9E7E'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.35)'}
-            >
-              zhengsherina@gmail.com ↗
-            </a>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+              <a
+                href="mailto:zhengsherina@gmail.com"
+                className="hover-line"
+                style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.3rem,2.5vw,2rem)', color: 'rgba(12,12,10,0.35)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 12, transition: 'color 0.3s' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#7A9E7E'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.35)'}
+              >
+                zhengsherina@gmail.com ↗
+              </a>
+              <a
+                href="https://www.linkedin.com/in/sherina-zheng-48b287224/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover-line"
+                style={{ fontFamily: 'var(--font-inter)', fontSize: 'clamp(0.8rem,1.4vw,1rem)', color: 'rgba(12,12,10,0.25)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'color 0.3s', letterSpacing: '0.04em' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#7A9E7E'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}
+              >
+                linkedin.com/in/sherina-zheng ↗
+              </a>
+            </div>
           </FadeUp>
         </div>
       </section>
