@@ -35,7 +35,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── Header ── */}
-      <section style={{ ...px, paddingTop: '5.5rem', paddingBottom: '2rem' }}>
+      <section style={{ ...px, paddingTop: '5rem', paddingBottom: '2rem' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
@@ -55,12 +55,14 @@ export default function AboutPage() {
 
           {/* Cartoon portrait card */}
           <FadeUp>
-            <div style={{ width: '100%', aspectRatio: '3/4', borderRadius: 24, overflow: 'hidden', position: 'relative',
-              background: 'linear-gradient(170deg,#B8D4BA 0%,#8FB892 55%,#6A9E70 100%)' }}>
+            <div style={{ width: '100%', aspectRatio: '3/4', borderRadius: 28, overflow: 'hidden', position: 'relative',
+              background: 'linear-gradient(175deg,#EAF2EB 0%,#C8DEC9 40%,#9BBFA0 100%)',
+              boxShadow: '0 2px 24px rgba(90,138,98,0.13), inset 0 1px 0 rgba(255,255,255,0.6)' }}>
 
-              {/* soft bg circles */}
-              <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-              <div style={{ position: 'absolute', bottom: 60, left: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
+              {/* soft decorative shapes */}
+              <div style={{ position: 'absolute', top: -24, right: -24, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.22)' }} />
+              <div style={{ position: 'absolute', top: 20, left: 16, width: 8, height: 8, borderRadius: '50%', background: 'rgba(122,158,126,0.35)' }} />
+              <div style={{ position: 'absolute', top: 36, left: 30, width: 4, height: 4, borderRadius: '50%', background: 'rgba(122,158,126,0.25)' }} />
 
               {/* ── Cartoon character SVG ── */}
               <svg viewBox="0 0 280 373" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -142,10 +144,10 @@ export default function AboutPage() {
               </svg>
 
               {/* Name caption */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem 1.25rem',
-                background: 'linear-gradient(to top, rgba(12,12,10,0.45), transparent)' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.06em' }}>Sherina Zheng</p>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: 'rgba(255,255,255,0.45)', marginTop: 1 }}>Designer · Builder · Thinker</p>
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.25rem 1.25rem 1rem',
+                background: 'linear-gradient(to top, rgba(60,90,62,0.55) 0%, transparent 100%)' }}>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(255,255,255,0.95)', letterSpacing: '0.08em', fontWeight: 500 }}>Sherina Zheng</p>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 2, letterSpacing: '0.04em' }}>Designer · Builder · Thinker</p>
               </div>
             </div>
           </FadeUp>
@@ -169,7 +171,7 @@ export default function AboutPage() {
             </FadeUp>
             <FadeUp delay={250}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                {['Curious by default', 'Systems thinker', 'Data-informed', 'Empathy-first'].map(trait => (
+                {['Curious by design', 'Systems thinker', 'Data-informed', 'Empathy-first'].map(trait => (
                   <span key={trait} style={{ padding: '6px 16px', borderRadius: 9999, border: '1px solid #D8E8D8', fontSize: 12, color: '#6B7B6C', fontFamily: 'var(--font-inter)', background: 'rgba(232,240,233,0.4)' }}>
                     {trait}
                   </span>
