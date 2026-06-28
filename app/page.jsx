@@ -468,7 +468,7 @@ export default function Home() {
           </svg>
           <div style={{ position: 'absolute', top: 30, left: 28, width: 134, textAlign: 'center', pointerEvents: 'none' }}>
             <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.5, letterSpacing: '0.01em' }}>
-              Leave your footprint here<br /><span style={{ color: '#7A9E7E', fontWeight: 600, fontSize: 10 }}>&#10022; click to write &#10022;</span>
+              Leave your footprint here<br /><span style={{ color: '#7A9E7E', fontWeight: 600, fontSize: 10 }}>✦ click to write ✦</span>
             </p>
           </div>
         </button>
@@ -478,8 +478,8 @@ export default function Home() {
           <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(12,12,10,0.5)', backdropFilter: 'blur(8px)' }}
             onClick={e => { if (e.target === e.currentTarget) setNoteOpen(false) }}>
             <div style={{ background: '#E8E3D5', borderRadius: 28, padding: '44px 48px', width: 'min(520px, 92vw)', boxShadow: '0 32px 80px rgba(0,0,0,0.2)', position: 'relative', maxHeight: '85vh', overflowY: 'auto' }}>
-              <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 18, right: 22, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#0C0C0A', opacity: 0.3, lineHeight: 1 }}>&times;</button>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.6rem', color: '#0C0C0A', marginBottom: 6 }}>Leave your footprint &#10022;</p>
+              <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 18, right: 22, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#0C0C0A', opacity: 0.3, lineHeight: 1 }}>×</button>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.6rem', color: '#0C0C0A', marginBottom: 6 }}>Leave your footprint ✦</p>
               <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your letters will fall to the ground and stay here for others to see.</p>
               <form onSubmit={handleNoteSubmit}>
                 <textarea autoFocus value={noteMsg} onChange={e => setNoteMsg(e.target.value)} placeholder="Say anything..." maxLength={160}
@@ -488,7 +488,7 @@ export default function Home() {
                 <button type="submit" style={{ marginTop: 14, padding: '12px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.05em', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
                   onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}>
-                  Drop it &#8595;
+                  Drop it ↓
                 </button>
               </form>
               {pastNotes.length > 0 && (
@@ -508,7 +508,7 @@ export default function Home() {
         {/* Falling letters */}
         {fallingLetters.map(({ ch, id, x, rot, delay, color, size }) => (
           <div key={id} style={{
-            position: 'fixed', left: `${x}vw`, top: 0, zIndex: 90,
+            position: 'fixed', left: `${x}vw`, top: '8vh', zIndex: 90,
             fontFamily: 'var(--font-dm-serif)', fontSize: size,
             color, opacity: 0,
             animation: `letterFall 3.6s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms forwards`,
@@ -841,7 +841,7 @@ export default function Home() {
         @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-580} }
         @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-390} }
         @keyframes cloudDrift  { from{transform:translateX(-300px)} to{transform:translateX(110vw)} }
-        @keyframes letterFall  { 0%{opacity:0;transform:translateY(-20px)} 10%{opacity:1} 85%{opacity:1;transform:translateY(100vh)} 100%{opacity:0;transform:translateY(100vh)} }
+        @keyframes letterFall  { 0%{opacity:0;transform:translateY(0)} 8%{opacity:1} 80%{opacity:1;transform:translateY(72vh)} 100%{opacity:0;transform:translateY(74vh)} }
       `}</style>
     </>
   )
