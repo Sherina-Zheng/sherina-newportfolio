@@ -262,53 +262,13 @@ function ParallaxName({ ready }) {
               }}
             >
               {word.split('').map((letter, li) => (
-                <span
-                  key={li}
-                  style={{
-                    display: 'inline',
-                    position: 'relative',
-                    // Even-indexed letters sit above the snake (z:3); odd sit below (z:1)
-                    zIndex: li % 2 === 0 ? 3 : 1,
-                  }}
-                >
-                  {letter}
-                </span>
+                <span key={li} style={{ display: 'inline' }}>{letter}</span>
               ))}
             </span>
           </span>
         ))}
       </h1>
 
-      {/* Snake at z:2 — threads between the two letter layers, constrained to letter spans */}
-      <svg
-        style={{
-          position: 'absolute', left: 0, top: 0,
-          width: '100%', height: '100%',
-          pointerEvents: 'none', overflow: 'visible',
-          zIndex: 2,
-        }}
-        viewBox="0 0 900 230"
-        preserveAspectRatio="none"
-      >
-        {/* Primary snake through "Sherina" — tight wave, only spans ~0–580px */}
-        <path
-          d="M 0 52 C 40 42, 80 62, 120 52 C 160 42, 200 62, 240 52 C 280 42, 320 62, 360 52 C 400 42, 440 62, 480 52 C 520 42, 555 60, 580 52"
-          fill="none" stroke="#7A9E7E" strokeWidth="3.5" strokeLinecap="round" opacity="0.7"
-          style={{ strokeDasharray: '100 480', animation: 'snakeCrawl 3.2s linear infinite' }}
-        />
-        {/* Thin trailing accent — same path, delayed */}
-        <path
-          d="M 0 52 C 40 42, 80 62, 120 52 C 160 42, 200 62, 240 52 C 280 42, 320 62, 360 52 C 400 42, 440 62, 480 52 C 520 42, 555 60, 580 52"
-          fill="none" stroke="#A8E6CF" strokeWidth="1.8" strokeLinecap="round" opacity="0.4"
-          style={{ strokeDasharray: '60 520', animation: 'snakeCrawl 3.2s linear infinite 1.6s' }}
-        />
-        {/* Snake through "Zheng" — tight wave, spans ~0–390px */}
-        <path
-          d="M 0 162 C 38 152, 78 172, 118 162 C 158 152, 198 172, 238 162 C 278 152, 318 172, 358 162 C 378 154, 390 166, 390 162"
-          fill="none" stroke="#4A7C6F" strokeWidth="3" strokeLinecap="round" opacity="0.6"
-          style={{ strokeDasharray: '80 320', animation: 'snakeCrawl2 3.8s linear infinite 0.5s' }}
-        />
-      </svg>
     </div>
   )
 }
@@ -394,23 +354,32 @@ export default function Home() {
   const [hoveredBento, setHoveredBento] = useState(null)
   const [noteOpen, setNoteOpen] = useState(false)
   const [noteMsg, setNoteMsg] = useState('')
-  const [scattered, setScattered] = useState([])
+  const [fallingLetters, setFallingLetters] = useState([])
+  const [pastNotes, setPastNotes] = useState([])
+
+  useEffect(() => {
+    fetch('/api/notes').then(r => r.json()).then(setPastNotes).catch(() => {})
+  }, [])
 
   function handleNoteSubmit(e) {
     e.preventDefault()
-    if (!noteMsg.trim()) return
-    const letters = noteMsg.split('').map((ch, i) => ({
+    const text = noteMsg.trim()
+    if (!text) return
+    const letters = text.split('').map((ch, i) => ({
       ch, id: i,
-      x: Math.random() * 80 + 5,
-      y: Math.random() * 70 + 10,
-      rot: Math.random() * 60 - 30,
-      delay: i * 40,
-      color: ['#7A9E7E','#A8E6CF','#4A7C6F','#0C0C0A','#D5CFC0'][i % 5],
+      x: 30 + Math.random() * 40,
+      rot: Math.random() * 30 - 15,
+      delay: i * 55,
+      color: ['#7A9E7E','#A8E6CF','#4A7C6F','#0C1F18','#D5CFC0'][i % 5],
+      size: Math.random() * 14 + 20,
     }))
-    setScattered(letters)
+    setFallingLetters(letters)
     setNoteOpen(false)
     setNoteMsg('')
-    setTimeout(() => setScattered([]), 4000)
+    fetch('/api/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) })
+      .then(() => fetch('/api/notes').then(r => r.json()).then(setPastNotes))
+      .catch(() => {})
+    setTimeout(() => setFallingLetters([]), 4000)
   }
   const bentoRow1 = [0, 1]
   const bentoRow2 = [2, 3, 4]
@@ -483,87 +452,68 @@ export default function Home() {
           Say hello →
         </a>
 
-        {/* Speech bubble near headphone on portrait */}
+        {/* Cloud-shaped footprint button near headphone */}
         <button
           onClick={() => setNoteOpen(true)}
-          className="absolute hidden md:flex"
-          style={{
-            right: '20%',
-            top: '16%',
-            zIndex: 12,
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 0,
-            opacity: ready ? 1 : 0,
-            transition: 'opacity 0.8s ease 1.2s, transform 0.2s ease',
-          }}
-          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+          className="absolute hidden md:block"
+          style={{ right: '20%', top: '16%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.25s ease' }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.07) translateY(-3px)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1) translateY(0)'}
         >
-          <div style={{ position: 'relative' }}>
-            {/* Cloud bubble shape */}
-            <svg width="170" height="72" viewBox="0 0 170 72" fill="none">
-              <path d="M 14 10 Q 14 4 20 4 L 150 4 Q 156 4 156 10 L 156 48 Q 156 54 150 54 L 50 54 L 32 68 L 38 54 L 20 54 Q 14 54 14 48 Z"
-                fill="rgba(232,227,213,0.96)" stroke="#7A9E7E" strokeWidth="1.5"/>
-              <path d="M 14 10 Q 14 4 20 4 L 150 4 Q 156 4 156 10 L 156 48 Q 156 54 150 54 L 50 54 L 32 68 L 38 54 L 20 54 Q 14 54 14 48 Z"
-                fill="none" stroke="rgba(122,158,126,0.3)" strokeWidth="0.5" strokeDasharray="4 3"/>
-            </svg>
-            <div style={{ position: 'absolute', top: 0, left: 0, width: 170, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 18px' }}>
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.45, textAlign: 'center', letterSpacing: '0.01em' }}>
-                Wanna leave a note to me?<br /><span style={{ color: '#7A9E7E', fontWeight: 600 }}>Try here ✦</span>
-              </p>
-            </div>
+          <svg width="190" height="100" viewBox="0 0 190 100" fill="none">
+            <path d="M 30 70 Q 30 82 42 82 L 148 82 Q 160 82 160 70 L 160 44 Q 160 38 155 36 Q 158 30 152 26 Q 146 22 140 28 Q 136 20 128 20 Q 120 20 118 28 Q 112 16 100 16 Q 88 16 84 26 Q 78 18 68 20 Q 60 22 60 30 Q 54 26 48 30 Q 42 34 44 42 Q 38 42 34 46 Q 30 50 30 56 Z"
+              fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4" strokeLinejoin="round"/>
+            <path d="M 65 82 L 52 96 L 78 82" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4" strokeLinejoin="round"/>
+          </svg>
+          <div style={{ position: 'absolute', top: 30, left: 28, width: 134, textAlign: 'center', pointerEvents: 'none' }}>
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+              Leave your footprint here<br /><span style={{ color: '#7A9E7E', fontWeight: 600, fontSize: 10 }}>&#10022; click to write &#10022;</span>
+            </p>
           </div>
         </button>
 
         {/* Note modal */}
         {noteOpen && (
-          <div
-            style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(12,12,10,0.45)', backdropFilter: 'blur(6px)' }}
-            onClick={e => { if (e.target === e.currentTarget) setNoteOpen(false) }}
-          >
-            <div style={{ background: '#E8E3D5', borderRadius: 24, padding: '40px 44px', width: 'min(480px, 90vw)', boxShadow: '0 24px 64px rgba(0,0,0,0.18)', position: 'relative' }}>
-              <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 16, right: 20, background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#0C0C0A', opacity: 0.35 }}>×</button>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.5rem', color: '#0C0C0A', marginBottom: 8 }}>Leave a note ✦</p>
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your message will scatter across the screen.</p>
+          <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(12,12,10,0.5)', backdropFilter: 'blur(8px)' }}
+            onClick={e => { if (e.target === e.currentTarget) setNoteOpen(false) }}>
+            <div style={{ background: '#E8E3D5', borderRadius: 28, padding: '44px 48px', width: 'min(520px, 92vw)', boxShadow: '0 32px 80px rgba(0,0,0,0.2)', position: 'relative', maxHeight: '85vh', overflowY: 'auto' }}>
+              <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 18, right: 22, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#0C0C0A', opacity: 0.3, lineHeight: 1 }}>&times;</button>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.6rem', color: '#0C0C0A', marginBottom: 6 }}>Leave your footprint &#10022;</p>
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your letters will fall to the ground and stay here for others to see.</p>
               <form onSubmit={handleNoteSubmit}>
-                <textarea
-                  autoFocus
-                  value={noteMsg}
-                  onChange={e => setNoteMsg(e.target.value)}
-                  placeholder="Type anything..."
-                  style={{ width: '100%', minHeight: 100, background: 'rgba(12,12,10,0.05)', border: '1px solid rgba(122,158,126,0.4)', borderRadius: 12, padding: '14px 16px', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', resize: 'none', outline: 'none', lineHeight: 1.6 }}
+                <textarea autoFocus value={noteMsg} onChange={e => setNoteMsg(e.target.value)} placeholder="Say anything..." maxLength={160}
+                  style={{ width: '100%', minHeight: 90, background: 'rgba(12,12,10,0.05)', border: '1px solid rgba(122,158,126,0.45)', borderRadius: 14, padding: '14px 16px', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', resize: 'none', outline: 'none', lineHeight: 1.6, boxSizing: 'border-box' }}
                 />
-                <button
-                  type="submit"
-                  style={{ marginTop: 16, padding: '12px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.05em', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
+                <button type="submit" style={{ marginTop: 14, padding: '12px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.05em', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}
-                >
-                  Scatter it →
+                  onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}>
+                  Drop it &#8595;
                 </button>
               </form>
+              {pastNotes.length > 0 && (
+                <div style={{ marginTop: 28, borderTop: '1px solid rgba(12,12,10,0.1)', paddingTop: 20 }}>
+                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.18em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', marginBottom: 14 }}>Footprints left behind</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {pastNotes.map((n, i) => (
+                      <div key={i} style={{ background: 'rgba(122,158,126,0.1)', borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.7)', lineHeight: 1.5 }}>{n.text}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Scattered letters */}
-        {scattered.map(({ ch, id, x, y, rot, delay, color }) => (
+        {/* Falling letters */}
+        {fallingLetters.map(({ ch, id, x, rot, delay, color, size }) => (
           <div key={id} style={{
-            position: 'fixed',
-            left: `${x}vw`,
-            top: `${y}vh`,
-            zIndex: 90,
-            fontFamily: 'var(--font-dm-serif)',
-            fontSize: `${Math.random() * 20 + 22}px`,
-            color,
-            transform: `rotate(${rot}deg)`,
-            opacity: 0,
-            animation: `letterFly 3.5s ease-out ${delay}ms forwards`,
+            position: 'fixed', left: `${x}vw`, top: 0, zIndex: 90,
+            fontFamily: 'var(--font-dm-serif)', fontSize: size,
+            color, opacity: 0,
+            animation: `letterFall 3.6s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms forwards`,
             pointerEvents: 'none',
-            willChange: 'transform, opacity',
-          }}>{ch === ' ' ? ' ' : ch}</div>
+          }}>{ch}</div>
         ))}
 
         {/* Portrait — rendered after rainbow so it's always in front */}
@@ -891,7 +841,7 @@ export default function Home() {
         @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-580} }
         @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-390} }
         @keyframes cloudDrift  { from{transform:translateX(-300px)} to{transform:translateX(110vw)} }
-        @keyframes letterFly   { 0%{opacity:0;transform:scale(0.4) rotate(var(--r,0deg))} 15%{opacity:1;transform:scale(1.1) rotate(var(--r,0deg))} 80%{opacity:0.8} 100%{opacity:0;transform:scale(0.8) translateY(40px) rotate(var(--r,0deg))} }
+        @keyframes letterFall  { 0%{opacity:0;transform:translateY(-20px)} 10%{opacity:1} 85%{opacity:1;transform:translateY(100vh)} 100%{opacity:0;transform:translateY(100vh)} }
       `}</style>
     </>
   )
