@@ -452,24 +452,30 @@ export default function Home() {
           Say hello →
         </a>
 
-        {/* Cloud-shaped footprint button near headphone */}
+        {/* Sticky-note footprint trigger */}
         <button
           onClick={() => setNoteOpen(true)}
           className="absolute hidden md:block"
-          style={{ right: '20%', top: '16%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.25s ease' }}
-          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.07) translateY(-3px)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1) translateY(0)'}
+          style={{ right: '19%', top: '14%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.3s ease',
+            transform: 'rotate(-4deg)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'rotate(-1deg) scale(1.06) translateY(-4px)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'rotate(-4deg)' }}
         >
-          <svg width="190" height="100" viewBox="0 0 190 100" fill="none">
-            <path d="M 30 70 Q 30 82 42 82 L 148 82 Q 160 82 160 70 L 160 44 Q 160 38 155 36 Q 158 30 152 26 Q 146 22 140 28 Q 136 20 128 20 Q 120 20 118 28 Q 112 16 100 16 Q 88 16 84 26 Q 78 18 68 20 Q 60 22 60 30 Q 54 26 48 30 Q 42 34 44 42 Q 38 42 34 46 Q 30 50 30 56 Z"
-              fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4" strokeLinejoin="round"/>
-            <path d="M 65 82 L 52 96 L 78 82" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4" strokeLinejoin="round"/>
-          </svg>
-          <div style={{ position: 'absolute', top: 30, left: 28, width: 134, textAlign: 'center', pointerEvents: 'none' }}>
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.5, letterSpacing: '0.01em' }}>
-              Leave your footprint here<br /><span style={{ color: '#7A9E7E', fontWeight: 600, fontSize: 10 }}>✦ click to write ✦</span>
+          <div style={{ position: 'relative', width: 160, background: '#E8E3D5', borderRadius: 4, padding: '14px 16px 18px', boxShadow: '2px 4px 14px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12)', border: '1px solid rgba(122,158,126,0.25)' }}>
+            {/* Pin */}
+            <div style={{ position: 'absolute', top: -9, left: '50%', transform: 'translateX(-50%)' }}>
+              <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
+                <circle cx="8" cy="6" r="5" fill="#7A9E7E" stroke="#4A7C6F" strokeWidth="1"/>
+                <line x1="8" y1="11" x2="8" y2="20" stroke="#4A7C6F" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </div>
+            {/* Folded corner */}
+            <div style={{ position: 'absolute', bottom: 0, right: 0, width: 0, height: 0, borderStyle: 'solid', borderWidth: '0 0 16px 16px', borderColor: 'transparent transparent rgba(122,158,126,0.35) transparent' }} />
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.55, letterSpacing: '0.01em', margin: 0, paddingTop: 4 }}>
+              Leave your footprint here
             </p>
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: '#7A9E7E', fontWeight: 600, margin: '6px 0 0', letterSpacing: '0.04em' }}>✦ click to write ✦</p>
           </div>
         </button>
 
@@ -480,7 +486,7 @@ export default function Home() {
             <div style={{ background: '#E8E3D5', borderRadius: 28, padding: '44px 48px', width: 'min(520px, 92vw)', boxShadow: '0 32px 80px rgba(0,0,0,0.2)', position: 'relative', maxHeight: '85vh', overflowY: 'auto' }}>
               <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 18, right: 22, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#0C0C0A', opacity: 0.3, lineHeight: 1 }}>×</button>
               <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.6rem', color: '#0C0C0A', marginBottom: 6 }}>Leave your footprint ✦</p>
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your letters will fall to the ground and stay here for others to see.</p>
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your note will be visible here.</p>
               <form onSubmit={handleNoteSubmit}>
                 <textarea autoFocus value={noteMsg} onChange={e => setNoteMsg(e.target.value)} placeholder="Say anything..." maxLength={160}
                   style={{ width: '100%', minHeight: 90, background: 'rgba(12,12,10,0.05)', border: '1px solid rgba(122,158,126,0.45)', borderRadius: 14, padding: '14px 16px', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', resize: 'none', outline: 'none', lineHeight: 1.6, boxSizing: 'border-box' }}
@@ -509,8 +515,9 @@ export default function Home() {
         {fallingLetters.map(({ ch, id, x, rot, delay, color, size }) => (
           <div key={id} style={{
             position: 'fixed', left: `${x}vw`, top: '8vh', zIndex: 90,
-            fontFamily: 'var(--font-dm-serif)', fontSize: size,
+            fontFamily: 'var(--font-dm-serif)', fontSize: `${size}px`,
             color, opacity: 0,
+            transform: `rotate(${rot}deg)`,
             animation: `letterFall 3.6s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms forwards`,
             pointerEvents: 'none',
           }}>{ch}</div>

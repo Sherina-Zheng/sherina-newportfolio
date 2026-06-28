@@ -51,7 +51,10 @@ export default function Nav() {
                 {/* Square-bracket right */}
                 <path d="M 26 9 L 29 9 L 29 27 L 26 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
                 {/* SZ monogram in mint — italic serif for creative flair */}
-                <text x="18" y="22.5" textAnchor="middle" fontFamily="'SF Mono', 'Fira Code', 'Fira Mono', monospace" fontSize="11.5" fill="#A8E6CF" fontWeight="600" letterSpacing="2">SZ</text>
+                {/* S — drawn as a stroke path */}
+                <path d="M 15 11 C 10 11, 8.5 13, 8.5 15 C 8.5 17, 10.5 17.5, 13 18 C 15.5 18.5, 17.5 19, 17.5 21 C 17.5 23.5, 15 25, 11 25" fill="none" stroke="#A8E6CF" strokeWidth="1.7" strokeLinecap="round"/>
+                {/* Z — drawn as a stroke path */}
+                <path d="M 20 11 L 27 11 L 20 25 L 27 25" fill="none" stroke="#A8E6CF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
             {/* thin separator */}
