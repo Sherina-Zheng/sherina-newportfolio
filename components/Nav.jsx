@@ -51,7 +51,7 @@ export default function Nav() {
                 {/* Square-bracket right */}
                 <path d="M 26 9 L 29 9 L 29 27 L 26 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
                 {/* SZ monogram in mint — italic serif for creative flair */}
-                <text x="18" y="22.5" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="13" fill="#A8E6CF" fontStyle="italic" letterSpacing="1">SZ</text>
+                <text x="18" y="22.5" textAnchor="middle" fontFamily="'Helvetica Neue', Arial, sans-serif" fontSize="12" fill="#A8E6CF" fontWeight="700" letterSpacing="2">SZ</text>
               </svg>
             </Link>
             {/* thin separator */}

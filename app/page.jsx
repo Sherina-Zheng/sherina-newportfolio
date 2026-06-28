@@ -93,7 +93,25 @@ function useNYCWeather() {
 
 /* ── Large artsy weather background — like the rainbow ── */
 function WeatherArt({ weatherState }) {
-  if (weatherState === 'sunny' || weatherState === 'cloudy') return (
+  if (weatherState === 'cloudy') return (
+    <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
+      {[
+        { y: '8%',  scale: 2.2, speed: 38, delay: 0,  opacity: 0.16 },
+        { y: '22%', scale: 1.5, speed: 28, delay: 10, opacity: 0.12 },
+        { y: '40%', scale: 2.8, speed: 50, delay: 20, opacity: 0.13 },
+        { y: '60%', scale: 1.8, speed: 33, delay: 5,  opacity: 0.1  },
+      ].map(({ y, scale, speed, delay, opacity }, i) => (
+        <div key={i} style={{ position: 'absolute', top: y, left: 0, opacity, animation: `cloudDrift ${speed}s linear infinite ${delay}s` }}>
+          <svg width="220" height="100" viewBox="0 0 220 100" style={{ transform: `scale(${scale})`, transformOrigin: 'left center' }}>
+            <path d="M 18 72 Q 12 52 32 48 Q 34 30 54 34 Q 60 18 82 26 Q 94 12 116 24 Q 132 14 150 28 Q 170 22 176 40 Q 196 40 198 58 Q 200 74 184 78 L 30 78 Q 16 78 18 72 Z" fill="#2A3A30"/>
+            <path d="M 38 68 Q 34 54 48 52 Q 52 42 64 46 Q 70 36 84 42 Q 94 34 108 42 Q 118 36 130 46 Q 142 42 146 54 Q 152 64 144 70 L 44 70 Q 36 70 38 68 Z" fill="#3A4A3E" opacity="0.7"/>
+          </svg>
+        </div>
+      ))}
+    </div>
+  )
+
+  if (weatherState === 'sunny') return (
     <div className="absolute pointer-events-none select-none" style={{ top: '-12%', left: '-10%', zIndex: 0 }}>
       <svg viewBox="0 0 600 600" width="600" height="600" style={{ animation: 'spinSlow 40s linear infinite', opacity: 0.11 }}>
         <circle cx="300" cy="300" r="90" fill="#FFCA28"/>
@@ -261,7 +279,7 @@ function ParallaxName({ ready }) {
         ))}
       </h1>
 
-      {/* Snake at z:2 — threads between the two letter layers */}
+      {/* Snake at z:2 — threads between the two letter layers, constrained to letter spans */}
       <svg
         style={{
           position: 'absolute', left: 0, top: 0,
@@ -272,23 +290,23 @@ function ParallaxName({ ready }) {
         viewBox="0 0 900 230"
         preserveAspectRatio="none"
       >
-        {/* Primary snake through "Sherina" at ~x-height of line 1 (~38% of div) */}
+        {/* Primary snake through "Sherina" — tight wave, only spans ~0–580px */}
         <path
-          d="M -50 46 C 60 14, 175 78, 300 46 C 425 14, 540 78, 660 46 C 760 20, 840 58, 960 46"
-          fill="none" stroke="#7A9E7E" strokeWidth="4" strokeLinecap="round" opacity="0.65"
-          style={{ strokeDasharray: '170 790', animation: 'snakeCrawl 3.6s linear infinite' }}
+          d="M 0 52 C 40 42, 80 62, 120 52 C 160 42, 200 62, 240 52 C 280 42, 320 62, 360 52 C 400 42, 440 62, 480 52 C 520 42, 555 60, 580 52"
+          fill="none" stroke="#7A9E7E" strokeWidth="3.5" strokeLinecap="round" opacity="0.7"
+          style={{ strokeDasharray: '100 480', animation: 'snakeCrawl 3.2s linear infinite' }}
         />
-        {/* Thin trailing accent — same line, delayed */}
+        {/* Thin trailing accent — same path, delayed */}
         <path
-          d="M -50 46 C 60 14, 175 78, 300 46 C 425 14, 540 78, 660 46 C 760 20, 840 58, 960 46"
-          fill="none" stroke="#A8E6CF" strokeWidth="2" strokeLinecap="round" opacity="0.35"
-          style={{ strokeDasharray: '90 870', animation: 'snakeCrawl 3.6s linear infinite 1.8s' }}
+          d="M 0 52 C 40 42, 80 62, 120 52 C 160 42, 200 62, 240 52 C 280 42, 320 62, 360 52 C 400 42, 440 62, 480 52 C 520 42, 555 60, 580 52"
+          fill="none" stroke="#A8E6CF" strokeWidth="1.8" strokeLinecap="round" opacity="0.4"
+          style={{ strokeDasharray: '60 520', animation: 'snakeCrawl 3.2s linear infinite 1.6s' }}
         />
-        {/* Snake through "Zheng" at ~x-height of line 2 (~73% of div) */}
+        {/* Snake through "Zheng" — tight wave, spans ~0–390px */}
         <path
-          d="M -50 158 C 55 126, 165 190, 285 158 C 405 126, 510 190, 600 158 C 660 138, 700 166, 750 158"
-          fill="none" stroke="#4A7C6F" strokeWidth="3.5" strokeLinecap="round" opacity="0.55"
-          style={{ strokeDasharray: '130 620', animation: 'snakeCrawl2 4.2s linear infinite 0.7s' }}
+          d="M 0 162 C 38 152, 78 172, 118 162 C 158 152, 198 172, 238 162 C 278 152, 318 172, 358 162 C 378 154, 390 166, 390 162"
+          fill="none" stroke="#4A7C6F" strokeWidth="3" strokeLinecap="round" opacity="0.6"
+          style={{ strokeDasharray: '80 320', animation: 'snakeCrawl2 3.8s linear infinite 0.5s' }}
         />
       </svg>
     </div>
@@ -374,6 +392,26 @@ export default function Home() {
   const { state: weatherState, temp } = useNYCWeather()
 
   const [hoveredBento, setHoveredBento] = useState(null)
+  const [noteOpen, setNoteOpen] = useState(false)
+  const [noteMsg, setNoteMsg] = useState('')
+  const [scattered, setScattered] = useState([])
+
+  function handleNoteSubmit(e) {
+    e.preventDefault()
+    if (!noteMsg.trim()) return
+    const letters = noteMsg.split('').map((ch, i) => ({
+      ch, id: i,
+      x: Math.random() * 80 + 5,
+      y: Math.random() * 70 + 10,
+      rot: Math.random() * 60 - 30,
+      delay: i * 40,
+      color: ['#7A9E7E','#A8E6CF','#4A7C6F','#0C0C0A','#D5CFC0'][i % 5],
+    }))
+    setScattered(letters)
+    setNoteOpen(false)
+    setNoteMsg('')
+    setTimeout(() => setScattered([]), 4000)
+  }
   const bentoRow1 = [0, 1]
   const bentoRow2 = [2, 3, 4]
   function getBentoScale(i) {
@@ -445,6 +483,89 @@ export default function Home() {
           Say hello →
         </a>
 
+        {/* Speech bubble near headphone on portrait */}
+        <button
+          onClick={() => setNoteOpen(true)}
+          className="absolute hidden md:flex"
+          style={{
+            right: '20%',
+            top: '16%',
+            zIndex: 12,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+            opacity: ready ? 1 : 0,
+            transition: 'opacity 0.8s ease 1.2s, transform 0.2s ease',
+          }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          <div style={{ position: 'relative' }}>
+            {/* Cloud bubble shape */}
+            <svg width="170" height="72" viewBox="0 0 170 72" fill="none">
+              <path d="M 14 10 Q 14 4 20 4 L 150 4 Q 156 4 156 10 L 156 48 Q 156 54 150 54 L 50 54 L 32 68 L 38 54 L 20 54 Q 14 54 14 48 Z"
+                fill="rgba(232,227,213,0.96)" stroke="#7A9E7E" strokeWidth="1.5"/>
+              <path d="M 14 10 Q 14 4 20 4 L 150 4 Q 156 4 156 10 L 156 48 Q 156 54 150 54 L 50 54 L 32 68 L 38 54 L 20 54 Q 14 54 14 48 Z"
+                fill="none" stroke="rgba(122,158,126,0.3)" strokeWidth="0.5" strokeDasharray="4 3"/>
+            </svg>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: 170, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 18px' }}>
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.45, textAlign: 'center', letterSpacing: '0.01em' }}>
+                Wanna leave a note to me?<br /><span style={{ color: '#7A9E7E', fontWeight: 600 }}>Try here ✦</span>
+              </p>
+            </div>
+          </div>
+        </button>
+
+        {/* Note modal */}
+        {noteOpen && (
+          <div
+            style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(12,12,10,0.45)', backdropFilter: 'blur(6px)' }}
+            onClick={e => { if (e.target === e.currentTarget) setNoteOpen(false) }}
+          >
+            <div style={{ background: '#E8E3D5', borderRadius: 24, padding: '40px 44px', width: 'min(480px, 90vw)', boxShadow: '0 24px 64px rgba(0,0,0,0.18)', position: 'relative' }}>
+              <button onClick={() => setNoteOpen(false)} style={{ position: 'absolute', top: 16, right: 20, background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#0C0C0A', opacity: 0.35 }}>×</button>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.5rem', color: '#0C0C0A', marginBottom: 8 }}>Leave a note ✦</p>
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(12,12,10,0.4)', marginBottom: 20 }}>Your message will scatter across the screen.</p>
+              <form onSubmit={handleNoteSubmit}>
+                <textarea
+                  autoFocus
+                  value={noteMsg}
+                  onChange={e => setNoteMsg(e.target.value)}
+                  placeholder="Type anything..."
+                  style={{ width: '100%', minHeight: 100, background: 'rgba(12,12,10,0.05)', border: '1px solid rgba(122,158,126,0.4)', borderRadius: 12, padding: '14px 16px', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', resize: 'none', outline: 'none', lineHeight: 1.6 }}
+                />
+                <button
+                  type="submit"
+                  style={{ marginTop: 16, padding: '12px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.05em', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}
+                >
+                  Scatter it →
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Scattered letters */}
+        {scattered.map(({ ch, id, x, y, rot, delay, color }) => (
+          <div key={id} style={{
+            position: 'fixed',
+            left: `${x}vw`,
+            top: `${y}vh`,
+            zIndex: 90,
+            fontFamily: 'var(--font-dm-serif)',
+            fontSize: `${Math.random() * 20 + 22}px`,
+            color,
+            transform: `rotate(${rot}deg)`,
+            opacity: 0,
+            animation: `letterFly 3.5s ease-out ${delay}ms forwards`,
+            pointerEvents: 'none',
+            willChange: 'transform, opacity',
+          }}>{ch === ' ' ? ' ' : ch}</div>
+        ))}
+
         {/* Portrait — rendered after rainbow so it's always in front */}
         <ScrollPortrait />
 
@@ -500,27 +621,6 @@ export default function Home() {
                 "I design user experiences that feel inevitable."
               </p>
             </div>
-            <Link
-              href="/work"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '14px 28px',
-                background: '#0C0C0A',
-                color: '#E8E3D5',
-                borderRadius: 9999,
-                fontSize: 14,
-                letterSpacing: '0.04em',
-                fontFamily: 'var(--font-inter)',
-                textDecoration: 'none',
-                transition: 'background 0.3s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
-              onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}
-            >
-              View my work →
-            </Link>
           </div>
         </div>
 
@@ -788,8 +888,10 @@ export default function Home() {
         @keyframes rainFall   { 0%{opacity:0;transform:translateY(-60px)} 60%{opacity:1} 100%{opacity:0;transform:translateY(80px)} }
         @keyframes windSway   { 0%,100%{transform:translateX(0)} 50%{transform:translateX(12px)} }
         @keyframes snowDrift  { 0%,100%{transform:translateY(0) translateX(0)} 33%{transform:translateY(14px) translateX(8px)} 66%{transform:translateY(6px) translateX(-6px)} }
-        @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-960} }
-        @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-770} }
+        @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-580} }
+        @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-390} }
+        @keyframes cloudDrift  { from{transform:translateX(-300px)} to{transform:translateX(110vw)} }
+        @keyframes letterFly   { 0%{opacity:0;transform:scale(0.4) rotate(var(--r,0deg))} 15%{opacity:1;transform:scale(1.1) rotate(var(--r,0deg))} 80%{opacity:0.8} 100%{opacity:0;transform:scale(0.8) translateY(40px) rotate(var(--r,0deg))} }
       `}</style>
     </>
   )
