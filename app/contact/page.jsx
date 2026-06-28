@@ -7,6 +7,8 @@ const socials = [
   { label: 'LinkedIn', value: '/in/sherina-zheng', href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
 ]
 
+const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5vw,3.5rem)' }
+
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
@@ -20,123 +22,125 @@ export default function ContactPage() {
     setSent(true)
   }
 
-  const inputClass = (field) => `
-    w-full bg-transparent border-b text-[#0C0C0A] text-sm py-4 outline-none font-sans font-light
-    transition-all duration-300 placeholder:text-[#0C0C0A]/25
-    ${focused === field ? 'border-[#7A9E7E]' : 'border-[#E8F0E9]'}
-  `
+  const borderColor = (field) => focused === field ? '#7A9E7E' : 'rgba(12,12,10,0.12)'
 
   return (
     <>
-      {/* Header */}
-      <section className="pt-56 pb-20" style={{ paddingLeft: "clamp(2rem,5vw,3.5rem)", paddingRight: "clamp(2rem,5vw,3.5rem)" }}>
-        <div className="max-w-7xl mx-auto">
-          <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem, 7vw, 6.5rem)', lineHeight: 1.05, color: '#0C0C0A' }}>
+      {/* ── Page wrapper ── */}
+      <div className="max-w-7xl mx-auto" style={{ ...px, paddingTop: '8rem', paddingBottom: '6rem' }}>
+
+        {/* ── Header ── */}
+        <div className="mb-16">
+          <FadeUp>
+            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
+              Contact
+            </span>
+          </FadeUp>
+          <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem,7vw,6rem)', lineHeight: 1.05, color: '#0C0C0A', marginTop: '0.5rem' }}>
             <RevealText>Let's talk.</RevealText>
           </h1>
-          <FadeUp delay={180}>
-            <p className="mt-6 text-base md:text-lg text-[#0C0C0A]/45 max-w-md font-sans font-light leading-relaxed">
+          <FadeUp delay={160}>
+            <p style={{ marginTop: '1.25rem', fontFamily: 'var(--font-inter)', fontSize: '1rem', color: 'rgba(12,12,10,0.45)', maxWidth: 440, lineHeight: 1.7, fontWeight: 300 }}>
               Whether you have a project in mind, want to collaborate, or just want to say hi — my inbox is always open.
             </p>
           </FadeUp>
         </div>
-      </section>
 
-      {/* Two column layout */}
-      <section className="px-8 md:px-14 pb-32">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
+        {/* ── Two columns ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '5rem', alignItems: 'start' }}
+          className="flex flex-col lg:grid">
 
           {/* Left: form */}
-          <div className="flex-1">
+          <div>
             <FadeUp>
-              <span className="text-[11px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase mb-8 block font-sans">Send a message</span>
+              <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '2rem' }}>
+                Send a message
+              </span>
             </FadeUp>
 
             {sent ? (
               <FadeUp>
-                <div className="py-16 text-center">
-                  <div className="w-14 h-14 rounded-full bg-[#E8F0E9] flex items-center justify-center mx-auto mb-6">
-                    <span className="text-2xl">✓</span>
-                  </div>
-                  <h3 className="text-2xl text-[#0C0C0A] mb-3" style={{ fontFamily: 'var(--font-dm-serif)' }}>Message sent!</h3>
-                  <p className="text-sm text-[#0C0C0A]/45 font-sans font-light">Your email client should have opened. I'll get back to you soon.</p>
-                  <button onClick={() => setSent(false)} className="mt-8 text-xs text-[#7A9E7E] hover-line font-sans">
+                <div style={{ padding: '4rem 0', textAlign: 'center' }}>
+                  <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#E8F0E9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', fontSize: 20 }}>✓</div>
+                  <h3 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.5rem', color: '#0C0C0A', marginBottom: '0.5rem' }}>Message sent!</h3>
+                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.45)', fontWeight: 300 }}>Your email client should have opened. I'll get back to you soon.</p>
+                  <button onClick={() => setSent(false)} style={{ marginTop: '1.5rem', fontFamily: 'var(--font-inter)', fontSize: 12, color: '#7A9E7E', background: 'none', border: 'none', cursor: 'pointer' }}>
                     Send another →
                   </button>
                 </div>
               </FadeUp>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-                <FadeUp delay={100}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                {[
+                  { key: 'name',    label: 'Name',    type: 'text',  placeholder: 'Your name' },
+                  { key: 'email',   label: 'Email',   type: 'email', placeholder: 'your@email.com' },
+                ].map(({ key, label, type, placeholder }, i) => (
+                  <FadeUp key={key} delay={80 + i * 60}>
+                    <div>
+                      <label style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>{label}</label>
+                      <input
+                        type={type}
+                        required
+                        placeholder={placeholder}
+                        value={form[key]}
+                        onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+                        onFocus={() => setFocused(key)}
+                        onBlur={() => setFocused(null)}
+                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: `1px solid ${borderColor(key)}`, padding: '0.75rem 0', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', outline: 'none', fontWeight: 300, transition: 'border-color 0.25s' }}
+                        className="placeholder:text-[#0C0C0A]/25"
+                      />
+                    </div>
+                  </FadeUp>
+                ))}
+
+                <FadeUp delay={200}>
                   <div>
-                    <label className="text-[10px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase font-sans block mb-1">Name</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Your name"
-                      value={form.name}
-                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                      onFocus={() => setFocused('name')}
-                      onBlur={() => setFocused(null)}
-                      className={inputClass('name')}
-                    />
-                  </div>
-                </FadeUp>
-                <FadeUp delay={160}>
-                  <div className="mt-6">
-                    <label className="text-[10px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase font-sans block mb-1">Email</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="your@email.com"
-                      value={form.email}
-                      onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                      onFocus={() => setFocused('email')}
-                      onBlur={() => setFocused(null)}
-                      className={inputClass('email')}
-                    />
-                  </div>
-                </FadeUp>
-                <FadeUp delay={220}>
-                  <div className="mt-6">
-                    <label className="text-[10px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase font-sans block mb-1">Message</label>
+                    <label style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>Message</label>
                     <textarea
                       required
-                      rows={5}
+                      rows={6}
                       placeholder="Tell me about your project..."
                       value={form.message}
                       onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                       onFocus={() => setFocused('message')}
                       onBlur={() => setFocused(null)}
-                      className={inputClass('message') + ' resize-none'}
-                      style={{ borderBottom: `1px solid ${focused === 'message' ? '#7A9E7E' : '#E8F0E9'}` }}
+                      style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: `1px solid ${borderColor('message')}`, padding: '0.75rem 0', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', outline: 'none', fontWeight: 300, resize: 'none', transition: 'border-color 0.25s' }}
+                      className="placeholder:text-[#0C0C0A]/25"
                     />
                   </div>
                 </FadeUp>
-                <FadeUp delay={280}>
+
+                <FadeUp delay={260}>
                   <button
                     type="submit"
-                    className="group mt-10 inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#E8E3D5] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans self-start"
+                    className="group"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.04em', border: 'none', cursor: 'pointer', transition: 'background 0.3s', alignSelf: 'flex-start' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}
                   >
-                    Send message
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                    Send message <span style={{ transition: 'transform 0.2s' }}>→</span>
                   </button>
                 </FadeUp>
               </form>
             )}
           </div>
 
-          {/* Right: socials + info */}
-          <div className="lg:w-80 flex flex-col gap-12 pt-2">
-            <FadeUp delay={150}>
+          {/* Right: info sidebar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', paddingTop: '3rem' }}>
+
+            {/* Social links */}
+            <FadeUp delay={120}>
               <div>
-                <span className="text-[10px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase font-sans block mb-6">Find me here</span>
-                <div className="flex flex-col gap-6">
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '1.25rem' }}>Find me here</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   {socials.map(({ label, value, href }) => (
                     <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
-                      className="group flex flex-col gap-1">
-                      <span className="text-[10px] tracking-[0.2em] text-[#7A9E7E] uppercase font-sans">{label}</span>
-                      <span className="text-sm text-[#0C0C0A]/60 group-hover:text-[#0C0C0A] transition-colors duration-200 font-sans hover-line">
+                      style={{ display: 'flex', flexDirection: 'column', gap: 3, textDecoration: 'none' }}
+                      className="group">
+                      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.18em', color: '#7A9E7E', textTransform: 'uppercase' }}>{label}</span>
+                      <span className="hover-line" style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.55)', transition: 'color 0.2s' }}
+                        onMouseEnter={e => e.currentTarget.style.color = '#0C0C0A'}
+                        onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.55)'}>
                         {value} ↗
                       </span>
                     </a>
@@ -145,33 +149,38 @@ export default function ContactPage() {
               </div>
             </FadeUp>
 
-            <FadeUp delay={250}>
-              <div className="p-8 rounded-3xl" style={{ backgroundColor: '#E8F0E9' }}>
-                <p className="text-xs text-[#6B7B6C] font-sans leading-relaxed mb-4">
+            {/* Divider */}
+            <div style={{ height: 1, background: 'rgba(12,12,10,0.08)' }} />
+
+            {/* Availability card */}
+            <FadeUp delay={200}>
+              <div style={{ background: '#E8F0E9', borderRadius: 20, padding: '1.5rem' }}>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: '#6B7B6C', lineHeight: 1.65, fontWeight: 300, marginBottom: '0.75rem' }}>
                   Currently open to freelance projects, full-time design roles, and interesting collaborations.
                 </p>
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#7A9E7E]" style={{ animation: 'pulse 2s infinite' }} />
-                  <span className="text-xs text-[#7A9E7E] font-sans">Available for work</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#7A9E7E', flexShrink: 0, animation: 'pulse 2s infinite' }} />
+                  <span style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: '#7A9E7E' }}>Available for work</span>
                 </div>
               </div>
             </FadeUp>
 
-            <FadeUp delay={320}>
+            {/* Response time */}
+            <FadeUp delay={270}>
               <div>
-                <span className="text-[10px] tracking-[0.2em] text-[#0C0C0A]/35 uppercase font-sans block mb-3">Response time</span>
-                <p className="text-sm text-[#0C0C0A]/50 font-sans font-light">Usually within 24–48 hours.</p>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>Response time</span>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.5)', fontWeight: 300 }}>Usually within 24–48 hours.</p>
               </div>
             </FadeUp>
+
           </div>
         </div>
-      </section>
+      </div>
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .flex.flex-col.lg\\:grid { display: flex; flex-direction: column; }
+        @media (min-width: 1024px) { .flex.flex-col.lg\\:grid { display: grid; } }
       `}</style>
     </>
   )
