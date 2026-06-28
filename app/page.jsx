@@ -532,25 +532,22 @@ export default function Home() {
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#6B7B6C', letterSpacing: '0.05em' }}>Available for work</span>
           </div>
 
-          {/* Cloud floats above pill when cloudy */}
-          {weatherState === 'cloudy' && (
-            <div style={{ marginBottom: 4, display: 'inline-block', animation: 'cloudBob 5s ease-in-out infinite', opacity: 0.75 }}>
-              <svg width="110" height="54" viewBox="0 0 110 54" fill="none">
-                {/* flat bottom body */}
-                <rect x="8" y="30" width="94" height="22" rx="11" fill="#3A4A40"/>
-                {/* bumps */}
-                <circle cx="22" cy="30" r="13" fill="#3A4A40"/>
-                <circle cx="42" cy="22" r="17" fill="#3A4A40"/>
-                <circle cx="66" cy="20" r="18" fill="#3A4A40"/>
-                <circle cx="88" cy="26" r="13" fill="#3A4A40"/>
-                {/* inner highlight */}
-                <rect x="14" y="36" width="80" height="12" rx="6" fill="#4A5A48" opacity="0.6"/>
-              </svg>
-            </div>
-          )}
-
-          {/* Weather pill */}
-          <WeatherPill weatherState={weatherState} temp={temp} ready={ready} />
+          {/* Cloud + pill stacked vertically */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            {weatherState === 'cloudy' && (
+              <div style={{ marginBottom: -6, animation: 'cloudBob 5s ease-in-out infinite', opacity: 0.82 }}>
+                <svg width="160" height="76" viewBox="0 0 110 54" fill="none">
+                  <rect x="8" y="30" width="94" height="22" rx="11" fill="#3A4A40"/>
+                  <circle cx="22" cy="30" r="13" fill="#3A4A40"/>
+                  <circle cx="42" cy="22" r="17" fill="#3A4A40"/>
+                  <circle cx="66" cy="20" r="18" fill="#3A4A40"/>
+                  <circle cx="88" cy="26" r="13" fill="#3A4A40"/>
+                  <rect x="14" y="36" width="80" height="12" rx="6" fill="#4A5A48" opacity="0.6"/>
+                </svg>
+              </div>
+            )}
+            <WeatherPill weatherState={weatherState} temp={temp} ready={ready} />
+          </div>
 
           {/* Parallax name */}
           <ParallaxName ready={ready} />
