@@ -95,18 +95,22 @@ function useNYCWeather() {
 function WeatherArt({ weatherState }) {
   if (weatherState === 'cloudy') return (
     <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '10%', left: '5%', opacity: 0.22, animation: 'cloudDrift 48s linear infinite, cloudBob 8s ease-in-out infinite' }}>
-        {/* Round fluffy cloud — built from overlapping ellipses */}
-        <svg width="260" height="120" viewBox="0 0 260 120" fill="none">
-          <ellipse cx="130" cy="90" rx="110" ry="38" fill="#2A3A30"/>
-          <ellipse cx="90"  cy="74" rx="55"  ry="45" fill="#2A3A30"/>
-          <ellipse cx="140" cy="68" rx="52"  ry="48" fill="#2A3A30"/>
-          <ellipse cx="188" cy="76" rx="46"  ry="40" fill="#2A3A30"/>
-          <ellipse cx="55"  cy="83" rx="38"  ry="32" fill="#2A3A30"/>
-          {/* Inner highlight layer */}
-          <ellipse cx="130" cy="85" rx="90"  ry="28" fill="#3A4A3E" opacity="0.55"/>
-          <ellipse cx="100" cy="72" rx="40"  ry="34" fill="#3A4A3E" opacity="0.45"/>
-          <ellipse cx="155" cy="70" rx="38"  ry="36" fill="#3A4A3E" opacity="0.4"/>
+      <div style={{ position: 'absolute', top: '8%', left: '4%', opacity: 0.2, animation: 'cloudDrift 48s linear infinite, cloudBob 8s ease-in-out infinite' }}>
+        {/* Cartoon fluffy cloud — circles stacked for classic bump silhouette */}
+        <svg width="280" height="130" viewBox="0 0 280 130" fill="none">
+          {/* Base flat body */}
+          <rect x="22" y="82" width="234" height="44" rx="22" fill="#2A3A30"/>
+          {/* Bumps — different sizes for organic feel */}
+          <circle cx="55"  cy="80" r="30" fill="#2A3A30"/>
+          <circle cx="98"  cy="62" r="38" fill="#2A3A30"/>
+          <circle cx="148" cy="56" r="42" fill="#2A3A30"/>
+          <circle cx="198" cy="65" r="33" fill="#2A3A30"/>
+          <circle cx="234" cy="78" r="24" fill="#2A3A30"/>
+          {/* Inner shading for depth */}
+          <rect x="30" y="90" width="216" height="32" rx="16" fill="#3A4A3E" opacity="0.5"/>
+          <circle cx="98"  cy="70" r="26" fill="#3A4A3E" opacity="0.4"/>
+          <circle cx="148" cy="64" r="30" fill="#3A4A3E" opacity="0.38"/>
+          <circle cx="198" cy="72" r="22" fill="#3A4A3E" opacity="0.4"/>
         </svg>
       </div>
     </div>
@@ -453,55 +457,74 @@ export default function Home() {
           Say hello →
         </a>
 
-        {/* Sticky-note footprint trigger */}
-        {/* Capybara + speech bubble trigger */}
+        {/* Capybara sitting on rainbow peak — also the footprint trigger */}
         <button
           onClick={() => setNoteOpen(true)}
           className="absolute hidden md:block"
-          style={{ right: '26%', top: '52%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.3s ease' }}
-          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06) translateY(-4px)'}
+          style={{ right: '32%', bottom: '36%', zIndex: 8, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.4s, transform 0.3s ease' }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.07) translateY(-5px)'}
           onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <svg width="230" height="190" viewBox="0 0 230 190" fill="none">
-            {/* ── Speech bubble ── */}
-            <rect x="2" y="2" width="152" height="68" rx="16" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5"/>
-            {/* bubble tail pointing down-right toward capybara head */}
-            <path d="M 100 70 L 112 88 L 126 70" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5" strokeLinejoin="round"/>
+          <svg width="260" height="230" viewBox="0 0 260 230" fill="none">
 
-            {/* ── Capybara ── */}
-            {/* Body */}
-            <ellipse cx="148" cy="158" rx="60" ry="34" fill="#8B6651"/>
-            {/* Belly */}
-            <ellipse cx="148" cy="168" rx="40" ry="20" fill="#C4956A" opacity="0.5"/>
-            {/* Head */}
-            <ellipse cx="108" cy="128" rx="30" ry="26" fill="#8B6651"/>
+            {/* ── Speech bubble (top-left, tail points down to capybara head) ── */}
+            <rect x="2" y="2" width="148" height="62" rx="15" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5"/>
+            <path d="M 90 64 L 105 82 L 118 64" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5" strokeLinejoin="round"/>
+
+            {/* ── Capybara — chubby, side-facing, sitting ── */}
+            {/* Shadow */}
+            <ellipse cx="155" cy="222" rx="72" ry="10" fill="#B8CBE8" opacity="0.55"/>
+
+            {/* Body — very round chubby horizontal oval */}
+            <ellipse cx="158" cy="182" rx="72" ry="46" fill="#C49A6C"/>
+            {/* Belly lighter patch */}
+            <ellipse cx="160" cy="196" rx="48" ry="26" fill="#D4B080" opacity="0.55"/>
+
+            {/* Head — large, square-ish */}
+            <ellipse cx="82"  cy="155" rx="40" ry="35" fill="#C49A6C"/>
+            {/* Face shading */}
+            <ellipse cx="75"  cy="163" rx="28" ry="22" fill="#D4B080" opacity="0.4"/>
+
             {/* Ear left */}
-            <ellipse cx="90" cy="107" rx="10" ry="9" fill="#8B6651"/>
-            <ellipse cx="90" cy="107" rx="6"  ry="5"  fill="#C4956A" opacity="0.6"/>
+            <ellipse cx="62"  cy="123" rx="12" ry="11" fill="#C49A6C"/>
+            <ellipse cx="62"  cy="123" rx="7"  ry="6"  fill="#D4A870" opacity="0.65"/>
             {/* Ear right */}
-            <ellipse cx="112" cy="103" rx="10" ry="9" fill="#8B6651"/>
-            <ellipse cx="112" cy="103" rx="6"  ry="5"  fill="#C4956A" opacity="0.6"/>
-            {/* Eye */}
-            <circle cx="96" cy="124" r="5" fill="#1A0A00"/>
-            <circle cx="94.5" cy="122.5" r="1.5" fill="white"/>
+            <ellipse cx="90"  cy="120" rx="12" ry="11" fill="#C49A6C"/>
+            <ellipse cx="90"  cy="120" rx="7"  ry="6"  fill="#D4A870" opacity="0.65"/>
+
+            {/* Eye — big dark oval */}
+            <ellipse cx="68" cy="149" rx="7" ry="6.5" fill="#1A0A00"/>
+            <circle  cx="65" cy="147" r="2"   fill="white"/>
+
             {/* Rectangular capybara snout */}
-            <rect x="82" y="133" width="34" height="17" rx="6" fill="#A67C62"/>
-            <ellipse cx="91" cy="141" rx="3" ry="2.5" fill="#6B4A35"/>
-            <ellipse cx="107" cy="141" rx="3" ry="2.5" fill="#6B4A35"/>
-            {/* Little mouth smile */}
-            <path d="M 92 147 Q 99 152 106 147" fill="none" stroke="#6B4A35" strokeWidth="1.2" strokeLinecap="round"/>
-            {/* Front legs */}
-            <ellipse cx="118" cy="184" rx="12" ry="8" fill="#7A5540"/>
-            <ellipse cx="140" cy="188" rx="12" ry="8" fill="#7A5540"/>
-            {/* Back legs */}
-            <ellipse cx="162" cy="188" rx="12" ry="8" fill="#7A5540"/>
-            <ellipse cx="182" cy="183" rx="12" ry="7" fill="#7A5540"/>
-            {/* Tiny tail */}
-            <ellipse cx="207" cy="148" rx="8" ry="6" fill="#7A5540"/>
+            <rect x="44" y="160" width="48" height="26" rx="10" fill="#A87848"/>
+            {/* Nostril left */}
+            <ellipse cx="56" cy="172" rx="4" ry="3.5" fill="#7A5530"/>
+            {/* Nostril right */}
+            <ellipse cx="76" cy="172" rx="4" ry="3.5" fill="#7A5530"/>
+            {/* Smile */}
+            <path d="M 56 180 Q 66 186 76 180" fill="none" stroke="#7A5530" strokeWidth="1.5" strokeLinecap="round"/>
+
+            {/* Orange on head */}
+            <circle cx="82"  cy="112" r="18"  fill="#FF9520"/>
+            <ellipse cx="82" cy="111" rx="12" ry="9"  fill="#FFAC40" opacity="0.55"/>
+            {/* Leaf */}
+            <path d="M 82 94 C 76 86, 90 82, 94 90" fill="#4A7C6F" stroke="#3A6A5F" strokeWidth="1"/>
+            <line x1="82" y1="94" x2="87" y2="90" stroke="#3A6A5F" strokeWidth="1" strokeLinecap="round"/>
+
+            {/* Legs — short stubby, pointing down */}
+            <ellipse cx="108" cy="216" rx="14" ry="9" fill="#A07840"/>
+            <ellipse cx="132" cy="220" rx="14" ry="9" fill="#A07840"/>
+            <ellipse cx="170" cy="220" rx="14" ry="9" fill="#A07840"/>
+            <ellipse cx="196" cy="216" rx="14" ry="9" fill="#A07840"/>
+
+            {/* Tiny tail stub */}
+            <ellipse cx="228" cy="174" rx="10" ry="7" fill="#A07840"/>
           </svg>
+
           {/* Text inside bubble */}
-          <div style={{ position: 'absolute', top: 10, left: 10, width: 136, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: 10, left: 10, width: 132, pointerEvents: 'none' }}>
             <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.55, margin: 0, letterSpacing: '0.01em' }}>
               Leave your footprint here
             </p>
