@@ -54,92 +54,185 @@ function ScrollPortrait() {
   )
 }
 
-/* ── Animated weather badge cycling through NYC moods ── */
-const weatherStates = [
-  {
-    label: 'Rainy in NYC',
-    color: '#74B9FF',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M5 9.5C5 7 7 5 9.5 5c.3 0 .6 0 .9.07A4.5 4.5 0 0 1 17 9.5c0 .17-.01.34-.03.5H17a3 3 0 0 1 0 6H6a3 3 0 0 1-1-5.83" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round"/>
-        <line x1="8" y1="17" x2="7" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0s' }}/>
-        <line x1="11" y1="17" x2="10" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0.25s' }}/>
-        <line x1="14" y1="17" x2="13" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0.5s' }}/>
+/* ── Real NYC weather via Open-Meteo (no API key) ── */
+const WMO_MAP = {
+  sunny:  [0, 1],
+  cloudy: [2, 3],
+  windy:  [45, 48, 51, 53, 55],
+  rainy:  [56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99],
+  snowy:  [71, 73, 75, 77, 85, 86],
+}
+const WEATHER_META = {
+  sunny:  { label: 'Sunny in NYC',  color: '#FFCA28' },
+  cloudy: { label: 'Cloudy in NYC', color: '#A29BFE' },
+  windy:  { label: 'Windy in NYC',  color: '#A29BFE' },
+  rainy:  { label: 'Rainy in NYC',  color: '#74B9FF' },
+  snowy:  { label: 'Snowy in NYC',  color: '#A8E6CF' },
+}
+function codeToState(code) {
+  for (const [state, codes] of Object.entries(WMO_MAP)) {
+    if (codes.includes(code)) return state
+  }
+  return 'sunny'
+}
+
+function useNYCWeather() {
+  const [state, setState] = useState('sunny')
+  const [temp, setTemp]   = useState(null)
+  useEffect(() => {
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74.01&current=weather_code,temperature_2m&temperature_unit=fahrenheit&timezone=America%2FNew_York')
+      .then(r => r.json())
+      .then(d => {
+        setState(codeToState(d.current.weather_code))
+        setTemp(Math.round(d.current.temperature_2m))
+      })
+      .catch(() => {})
+  }, [])
+  return { state, temp }
+}
+
+/* ── Large artsy weather background — like the rainbow ── */
+function WeatherArt({ weatherState }) {
+  if (weatherState === 'sunny' || weatherState === 'cloudy') return (
+    <div className="absolute pointer-events-none select-none" style={{ top: '-12%', left: '-10%', zIndex: 0 }}>
+      <svg viewBox="0 0 600 600" width="600" height="600" style={{ animation: 'spinSlow 40s linear infinite', opacity: 0.11 }}>
+        <circle cx="300" cy="300" r="90" fill="#FFCA28"/>
+        {[...Array(18)].map((_, i) => {
+          const a = (i * 20) * Math.PI / 180
+          return <line key={i}
+            x1={300 + 115 * Math.cos(a)} y1={300 + 115 * Math.sin(a)}
+            x2={300 + 270 * Math.cos(a)} y2={300 + 270 * Math.sin(a)}
+            stroke="#FFCA28" strokeWidth={i % 3 === 0 ? 5 : 2.5} strokeLinecap="round"
+          />
+        })}
+        <circle cx="300" cy="300" r="200" fill="none" stroke="#FFCA28" strokeWidth="1.5" opacity="0.4"/>
+        <circle cx="300" cy="300" r="250" fill="none" stroke="#FFCA28" strokeWidth="0.8" opacity="0.25"/>
       </svg>
-    ),
-  },
-  {
-    label: 'Sunny day',
-    color: '#FFCA28',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ animation: 'spinSlow 8s linear infinite' }}>
-        <circle cx="11" cy="11" r="4" fill="#FFCA28"/>
-        {[0,45,90,135,180,225,270,315].map(deg => (
-          <line key={deg}
-            x1={11 + 6.5 * Math.cos(deg * Math.PI / 180)}
-            y1={11 + 6.5 * Math.sin(deg * Math.PI / 180)}
-            x2={11 + 9 * Math.cos(deg * Math.PI / 180)}
-            y2={11 + 9 * Math.sin(deg * Math.PI / 180)}
-            stroke="#FFCA28" strokeWidth="1.5" strokeLinecap="round"
+    </div>
+  )
+
+  if (weatherState === 'rainy') return (
+    <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
+      <svg width="100%" height="100%" viewBox="0 0 700 900" preserveAspectRatio="xMidYMid slice" style={{ opacity: 0.13 }}>
+        {[...Array(20)].map((_, i) => (
+          <line key={i}
+            x1={i * 38 - 60} y1="-40"
+            x2={i * 38 + 160} y2="940"
+            stroke="#74B9FF" strokeWidth={i % 3 === 0 ? 2.5 : 1.5} strokeLinecap="round"
+            style={{ animation: `rainFall ${1.4 + (i % 4) * 0.25}s linear infinite ${(i * 0.17) % 1.4}s` }}
           />
         ))}
       </svg>
-    ),
-  },
-  {
-    label: 'Snowy vibes',
-    color: '#A8E6CF',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <line x1="11" y1="2" x2="11" y2="20" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
-        <line x1="2" y1="11" x2="20" y2="11" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
-        <line x1="4.5" y1="4.5" x2="17.5" y2="17.5" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
-        <line x1="17.5" y1="4.5" x2="4.5" y2="17.5" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
-        <circle cx="11" cy="11" r="2" fill="#A8E6CF"/>
-        <circle cx="11" cy="3" r="1.2" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0s' }}/>
-        <circle cx="6" cy="5.5" r="1" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0.4s' }}/>
-        <circle cx="16" cy="5.5" r="1" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0.8s' }}/>
-      </svg>
-    ),
-  },
-  {
-    label: 'Windy blows',
-    color: '#A29BFE',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M2 7c2-2 5-2 7 0s5 2 7 0" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0s' }}/>
-        <path d="M2 11c3-2 6-2 9 0s6 1 9-1" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0.2s' }}/>
-        <path d="M2 15c2-1 4-1 6 0s4 1 6-1" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0.4s' }}/>
-      </svg>
-    ),
-  },
-]
+    </div>
+  )
 
-function WeatherWidget({ ready }) {
-  const [idx, setIdx] = useState(0)
+  if (weatherState === 'snowy') return (
+    <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
+      {[...Array(14)].map((_, i) => {
+        const size = 28 + (i % 3) * 14
+        return (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `${(i * 7.1) % 60}%`,
+            top: `${(i * 13.7) % 90}%`,
+            opacity: 0.14,
+            animation: `snowDrift ${5 + (i % 4) * 1.5}s ease-in-out infinite ${i * 0.6}s`,
+          }}>
+            <svg width={size} height={size} viewBox="0 0 40 40" style={{ animation: `spinSlow ${10 + i * 3}s linear infinite` }}>
+              {[0, 45, 90, 135].map(deg => {
+                const r = deg * Math.PI / 180
+                return <line key={deg}
+                  x1={20 - 18 * Math.cos(r)} y1={20 - 18 * Math.sin(r)}
+                  x2={20 + 18 * Math.cos(r)} y2={20 + 18 * Math.sin(r)}
+                  stroke="#A8E6CF" strokeWidth="2.5" strokeLinecap="round"
+                />
+              })}
+              <circle cx="20" cy="20" r="3" fill="#A8E6CF"/>
+              {[0,90,180,270].map(deg => {
+                const r = deg * Math.PI / 180
+                return <circle key={deg} cx={20 + 12 * Math.cos(r)} cy={20 + 12 * Math.sin(r)} r="2" fill="#A8E6CF"/>
+              })}
+            </svg>
+          </div>
+        )
+      })}
+    </div>
+  )
+
+  // windy
+  return (
+    <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0 }}>
+      <svg viewBox="0 0 900 700" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style={{ opacity: 0.13 }}>
+        {[0.15, 0.3, 0.45, 0.6, 0.75].map((yF, i) => (
+          <path key={i}
+            d={`M -80 ${yF * 700} C 150 ${(yF - 0.1) * 700}, 300 ${(yF + 0.1) * 700}, 450 ${yF * 700} C 600 ${(yF - 0.1) * 700}, 750 ${(yF + 0.1) * 700}, 980 ${yF * 700}`}
+            fill="none" stroke="#A29BFE" strokeWidth={4 - i * 0.5} strokeLinecap="round"
+            style={{ animation: `windSway ${2.2 + i * 0.4}s ease-in-out infinite ${i * 0.35}s` }}
+          />
+        ))}
+      </svg>
+    </div>
+  )
+}
+
+/* ── Small weather pill above the name ── */
+function WeatherPill({ weatherState, temp, ready }) {
+  const meta = WEATHER_META[weatherState] || WEATHER_META.sunny
   const [visible, setVisible] = useState(true)
+  const prevState = useRef(weatherState)
   useEffect(() => {
-    const t = setInterval(() => {
+    if (prevState.current !== weatherState) {
       setVisible(false)
-      setTimeout(() => { setIdx(i => (i + 1) % weatherStates.length); setVisible(true) }, 350)
-    }, 3200)
-    return () => clearInterval(t)
-  }, [])
-  const w = weatherStates[idx]
+      const t = setTimeout(() => { setVisible(true); prevState.current = weatherState }, 350)
+      return () => clearTimeout(t)
+    }
+  }, [weatherState])
   return (
     <div style={{
       display: 'inline-flex', alignItems: 'center', gap: 8,
       padding: '7px 14px', borderRadius: 9999,
-      border: `1px solid ${w.color}55`,
-      background: `${w.color}18`,
+      border: `1px solid ${meta.color}55`,
+      background: `${meta.color}18`,
       marginBottom: 14,
       opacity: ready && visible ? 1 : 0,
       transform: visible ? 'translateY(0)' : 'translateY(-6px)',
-      transition: 'opacity 0.35s ease, transform 0.35s ease, border-color 0.5s ease, background 0.5s ease',
+      transition: 'opacity 0.35s ease, transform 0.35s ease, border-color 0.6s ease, background 0.6s ease',
     }}>
-      {w.icon}
-      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.08em', color: w.color }}>{w.label}</span>
+      <span style={{ width: 7, height: 7, borderRadius: '50%', background: meta.color, animation: 'pulse 2s infinite', flexShrink: 0 }}/>
+      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.08em', color: meta.color }}>
+        {meta.label}{temp !== null ? ` · ${temp}°F` : ''}
+      </span>
     </div>
+  )
+}
+
+/* ── Snake strips weaving through the name ── */
+function SnakeStrips() {
+  return (
+    <svg
+      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' }}
+      viewBox="0 0 900 230"
+      preserveAspectRatio="none"
+    >
+      {/* Primary snake — weaves through "Sherina" then "Zheng" */}
+      <path
+        d="M -60 55 C 90 5, 230 105, 380 55 C 530 5, 670 105, 820 55 C 870 35, 900 50, 960 55"
+        fill="none" stroke="#7A9E7E" strokeWidth="3.5" strokeLinecap="round" opacity="0.55"
+        style={{ strokeDasharray: '180 780', animation: 'snakeCrawl 3.8s linear infinite' }}
+      />
+      {/* Secondary snake on Zheng line, offset phase */}
+      <path
+        d="M -60 170 C 60 125, 160 215, 280 170 C 400 125, 500 215, 600 170 C 680 135, 720 175, 780 170"
+        fill="none" stroke="#B8D4BC" strokeWidth="2.5" strokeLinecap="round" opacity="0.45"
+        style={{ strokeDasharray: '130 640', animation: 'snakeCrawl2 4.4s linear infinite 0.9s' }}
+      />
+      {/* Thin accent snake */}
+      <path
+        d="M -60 55 C 90 5, 230 105, 380 55 C 530 5, 670 105, 820 55 C 870 35, 900 50, 960 55"
+        fill="none" stroke="#4A7C6F" strokeWidth="1.5" strokeLinecap="round" opacity="0.3"
+        style={{ strokeDasharray: '80 880', animation: 'snakeCrawl 3.8s linear infinite 2.1s' }}
+      />
+    </svg>
   )
 }
 
@@ -157,31 +250,34 @@ function ParallaxName({ ready }) {
   }, [])
 
   return (
-    <h1
-      ref={ref}
-      style={{
-        fontFamily: 'var(--font-dm-serif)',
-        fontSize: 'clamp(3.8rem, 10.5vw, 10.5rem)',
-        lineHeight: 1,
-        letterSpacing: '-0.01em',
-        color: '#0C0C0A',
-        willChange: 'transform',
-      }}
-    >
-      {['Sherina', 'Zheng'].map((w, i) => (
-        <span key={w} className="block overflow-hidden">
-          <span
-            className="block"
-            style={{
-              transform: ready ? 'translateY(0)' : 'translateY(112%)',
-              transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${i * 130 + 100}ms`,
-            }}
-          >
-            {w}
+    <div ref={ref} style={{ position: 'relative', willChange: 'transform' }}>
+      <SnakeStrips />
+      <h1
+        style={{
+          fontFamily: 'var(--font-dm-serif)',
+          fontSize: 'clamp(3.8rem, 10.5vw, 10.5rem)',
+          lineHeight: 1,
+          letterSpacing: '-0.01em',
+          color: '#0C0C0A',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {['Sherina', 'Zheng'].map((w, i) => (
+          <span key={w} className="block overflow-hidden">
+            <span
+              className="block"
+              style={{
+                transform: ready ? 'translateY(0)' : 'translateY(112%)',
+                transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${i * 130 + 100}ms`,
+              }}
+            >
+              {w}
+            </span>
           </span>
-        </span>
-      ))}
-    </h1>
+        ))}
+      </h1>
+    </div>
   )
 }
 
@@ -261,6 +357,7 @@ const projects = [
 export default function Home() {
   const [ready, setReady] = useState(false)
   useEffect(() => { const t = setTimeout(() => setReady(true), 80); return () => clearTimeout(t) }, [])
+  const { state: weatherState, temp } = useNYCWeather()
 
   const [hoveredBento, setHoveredBento] = useState(null)
   const bentoRow1 = [0, 1]
@@ -281,6 +378,9 @@ export default function Home() {
         className="relative min-h-screen flex flex-col justify-end overflow-hidden"
         style={{ paddingBottom: '6rem', paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
       >
+        {/* ── Artsy live weather background ── */}
+        <WeatherArt weatherState={weatherState} />
+
         {/* ── Cartoon rainbow arc — z-index -1 so it's always behind portrait ── */}
         <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: -1 }}>
           <svg
@@ -309,6 +409,28 @@ export default function Home() {
           </svg>
         </div>
 
+        {/* Say hello — floats just left of portrait at head level */}
+        <a
+          href="mailto:zhengsherina@gmail.com"
+          className="absolute hover-line hidden md:block"
+          style={{
+            right: 'calc(46% + 18px)',
+            top: '24%',
+            zIndex: 10,
+            fontFamily: 'var(--font-inter)',
+            fontSize: 13,
+            letterSpacing: '0.06em',
+            color: 'rgba(12,12,10,0.5)',
+            textDecoration: 'none',
+            transition: 'color 0.2s',
+            opacity: ready ? 1 : 0,
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = '#0C0C0A'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.5)'}
+        >
+          Say hello →
+        </a>
+
         {/* Portrait — rendered after rainbow so it's always in front */}
         <ScrollPortrait />
 
@@ -336,8 +458,8 @@ export default function Home() {
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#6B7B6C', letterSpacing: '0.05em' }}>Available for work</span>
           </div>
 
-          {/* Weather widget */}
-          <WeatherWidget ready={ready} />
+          {/* Weather pill */}
+          <WeatherPill weatherState={weatherState} temp={temp} ready={ready} />
 
           {/* Parallax name */}
           <ParallaxName ready={ready} />
@@ -360,18 +482,9 @@ export default function Home() {
               <p style={{ fontFamily: 'var(--font-inter)', fontWeight: 300, fontSize: '1.1rem', color: 'rgba(12,12,10,0.55)', marginBottom: 6 }}>
                 <RoleRotator /> — Based in NYC
               </p>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1rem', color: 'rgba(12,12,10,0.35)', fontStyle: 'italic', maxWidth: 340, marginBottom: 16 }}>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1rem', color: 'rgba(12,12,10,0.35)', fontStyle: 'italic', maxWidth: 340 }}>
                 "I design user experiences that feel inevitable."
               </p>
-              <a
-                href="mailto:zhengsherina@gmail.com"
-                className="hover-line"
-                style={{ fontFamily: 'var(--font-inter)', fontSize: 14, letterSpacing: '0.04em', color: 'rgba(12,12,10,0.65)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => e.currentTarget.style.color = '#0C0C0A'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.65)'}
-              >
-                Say hello →
-              </a>
             </div>
             <Link
               href="/work"
@@ -657,10 +770,12 @@ export default function Home() {
         @keyframes marquee   { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:0.35} }
         @keyframes spinBadge { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes spinSlow  { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes rainDrop  { 0%{opacity:0;transform:translateY(-4px)} 60%{opacity:1} 100%{opacity:0;transform:translateY(6px)} }
-        @keyframes snowFall  { 0%{opacity:0;transform:translateY(-4px)} 50%{opacity:1} 100%{opacity:0;transform:translateY(5px)} }
-        @keyframes windSway  { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
+        @keyframes spinSlow   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        @keyframes rainFall   { 0%{opacity:0;transform:translateY(-60px)} 60%{opacity:1} 100%{opacity:0;transform:translateY(80px)} }
+        @keyframes windSway   { 0%,100%{transform:translateX(0)} 50%{transform:translateX(12px)} }
+        @keyframes snowDrift  { 0%,100%{transform:translateY(0) translateX(0)} 33%{transform:translateY(14px) translateX(8px)} 66%{transform:translateY(6px) translateX(-6px)} }
+        @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-960} }
+        @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-770} }
       `}</style>
     </>
   )
