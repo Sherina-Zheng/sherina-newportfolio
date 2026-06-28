@@ -78,7 +78,7 @@ export default function ContactPage() {
                 <div style={{ padding: '4rem 0', textAlign: 'center' }}>
                   <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#E8F0E9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', fontSize: 20 }}>✓</div>
                   <h3 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.5rem', color: '#0C0C0A', marginBottom: '0.5rem' }}>Message sent!</h3>
-                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.45)', fontWeight: 300 }}>Your email client should have opened. I'll get back to you soon.</p>
+                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.45)', fontWeight: 300 }}>Your email is sent! I'll get back to you shortly.</p>
                   <button onClick={() => setSent(false)} style={{ marginTop: '1.5rem', fontFamily: 'var(--font-inter)', fontSize: 12, color: '#7A9E7E', background: 'none', border: 'none', cursor: 'pointer' }}>
                     Send another →
                   </button>
@@ -144,7 +144,7 @@ export default function ContactPage() {
           </div>
 
           {/* Right: info sidebar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', paddingTop: '3rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
 
             {/* Social links */}
             <FadeUp delay={120}>
