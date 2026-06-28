@@ -95,19 +95,12 @@ function useNYCWeather() {
 function WeatherArt({ weatherState }) {
   if (weatherState === 'cloudy') return (
     <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
-      {[
-        { y: '8%',  scale: 2.2, speed: 38, delay: 0,  opacity: 0.16 },
-        { y: '22%', scale: 1.5, speed: 28, delay: 10, opacity: 0.12 },
-        { y: '40%', scale: 2.8, speed: 50, delay: 20, opacity: 0.13 },
-        { y: '60%', scale: 1.8, speed: 33, delay: 5,  opacity: 0.1  },
-      ].map(({ y, scale, speed, delay, opacity }, i) => (
-        <div key={i} style={{ position: 'absolute', top: y, left: 0, opacity, animation: `cloudDrift ${speed}s linear infinite ${delay}s` }}>
-          <svg width="220" height="100" viewBox="0 0 220 100" style={{ transform: `scale(${scale})`, transformOrigin: 'left center' }}>
-            <path d="M 18 72 Q 12 52 32 48 Q 34 30 54 34 Q 60 18 82 26 Q 94 12 116 24 Q 132 14 150 28 Q 170 22 176 40 Q 196 40 198 58 Q 200 74 184 78 L 30 78 Q 16 78 18 72 Z" fill="#2A3A30"/>
-            <path d="M 38 68 Q 34 54 48 52 Q 52 42 64 46 Q 70 36 84 42 Q 94 34 108 42 Q 118 36 130 46 Q 142 42 146 54 Q 152 64 144 70 L 44 70 Q 36 70 38 68 Z" fill="#3A4A3E" opacity="0.7"/>
-          </svg>
-        </div>
-      ))}
+      <div style={{ position: 'absolute', top: '12%', left: '-5%', opacity: 0.18, animation: 'cloudDrift 44s linear infinite, cloudBob 7s ease-in-out infinite' }}>
+        <svg width="320" height="140" viewBox="0 0 220 100" style={{ transform: 'scale(2.6)', transformOrigin: 'left center' }}>
+          <path d="M 18 72 Q 12 52 32 48 Q 34 30 54 34 Q 60 18 82 26 Q 94 12 116 24 Q 132 14 150 28 Q 170 22 176 40 Q 196 40 198 58 Q 200 74 184 78 L 30 78 Q 16 78 18 72 Z" fill="#2A3A30"/>
+          <path d="M 38 68 Q 34 54 48 52 Q 52 42 64 46 Q 70 36 84 42 Q 94 34 108 42 Q 118 36 130 46 Q 142 42 146 54 Q 152 64 144 70 L 44 70 Q 36 70 38 68 Z" fill="#3A4A3E" opacity="0.7"/>
+        </svg>
+      </div>
     </div>
   )
 
@@ -456,7 +449,7 @@ export default function Home() {
         <button
           onClick={() => setNoteOpen(true)}
           className="absolute hidden md:block"
-          style={{ right: '19%', top: '14%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+          style={{ right: '36%', top: '14%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
             opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.3s ease',
             transform: 'rotate(-4deg)' }}
           onMouseEnter={e => { e.currentTarget.style.transform = 'rotate(-1deg) scale(1.06) translateY(-4px)' }}
@@ -848,6 +841,7 @@ export default function Home() {
         @keyframes snakeCrawl { from{stroke-dashoffset:0} to{stroke-dashoffset:-580} }
         @keyframes snakeCrawl2{ from{stroke-dashoffset:0} to{stroke-dashoffset:-390} }
         @keyframes cloudDrift  { from{transform:translateX(-300px)} to{transform:translateX(110vw)} }
+        @keyframes cloudBob    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
         @keyframes letterFall  { 0%{opacity:0;transform:translateY(0)} 8%{opacity:1} 80%{opacity:1;transform:translateY(72vh)} 100%{opacity:0;transform:translateY(74vh)} }
       `}</style>
     </>
