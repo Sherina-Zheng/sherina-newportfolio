@@ -35,16 +35,23 @@ export default function Nav() {
 
           {/* Left: SZ icon | divider | About · Work · Contact */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/" className="group flex-shrink-0 transition-transform duration-300 group-hover:scale-110 block">
+            <Link href="/" className="group flex-shrink-0 block" style={{ transition: 'transform 0.3s ease', display: 'inline-block' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
               <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="36" height="36" rx="10" fill="#7A9E7E"/>
-                <rect x="2.5" y="2.5" width="31" height="31" rx="7.5" stroke="#E8E3D5" strokeWidth="0.6" strokeOpacity="0.25"/>
-                {/* diagonal accent */}
-                <path d="M 9 27 L 27 9" stroke="#E8E3D5" strokeWidth="0.9" strokeLinecap="round" strokeOpacity="0.18"/>
-                {/* S — upper left */}
-                <text x="5" y="19" fontFamily="Georgia, serif" fontSize="15" fill="#E8E3D5" fontStyle="italic">S</text>
-                {/* Z — lower right, slightly offset */}
-                <text x="19" y="30" fontFamily="Georgia, serif" fontSize="12" fill="#E8E3D5" fontStyle="italic" fillOpacity="0.85">Z</text>
+                {/* Dark forest bg */}
+                <rect width="36" height="36" rx="9" fill="#0C1F18"/>
+                {/* Outer glow ring */}
+                <rect x="1" y="1" width="34" height="34" rx="8" stroke="#7A9E7E" strokeWidth="0.8" strokeOpacity="0.45"/>
+                {/* Subtle scan line */}
+                <rect x="0" y="17" width="36" height="0.6" fill="#7A9E7E" fillOpacity="0.07" rx="1"/>
+                {/* Square-bracket left */}
+                <path d="M 10 9 L 7 9 L 7 27 L 10 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
+                {/* Square-bracket right */}
+                <path d="M 26 9 L 29 9 L 29 27 L 26 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
+                {/* SZ monogram in mint — italic serif for creative flair */}
+                <text x="18" y="22.5" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="13" fill="#A8E6CF" fontStyle="italic" letterSpacing="1">SZ</text>
               </svg>
             </Link>
             {/* thin separator */}

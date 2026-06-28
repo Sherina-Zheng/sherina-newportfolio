@@ -206,37 +206,7 @@ function WeatherPill({ weatherState, temp, ready }) {
   )
 }
 
-/* ── Snake strips weaving through the name ── */
-function SnakeStrips() {
-  return (
-    <svg
-      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' }}
-      viewBox="0 0 900 230"
-      preserveAspectRatio="none"
-    >
-      {/* Primary snake — weaves through "Sherina" then "Zheng" */}
-      <path
-        d="M -60 55 C 90 5, 230 105, 380 55 C 530 5, 670 105, 820 55 C 870 35, 900 50, 960 55"
-        fill="none" stroke="#7A9E7E" strokeWidth="3.5" strokeLinecap="round" opacity="0.55"
-        style={{ strokeDasharray: '180 780', animation: 'snakeCrawl 3.8s linear infinite' }}
-      />
-      {/* Secondary snake on Zheng line, offset phase */}
-      <path
-        d="M -60 170 C 60 125, 160 215, 280 170 C 400 125, 500 215, 600 170 C 680 135, 720 175, 780 170"
-        fill="none" stroke="#B8D4BC" strokeWidth="2.5" strokeLinecap="round" opacity="0.45"
-        style={{ strokeDasharray: '130 640', animation: 'snakeCrawl2 4.4s linear infinite 0.9s' }}
-      />
-      {/* Thin accent snake */}
-      <path
-        d="M -60 55 C 90 5, 230 105, 380 55 C 530 5, 670 105, 820 55 C 870 35, 900 50, 960 55"
-        fill="none" stroke="#4A7C6F" strokeWidth="1.5" strokeLinecap="round" opacity="0.3"
-        style={{ strokeDasharray: '80 880', animation: 'snakeCrawl 3.8s linear infinite 2.1s' }}
-      />
-    </svg>
-  )
-}
-
-/* ── Parallax name: drifts up as user scrolls ── */
+/* ── Parallax name with snake woven through letter layers ── */
 function ParallaxName({ ready }) {
   const ref = useRef(null)
   useEffect(() => {
@@ -249,9 +219,12 @@ function ParallaxName({ ready }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Each word split into letters; alternating letters sit above/below the snake
+  // z:1 = "behind" snake (snake passes in front), z:3 = "in front" (snake passes behind)
+  const words = ['Sherina', 'Zheng']
+
   return (
     <div ref={ref} style={{ position: 'relative', willChange: 'transform' }}>
-      <SnakeStrips />
       <h1
         style={{
           fontFamily: 'var(--font-dm-serif)',
@@ -259,24 +232,65 @@ function ParallaxName({ ready }) {
           lineHeight: 1,
           letterSpacing: '-0.01em',
           color: '#0C0C0A',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
-        {['Sherina', 'Zheng'].map((w, i) => (
-          <span key={w} className="block overflow-hidden">
+        {words.map((word, wi) => (
+          <span key={word} className="block overflow-hidden">
             <span
-              className="block"
               style={{
+                display: 'inline-block',
                 transform: ready ? 'translateY(0)' : 'translateY(112%)',
-                transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${i * 130 + 100}ms`,
+                transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${wi * 130 + 100}ms`,
               }}
             >
-              {w}
+              {word.split('').map((letter, li) => (
+                <span
+                  key={li}
+                  style={{
+                    display: 'inline',
+                    position: 'relative',
+                    // Even-indexed letters sit above the snake (z:3); odd sit below (z:1)
+                    zIndex: li % 2 === 0 ? 3 : 1,
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
             </span>
           </span>
         ))}
       </h1>
+
+      {/* Snake at z:2 — threads between the two letter layers */}
+      <svg
+        style={{
+          position: 'absolute', left: 0, top: 0,
+          width: '100%', height: '100%',
+          pointerEvents: 'none', overflow: 'visible',
+          zIndex: 2,
+        }}
+        viewBox="0 0 900 230"
+        preserveAspectRatio="none"
+      >
+        {/* Primary snake through "Sherina" at ~x-height of line 1 (~38% of div) */}
+        <path
+          d="M -50 46 C 60 14, 175 78, 300 46 C 425 14, 540 78, 660 46 C 760 20, 840 58, 960 46"
+          fill="none" stroke="#7A9E7E" strokeWidth="4" strokeLinecap="round" opacity="0.65"
+          style={{ strokeDasharray: '170 790', animation: 'snakeCrawl 3.6s linear infinite' }}
+        />
+        {/* Thin trailing accent — same line, delayed */}
+        <path
+          d="M -50 46 C 60 14, 175 78, 300 46 C 425 14, 540 78, 660 46 C 760 20, 840 58, 960 46"
+          fill="none" stroke="#A8E6CF" strokeWidth="2" strokeLinecap="round" opacity="0.35"
+          style={{ strokeDasharray: '90 870', animation: 'snakeCrawl 3.6s linear infinite 1.8s' }}
+        />
+        {/* Snake through "Zheng" at ~x-height of line 2 (~73% of div) */}
+        <path
+          d="M -50 158 C 55 126, 165 190, 285 158 C 405 126, 510 190, 600 158 C 660 138, 700 166, 750 158"
+          fill="none" stroke="#4A7C6F" strokeWidth="3.5" strokeLinecap="round" opacity="0.55"
+          style={{ strokeDasharray: '130 620', animation: 'snakeCrawl2 4.2s linear infinite 0.7s' }}
+        />
+      </svg>
     </div>
   )
 }
