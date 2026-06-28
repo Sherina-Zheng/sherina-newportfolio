@@ -26,13 +26,13 @@ function ScrollPortrait() {
   return (
     <div
       className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none"
-      style={{ zIndex: 1, transformOrigin: 'right center' }}
+      style={{ zIndex: 1, transformOrigin: 'right top' }}
     >
       <div
         ref={ref}
         className="absolute inset-0"
         style={{
-          transformOrigin: 'right center',
+          transformOrigin: 'right top',
           willChange: 'transform, opacity',
           transition: 'transform 0.05s linear, opacity 0.05s linear',
         }}
@@ -50,6 +50,95 @@ function ScrollPortrait() {
           }}
         />
       </div>
+    </div>
+  )
+}
+
+/* ── Animated weather badge cycling through NYC moods ── */
+const weatherStates = [
+  {
+    label: 'Rainy in NYC',
+    color: '#74B9FF',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M5 9.5C5 7 7 5 9.5 5c.3 0 .6 0 .9.07A4.5 4.5 0 0 1 17 9.5c0 .17-.01.34-.03.5H17a3 3 0 0 1 0 6H6a3 3 0 0 1-1-5.83" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="8" y1="17" x2="7" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0s' }}/>
+        <line x1="11" y1="17" x2="10" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0.25s' }}/>
+        <line x1="14" y1="17" x2="13" y2="20" stroke="#74B9FF" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'rainDrop 1.1s ease-in infinite 0.5s' }}/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Sunny day',
+    color: '#FFCA28',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ animation: 'spinSlow 8s linear infinite' }}>
+        <circle cx="11" cy="11" r="4" fill="#FFCA28"/>
+        {[0,45,90,135,180,225,270,315].map(deg => (
+          <line key={deg}
+            x1={11 + 6.5 * Math.cos(deg * Math.PI / 180)}
+            y1={11 + 6.5 * Math.sin(deg * Math.PI / 180)}
+            x2={11 + 9 * Math.cos(deg * Math.PI / 180)}
+            y2={11 + 9 * Math.sin(deg * Math.PI / 180)}
+            stroke="#FFCA28" strokeWidth="1.5" strokeLinecap="round"
+          />
+        ))}
+      </svg>
+    ),
+  },
+  {
+    label: 'Snowy vibes',
+    color: '#A8E6CF',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <line x1="11" y1="2" x2="11" y2="20" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="2" y1="11" x2="20" y2="11" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="4.5" y1="4.5" x2="17.5" y2="17.5" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="17.5" y1="4.5" x2="4.5" y2="17.5" stroke="#A8E6CF" strokeWidth="1.4" strokeLinecap="round"/>
+        <circle cx="11" cy="11" r="2" fill="#A8E6CF"/>
+        <circle cx="11" cy="3" r="1.2" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0s' }}/>
+        <circle cx="6" cy="5.5" r="1" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0.4s' }}/>
+        <circle cx="16" cy="5.5" r="1" fill="#A8E6CF" style={{ animation: 'snowFall 2s ease-in infinite 0.8s' }}/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Windy blows',
+    color: '#A29BFE',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M2 7c2-2 5-2 7 0s5 2 7 0" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0s' }}/>
+        <path d="M2 11c3-2 6-2 9 0s6 1 9-1" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0.2s' }}/>
+        <path d="M2 15c2-1 4-1 6 0s4 1 6-1" stroke="#A29BFE" strokeWidth="1.4" strokeLinecap="round" style={{ animation: 'windSway 1.4s ease-in-out infinite 0.4s' }}/>
+      </svg>
+    ),
+  },
+]
+
+function WeatherWidget({ ready }) {
+  const [idx, setIdx] = useState(0)
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    const t = setInterval(() => {
+      setVisible(false)
+      setTimeout(() => { setIdx(i => (i + 1) % weatherStates.length); setVisible(true) }, 350)
+    }, 3200)
+    return () => clearInterval(t)
+  }, [])
+  const w = weatherStates[idx]
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 8,
+      padding: '7px 14px', borderRadius: 9999,
+      border: `1px solid ${w.color}55`,
+      background: `${w.color}18`,
+      marginBottom: 14,
+      opacity: ready && visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(-6px)',
+      transition: 'opacity 0.35s ease, transform 0.35s ease, border-color 0.5s ease, background 0.5s ease',
+    }}>
+      {w.icon}
+      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.08em', color: w.color }}>{w.label}</span>
     </div>
   )
 }
@@ -246,6 +335,9 @@ export default function Home() {
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7A9E7E', animation: 'pulse 2s infinite' }} />
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#6B7B6C', letterSpacing: '0.05em' }}>Available for work</span>
           </div>
+
+          {/* Weather widget */}
+          <WeatherWidget ready={ready} />
 
           {/* Parallax name */}
           <ParallaxName ready={ready} />
@@ -556,6 +648,10 @@ export default function Home() {
         @keyframes marquee   { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:0.35} }
         @keyframes spinBadge { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        @keyframes spinSlow  { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        @keyframes rainDrop  { 0%{opacity:0;transform:translateY(-4px)} 60%{opacity:1} 100%{opacity:0;transform:translateY(6px)} }
+        @keyframes snowFall  { 0%{opacity:0;transform:translateY(-4px)} 50%{opacity:1} 100%{opacity:0;transform:translateY(5px)} }
+        @keyframes windSway  { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
       `}</style>
     </>
   )
