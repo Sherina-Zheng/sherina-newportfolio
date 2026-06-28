@@ -11,7 +11,7 @@ function ScrollPortrait() {
     const onScroll = () => {
       if (!ref.current) return
       // Progress 0→1 over the first 600px of scroll
-      const p = Math.min(window.scrollY / 600, 1)
+      const p = Math.min(window.scrollY / 280, 1)
       const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p
       const scale   = 0.84 + ease * 0.16   // 0.84 → 1.0
       const opacity = 0.55 + ease * 0.45   // 0.55 → 1.0
@@ -491,7 +491,7 @@ export default function Home() {
                 {/* Personal one-liner */}
                 <FadeUp delay={80}>
                   <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.2rem,2.2vw,1.8rem)', color: 'rgba(12,12,10,0.38)', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.6 }}>
-                    Data brain. Design heart. Ships things that actually work.
+                    Data brain. Design heart. Ships things 0-1.
                   </p>
                 </FadeUp>
 
