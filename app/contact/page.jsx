@@ -3,8 +3,9 @@ import { useState } from 'react'
 import { FadeUp, RevealText } from '../../components/ScrollReveal'
 
 const socials = [
-  { label: 'Email', value: 'zhengsherina@gmail.com', href: 'mailto:zhengsherina@gmail.com' },
-  { label: 'LinkedIn', value: '/in/sherina-zheng', href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
+  { label: 'Email',    value: 'zhengsherina@gmail.com',  href: 'mailto:zhengsherina@gmail.com' },
+  { label: 'LinkedIn', value: '/in/sherina-zheng',        href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
+  { label: 'Phone',    value: '+1 (347) 506-7548',        href: 'tel:+13475067548' },
 ]
 
 const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5vw,3.5rem)' }
@@ -12,14 +13,28 @@ const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5v
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
   const [focused, setFocused] = useState(null)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const { name, email, message } = form
-    const body = encodeURIComponent(`Hi Sherina,\n\nFrom: ${name} (${email})\n\n${message}`)
-    window.location.href = `mailto:zhengsherina@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${body}`
-    setSent(true)
+    setSending(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('send failed')
+      setSent(true)
+      setForm({ name: '', email: '', message: '' })
+    } catch {
+      setError('Something went wrong — please try emailing directly.')
+    } finally {
+      setSending(false)
+    }
   }
 
   const borderColor = (field) => focused === field ? '#7A9E7E' : 'rgba(12,12,10,0.12)'
@@ -111,15 +126,18 @@ export default function ContactPage() {
                 </FadeUp>
 
                 <FadeUp delay={260}>
-                  <button
-                    type="submit"
-                    className="group"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.04em', border: 'none', cursor: 'pointer', transition: 'background 0.3s', alignSelf: 'flex-start' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#7A9E7E'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#0C0C0A'}
-                  >
-                    Send message <span style={{ transition: 'transform 0.2s' }}>→</span>
-                  </button>
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: sending ? '#7A9E7E' : '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.04em', border: 'none', cursor: sending ? 'default' : 'pointer', transition: 'background 0.3s', opacity: sending ? 0.7 : 1 }}
+                      onMouseEnter={e => { if (!sending) e.currentTarget.style.background = '#7A9E7E' }}
+                      onMouseLeave={e => { if (!sending) e.currentTarget.style.background = '#0C0C0A' }}
+                    >
+                      {sending ? 'Sending…' : 'Send message'} {!sending && <span>→</span>}
+                    </button>
+                    {error && <p style={{ marginTop: '0.75rem', fontFamily: 'var(--font-inter)', fontSize: 12, color: '#C0392B' }}>{error}</p>}
+                  </div>
                 </FadeUp>
               </form>
             )}
