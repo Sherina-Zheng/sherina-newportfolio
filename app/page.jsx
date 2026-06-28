@@ -95,10 +95,18 @@ function useNYCWeather() {
 function WeatherArt({ weatherState }) {
   if (weatherState === 'cloudy') return (
     <div className="absolute pointer-events-none select-none" style={{ inset: 0, zIndex: 0, overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '12%', left: '-5%', opacity: 0.18, animation: 'cloudDrift 44s linear infinite, cloudBob 7s ease-in-out infinite' }}>
-        <svg width="320" height="140" viewBox="0 0 220 100" style={{ transform: 'scale(2.6)', transformOrigin: 'left center' }}>
-          <path d="M 18 72 Q 12 52 32 48 Q 34 30 54 34 Q 60 18 82 26 Q 94 12 116 24 Q 132 14 150 28 Q 170 22 176 40 Q 196 40 198 58 Q 200 74 184 78 L 30 78 Q 16 78 18 72 Z" fill="#2A3A30"/>
-          <path d="M 38 68 Q 34 54 48 52 Q 52 42 64 46 Q 70 36 84 42 Q 94 34 108 42 Q 118 36 130 46 Q 142 42 146 54 Q 152 64 144 70 L 44 70 Q 36 70 38 68 Z" fill="#3A4A3E" opacity="0.7"/>
+      <div style={{ position: 'absolute', top: '10%', left: '5%', opacity: 0.22, animation: 'cloudDrift 48s linear infinite, cloudBob 8s ease-in-out infinite' }}>
+        {/* Round fluffy cloud — built from overlapping ellipses */}
+        <svg width="260" height="120" viewBox="0 0 260 120" fill="none">
+          <ellipse cx="130" cy="90" rx="110" ry="38" fill="#2A3A30"/>
+          <ellipse cx="90"  cy="74" rx="55"  ry="45" fill="#2A3A30"/>
+          <ellipse cx="140" cy="68" rx="52"  ry="48" fill="#2A3A30"/>
+          <ellipse cx="188" cy="76" rx="46"  ry="40" fill="#2A3A30"/>
+          <ellipse cx="55"  cy="83" rx="38"  ry="32" fill="#2A3A30"/>
+          {/* Inner highlight layer */}
+          <ellipse cx="130" cy="85" rx="90"  ry="28" fill="#3A4A3E" opacity="0.55"/>
+          <ellipse cx="100" cy="72" rx="40"  ry="34" fill="#3A4A3E" opacity="0.45"/>
+          <ellipse cx="155" cy="70" rx="38"  ry="36" fill="#3A4A3E" opacity="0.4"/>
         </svg>
       </div>
     </div>
@@ -446,29 +454,58 @@ export default function Home() {
         </a>
 
         {/* Sticky-note footprint trigger */}
+        {/* Capybara + speech bubble trigger */}
         <button
           onClick={() => setNoteOpen(true)}
           className="absolute hidden md:block"
-          style={{ right: '36%', top: '14%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.3s ease',
-            transform: 'rotate(-4deg)' }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'rotate(-1deg) scale(1.06) translateY(-4px)' }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'rotate(-4deg)' }}
+          style={{ right: '26%', top: '52%', zIndex: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 1.2s, transform 0.3s ease' }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06) translateY(-4px)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <div style={{ position: 'relative', width: 160, background: '#E8E3D5', borderRadius: 4, padding: '14px 16px 18px', boxShadow: '2px 4px 14px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12)', border: '1px solid rgba(122,158,126,0.25)' }}>
-            {/* Pin */}
-            <div style={{ position: 'absolute', top: -9, left: '50%', transform: 'translateX(-50%)' }}>
-              <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
-                <circle cx="8" cy="6" r="5" fill="#7A9E7E" stroke="#4A7C6F" strokeWidth="1"/>
-                <line x1="8" y1="11" x2="8" y2="20" stroke="#4A7C6F" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-            </div>
-            {/* Folded corner */}
-            <div style={{ position: 'absolute', bottom: 0, right: 0, width: 0, height: 0, borderStyle: 'solid', borderWidth: '0 0 16px 16px', borderColor: 'transparent transparent rgba(122,158,126,0.35) transparent' }} />
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.55, letterSpacing: '0.01em', margin: 0, paddingTop: 4 }}>
+          <svg width="230" height="190" viewBox="0 0 230 190" fill="none">
+            {/* ── Speech bubble ── */}
+            <rect x="2" y="2" width="152" height="68" rx="16" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5"/>
+            {/* bubble tail pointing down-right toward capybara head */}
+            <path d="M 100 70 L 112 88 L 126 70" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.5" strokeLinejoin="round"/>
+
+            {/* ── Capybara ── */}
+            {/* Body */}
+            <ellipse cx="148" cy="158" rx="60" ry="34" fill="#8B6651"/>
+            {/* Belly */}
+            <ellipse cx="148" cy="168" rx="40" ry="20" fill="#C4956A" opacity="0.5"/>
+            {/* Head */}
+            <ellipse cx="108" cy="128" rx="30" ry="26" fill="#8B6651"/>
+            {/* Ear left */}
+            <ellipse cx="90" cy="107" rx="10" ry="9" fill="#8B6651"/>
+            <ellipse cx="90" cy="107" rx="6"  ry="5"  fill="#C4956A" opacity="0.6"/>
+            {/* Ear right */}
+            <ellipse cx="112" cy="103" rx="10" ry="9" fill="#8B6651"/>
+            <ellipse cx="112" cy="103" rx="6"  ry="5"  fill="#C4956A" opacity="0.6"/>
+            {/* Eye */}
+            <circle cx="96" cy="124" r="5" fill="#1A0A00"/>
+            <circle cx="94.5" cy="122.5" r="1.5" fill="white"/>
+            {/* Rectangular capybara snout */}
+            <rect x="82" y="133" width="34" height="17" rx="6" fill="#A67C62"/>
+            <ellipse cx="91" cy="141" rx="3" ry="2.5" fill="#6B4A35"/>
+            <ellipse cx="107" cy="141" rx="3" ry="2.5" fill="#6B4A35"/>
+            {/* Little mouth smile */}
+            <path d="M 92 147 Q 99 152 106 147" fill="none" stroke="#6B4A35" strokeWidth="1.2" strokeLinecap="round"/>
+            {/* Front legs */}
+            <ellipse cx="118" cy="184" rx="12" ry="8" fill="#7A5540"/>
+            <ellipse cx="140" cy="188" rx="12" ry="8" fill="#7A5540"/>
+            {/* Back legs */}
+            <ellipse cx="162" cy="188" rx="12" ry="8" fill="#7A5540"/>
+            <ellipse cx="182" cy="183" rx="12" ry="7" fill="#7A5540"/>
+            {/* Tiny tail */}
+            <ellipse cx="207" cy="148" rx="8" ry="6" fill="#7A5540"/>
+          </svg>
+          {/* Text inside bubble */}
+          <div style={{ position: 'absolute', top: 10, left: 10, width: 136, pointerEvents: 'none' }}>
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: '#0C0C0A', lineHeight: 1.55, margin: 0, letterSpacing: '0.01em' }}>
               Leave your footprint here
             </p>
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: '#7A9E7E', fontWeight: 600, margin: '6px 0 0', letterSpacing: '0.04em' }}>✦ click to write ✦</p>
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: '#7A9E7E', fontWeight: 600, margin: '5px 0 0', letterSpacing: '0.03em' }}>✦ click to write ✦</p>
           </div>
         </button>
 
