@@ -35,7 +35,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── Header ── */}
-      <section style={{ ...px, paddingTop: '5rem', paddingBottom: '2rem' }}>
+      <section style={{ ...px, paddingTop: 'calc(28px + 36px + 28px + 1.5rem)', paddingBottom: '2rem' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
@@ -56,98 +56,136 @@ export default function AboutPage() {
           {/* Cartoon portrait card */}
           <FadeUp>
             <div style={{ width: '100%', aspectRatio: '3/4', borderRadius: 28, overflow: 'hidden', position: 'relative',
-              background: 'linear-gradient(175deg,#EAF2EB 0%,#C8DEC9 40%,#9BBFA0 100%)',
-              boxShadow: '0 2px 24px rgba(90,138,98,0.13), inset 0 1px 0 rgba(255,255,255,0.6)' }}>
+              background: 'linear-gradient(160deg,#1A2A20 0%,#1E3528 45%,#152318 100%)',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.18)' }}>
 
-              {/* soft decorative shapes */}
-              <div style={{ position: 'absolute', top: -24, right: -24, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.22)' }} />
-              <div style={{ position: 'absolute', top: 20, left: 16, width: 8, height: 8, borderRadius: '50%', background: 'rgba(122,158,126,0.35)' }} />
-              <div style={{ position: 'absolute', top: 36, left: 30, width: 4, height: 4, borderRadius: '50%', background: 'rgba(122,158,126,0.25)' }} />
+              {/* Grid lines bg */}
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.07 }} viewBox="0 0 280 373" preserveAspectRatio="none">
+                {[0,40,80,120,160,200,240,280].map(x => <line key={x} x1={x} y1="0" x2={x} y2="373" stroke="#7A9E7E" strokeWidth="0.8"/>)}
+                {[0,40,80,120,160,200,240,280,320,360].map(y => <line key={y} x1="0" y1={y} x2="280" y2={y} stroke="#7A9E7E" strokeWidth="0.8"/>)}
+              </svg>
 
-              {/* ── Cartoon character SVG ── */}
-              <svg viewBox="0 0 280 373" fill="none" xmlns="http://www.w3.org/2000/svg"
-                style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '88%', height: 'auto' }}>
+              {/* Floating code snippets */}
+              <text x="14" y="32" style={{ fontFamily: 'monospace', fontSize: 9, fill: '#7A9E7E', opacity: 0.55 }}>{'</design>'}</text>
+              <text x="168" y="56" style={{ fontFamily: 'monospace', fontSize: 8, fill: '#A8E6CF', opacity: 0.4 }}>{'fn build()'}</text>
+              <text x="20" y="300" style={{ fontFamily: 'monospace', fontSize: 8, fill: '#7A9E7E', opacity: 0.4 }}>{'{ craft }'}</text>
 
-                {/* Shadow */}
-                <ellipse cx="140" cy="368" rx="62" ry="8" fill="rgba(0,0,0,0.13)" />
+              {/* Star accents */}
+              {[[240,28,6],[24,200,4],[250,190,5],[200,310,4]].map(([x,y,r],i) => (
+                <svg key={i} style={{ position:'absolute', left: x, top: y }} viewBox="0 0 12 12" width={r*2} height={r*2}>
+                  <path d="M6 0 L7 5 L12 6 L7 7 L6 12 L5 7 L0 6 L5 5 Z" fill="#A8E6CF" opacity="0.5"/>
+                </svg>
+              ))}
 
-                {/* Body — sage green outfit */}
-                <rect x="82" y="218" width="116" height="100" rx="28" fill="#5A8A62"/>
-                {/* Collar / neck area */}
-                <rect x="118" y="210" width="44" height="32" rx="10" fill="#5A8A62"/>
-                {/* Shirt detail — white inner */}
-                <ellipse cx="140" cy="228" rx="16" ry="20" fill="#E8E3D5" opacity="0.6"/>
+              {/* ── Character SVG ── */}
+              <svg viewBox="0 0 280 380" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '84%', height: 'auto' }}>
 
-                {/* Arms */}
-                <rect x="48" y="220" width="40" height="72" rx="20" fill="#5A8A62"/>
-                <rect x="192" y="220" width="40" height="72" rx="20" fill="#5A8A62"/>
+                {/* Ground shadow */}
+                <ellipse cx="140" cy="375" rx="58" ry="7" fill="rgba(0,0,0,0.25)" />
+
+                {/* Hoodie body — dark charcoal */}
+                <rect x="78" y="215" width="124" height="110" rx="30" fill="#2A3530"/>
+                {/* Hood overlap / collar */}
+                <path d="M110 215 Q140 238 170 215" fill="#222C28" stroke="none"/>
+                {/* Hoodie pocket */}
+                <rect x="112" y="268" width="56" height="30" rx="10" fill="#1E2924"/>
+                <line x1="140" y1="268" x2="140" y2="298" stroke="#2A3530" strokeWidth="1.5"/>
+                {/* Hoodie cuffs / arms */}
+                <rect x="42" y="218" width="42" height="78" rx="21" fill="#2A3530"/>
+                <rect x="196" y="218" width="42" height="78" rx="21" fill="#2A3530"/>
                 {/* Hands */}
-                <ellipse cx="68" cy="298" rx="18" ry="16" fill="#F2C4A0"/>
-                <ellipse cx="212" cy="298" rx="18" ry="16" fill="#F2C4A0"/>
+                <ellipse cx="63" cy="302" rx="17" ry="15" fill="#F0BC95"/>
+                <ellipse cx="217" cy="302" rx="17" ry="15" fill="#F0BC95"/>
 
                 {/* Legs */}
-                <rect x="104" y="308" width="34" height="60" rx="17" fill="#3D5C42"/>
-                <rect x="142" y="308" width="34" height="60" rx="17" fill="#3D5C42"/>
-                {/* Shoes */}
-                <ellipse cx="121" cy="368" rx="24" ry="10" fill="#2C2C2A"/>
-                <ellipse cx="159" cy="368" rx="24" ry="10" fill="#2C2C2A"/>
+                <rect x="103" y="316" width="34" height="58" rx="17" fill="#1A2420"/>
+                <rect x="143" y="316" width="34" height="58" rx="17" fill="#1A2420"/>
+                {/* Shoes — chunky white sneakers */}
+                <rect x="94" y="362" width="50" height="16" rx="8" fill="#E8E3D5"/>
+                <rect x="136" y="362" width="50" height="16" rx="8" fill="#E8E3D5"/>
+                <rect x="94" y="362" width="50" height="6" rx="3" fill="rgba(255,255,255,0.4)"/>
+                <rect x="136" y="362" width="50" height="6" rx="3" fill="rgba(255,255,255,0.4)"/>
 
                 {/* Neck */}
-                <rect x="122" y="188" width="36" height="34" rx="12" fill="#F2C4A0"/>
+                <rect x="122" y="192" width="36" height="32" rx="12" fill="#F0BC95"/>
 
                 {/* Head */}
-                <ellipse cx="140" cy="158" rx="68" ry="72" fill="#F2C4A0"/>
+                <ellipse cx="140" cy="155" rx="66" ry="68" fill="#F0BC95"/>
 
-                {/* Hair — dark, flowy */}
-                <ellipse cx="140" cy="100" rx="68" ry="44" fill="#2C1A0E"/>
-                {/* Hair sides */}
-                <ellipse cx="80" cy="140" rx="22" ry="40" fill="#2C1A0E"/>
-                <ellipse cx="200" cy="140" rx="22" ry="40" fill="#2C1A0E"/>
-                {/* Hair highlight */}
-                <ellipse cx="118" cy="95" rx="18" ry="8" fill="#4A2E18" opacity="0.6"/>
+                {/* Hair — sleek dark, straight with subtle fringe */}
+                <ellipse cx="140" cy="97" rx="66" ry="40" fill="#1C1008"/>
+                <ellipse cx="78" cy="138" rx="18" ry="36" fill="#1C1008"/>
+                <ellipse cx="202" cy="138" rx="18" ry="36" fill="#1C1008"/>
+                {/* Fringe */}
+                <path d="M96 100 Q108 118 116 108 Q128 124 140 112 Q152 124 164 108 Q172 118 184 100" fill="#1C1008" stroke="none"/>
+                {/* Hair sheen */}
+                <ellipse cx="116" cy="90" rx="16" ry="7" fill="#2E1E0A" opacity="0.5"/>
 
                 {/* Ears */}
-                <ellipse cx="74" cy="162" rx="10" ry="12" fill="#F2C4A0"/>
-                <ellipse cx="206" cy="162" rx="10" ry="12" fill="#F2C4A0"/>
-                <ellipse cx="74" cy="162" rx="6" ry="8" fill="#E8A882"/>
-                <ellipse cx="206" cy="162" rx="6" ry="8" fill="#E8A882"/>
+                <ellipse cx="76" cy="158" rx="10" ry="12" fill="#F0BC95"/>
+                <ellipse cx="204" cy="158" rx="10" ry="12" fill="#F0BC95"/>
+                <ellipse cx="76" cy="158" rx="6" ry="8" fill="#E0A87A"/>
+                <ellipse cx="204" cy="158" rx="6" ry="8" fill="#E0A87A"/>
 
-                {/* Eyes */}
-                <ellipse cx="118" cy="158" rx="12" ry="13" fill="white"/>
-                <ellipse cx="162" cy="158" rx="12" ry="13" fill="white"/>
-                <circle cx="120" cy="160" r="8" fill="#2C1A0E"/>
-                <circle cx="164" cy="160" r="8" fill="#2C1A0E"/>
-                {/* Eye shine */}
-                <circle cx="123" cy="157" r="3" fill="white"/>
-                <circle cx="167" cy="157" r="3" fill="white"/>
-                {/* Eyelashes */}
-                <path d="M108 150 Q110 146 112 148" stroke="#2C1A0E" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M152 150 Q154 146 156 148" stroke="#2C1A0E" strokeWidth="1.5" strokeLinecap="round"/>
+                {/* Glasses frames — round, mint accent */}
+                <rect x="96" y="148" width="36" height="26" rx="13" fill="none" stroke="#A8E6CF" strokeWidth="2.5"/>
+                <rect x="148" y="148" width="36" height="26" rx="13" fill="none" stroke="#A8E6CF" strokeWidth="2.5"/>
+                {/* Bridge */}
+                <line x1="132" y1="161" x2="148" y2="161" stroke="#A8E6CF" strokeWidth="2" strokeLinecap="round"/>
+                {/* Temple arms */}
+                <line x1="96" y1="161" x2="78" y2="158" stroke="#A8E6CF" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="184" y1="161" x2="202" y2="158" stroke="#A8E6CF" strokeWidth="2" strokeLinecap="round"/>
+                {/* Lens tint */}
+                <rect x="97" y="149" width="34" height="24" rx="12" fill="#A8E6CF" fillOpacity="0.08"/>
+                <rect x="149" y="149" width="34" height="24" rx="12" fill="#A8E6CF" fillOpacity="0.08"/>
 
-                {/* Eyebrows */}
-                <path d="M108 144 Q118 138 128 142" stroke="#2C1A0E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                <path d="M152 142 Q162 138 172 144" stroke="#2C1A0E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                {/* Eyes behind glasses */}
+                <circle cx="114" cy="161" r="7" fill="#1C1008"/>
+                <circle cx="166" cy="161" r="7" fill="#1C1008"/>
+                <circle cx="117" cy="158" r="2.5" fill="white"/>
+                <circle cx="169" cy="158" r="2.5" fill="white"/>
+
+                {/* Eyebrows — sharp, defined */}
+                <path d="M100 143 Q114 136 126 140" stroke="#1C1008" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
+                <path d="M154 140 Q166 136 180 143" stroke="#1C1008" strokeWidth="2.8" strokeLinecap="round" fill="none"/>
 
                 {/* Nose */}
-                <ellipse cx="140" cy="172" rx="5" ry="3.5" fill="#E8A882"/>
+                <ellipse cx="140" cy="172" rx="4.5" ry="3" fill="#E0A87A"/>
 
-                {/* Smile */}
-                <path d="M124 184 Q140 196 156 184" stroke="#C4846A" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                {/* Smile — small, confident */}
+                <path d="M128 183 Q140 192 152 183" stroke="#C4846A" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
 
-                {/* Blush */}
-                <ellipse cx="104" cy="176" rx="12" ry="7" fill="#F4A0A0" opacity="0.35"/>
-                <ellipse cx="176" cy="176" rx="12" ry="7" fill="#F4A0A0" opacity="0.35"/>
+                {/* Subtle blush */}
+                <ellipse cx="102" cy="174" rx="11" ry="6" fill="#F4A0A0" opacity="0.28"/>
+                <ellipse cx="178" cy="174" rx="11" ry="6" fill="#F4A0A0" opacity="0.28"/>
 
-                {/* Small earring */}
-                <circle cx="74" cy="170" r="3.5" fill="#F4C430" opacity="0.9"/>
-                <circle cx="206" cy="170" r="3.5" fill="#F4C430" opacity="0.9"/>
+                {/* Gold stud earrings */}
+                <circle cx="76" cy="167" r="3" fill="#F4C430"/>
+                <circle cx="204" cy="167" r="3" fill="#F4C430"/>
+
+                {/* Tiny laptop in hands */}
+                <rect x="72" y="286" width="96" height="56" rx="6" fill="#1A2420"/>
+                <rect x="76" y="290" width="88" height="44" rx="4" fill="#0E1A14"/>
+                {/* Screen glow */}
+                <rect x="78" y="292" width="84" height="40" rx="3" fill="#0E1A14"/>
+                <rect x="80" y="294" width="80" height="36" rx="2" fill="#1C3828" opacity="0.8"/>
+                {/* Code lines on screen */}
+                <rect x="84" y="299" width="36" height="2.5" rx="1" fill="#A8E6CF" opacity="0.7"/>
+                <rect x="84" y="305" width="52" height="2.5" rx="1" fill="#7A9E7E" opacity="0.5"/>
+                <rect x="84" y="311" width="28" height="2.5" rx="1" fill="#A8E6CF" opacity="0.55"/>
+                <rect x="84" y="317" width="44" height="2.5" rx="1" fill="#7A9E7E" opacity="0.45"/>
+                {/* Cursor blink */}
+                <rect x="116" y="311" width="2" height="6" rx="1" fill="#A8E6CF" opacity="0.9"/>
+                {/* Laptop base */}
+                <rect x="66" y="340" width="108" height="6" rx="3" fill="#2A3530"/>
               </svg>
 
               {/* Name caption */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.25rem 1.25rem 1rem',
-                background: 'linear-gradient(to top, rgba(60,90,62,0.55) 0%, transparent 100%)' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(255,255,255,0.95)', letterSpacing: '0.08em', fontWeight: 500 }}>Sherina Zheng</p>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 2, letterSpacing: '0.04em' }}>Designer · Builder · Thinker</p>
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '2rem 1.25rem 1rem',
+                background: 'linear-gradient(to top, rgba(10,18,14,0.85) 0%, transparent 100%)' }}>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'rgba(168,230,207,0.9)', letterSpacing: '0.1em', fontWeight: 500 }}>Sherina Zheng</p>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: 'rgba(255,255,255,0.35)', marginTop: 2, letterSpacing: '0.04em' }}>Designer · Builder · Thinker</p>
               </div>
             </div>
           </FadeUp>
