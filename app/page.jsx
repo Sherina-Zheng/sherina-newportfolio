@@ -360,9 +360,18 @@ export default function Home() {
               <p style={{ fontFamily: 'var(--font-inter)', fontWeight: 300, fontSize: '1.1rem', color: 'rgba(12,12,10,0.55)', marginBottom: 6 }}>
                 <RoleRotator /> — Based in NYC
               </p>
-              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1rem', color: 'rgba(12,12,10,0.35)', fontStyle: 'italic', maxWidth: 340 }}>
+              <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1rem', color: 'rgba(12,12,10,0.35)', fontStyle: 'italic', maxWidth: 340, marginBottom: 16 }}>
                 "I design user experiences that feel inevitable."
               </p>
+              <a
+                href="mailto:zhengsherina@gmail.com"
+                className="hover-line"
+                style={{ fontFamily: 'var(--font-inter)', fontSize: 14, letterSpacing: '0.04em', color: 'rgba(12,12,10,0.65)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#0C0C0A'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.65)'}
+              >
+                Say hello →
+              </a>
             </div>
             <Link
               href="/work"

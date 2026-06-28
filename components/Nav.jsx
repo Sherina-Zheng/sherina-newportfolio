@@ -61,14 +61,6 @@ export default function Nav() {
             </div>
           </div>
 
-          {/* Right: Say hello */}
-          <a
-            href="mailto:zhengsherina@gmail.com"
-            className="hidden md:inline-flex px-5 py-2 rounded-full border border-[#0C0C0A]/20 text-sm text-[#0C0C0A]/75 hover:bg-[#0C0C0A] hover:text-[#E8E3D5] hover:border-[#0C0C0A] transition-all duration-300"
-            style={{ fontFamily: 'var(--font-inter)' }}
-          >
-            Say hello →
-          </a>
 
           {/* Mobile hamburger */}
           <button
