@@ -13,12 +13,6 @@ const skills = [
 
 const timeline = [
   {
-    year: 'Now',
-    title: 'Product Operations Manager',
-    org: 'CodePay',
-    desc: 'Driving cross-functional product initiatives in fintech — bridging strategy and execution, streamlining workflows, and turning complex problems into clear outcomes.',
-  },
-  {
     year: '2024',
     title: 'ISO Boarding Associate',
     org: 'Financial Technology',
@@ -30,13 +24,19 @@ const timeline = [
     org: 'Academic Background',
     desc: 'Foundation in data analytics — interpreting complex datasets, building dashboards, and translating numbers into product decisions.',
   },
+  {
+    year: 'Now',
+    title: 'Exploring & Building',
+    org: 'Product Design · Web Dev · PM',
+    desc: 'Leaning into the intersection of design and engineering — building systems with intention and learning that every layer added with care becomes something that lasts.',
+  },
 ]
 
 export default function AboutPage() {
   return (
     <>
       {/* ── Header ── */}
-      <section style={{ ...px, paddingTop: 'calc(16px + 36px + 16px + 1rem)', paddingBottom: '2rem' }}>
+      <section style={{ ...px, paddingTop: 'calc(16px + 36px + 16px + 0.25rem)', paddingBottom: '1rem' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
@@ -51,7 +51,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Intro: portrait + bio ── */}
-      <section style={{ ...px, paddingTop: '2.5rem', paddingBottom: '5rem' }}>
+      <section style={{ ...px, paddingTop: '1.5rem', paddingBottom: '5rem' }}>
         <div className="max-w-7xl mx-auto about-intro-grid">
 
           {/* Photo portrait */}
@@ -130,7 +130,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Skills / Capabilities ── */}
-      <section style={{ ...px, paddingTop: '4rem', paddingBottom: '5rem' }}>
+      <section style={{ ...px, paddingTop: '4rem', paddingBottom: '5rem', textAlign: 'center' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: '2.5rem' }}>Capabilities</span>
@@ -140,7 +140,7 @@ export default function AboutPage() {
               <FadeUp key={cat} delay={i * 70}>
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase', marginBottom: '1rem' }}>{cat}</h4>
-                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
                     {items.map(item => (
                       <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7A9E7E', flexShrink: 0 }} />
