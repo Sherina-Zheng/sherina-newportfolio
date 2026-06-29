@@ -140,7 +140,7 @@ export default function AboutPage() {
               <FadeUp key={cat} delay={i * 70}>
                 <div style={{ textAlign: 'center' }}>
                   <h4 style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase', marginBottom: '1rem' }}>{cat}</h4>
-                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+                  <ul style={{ display: 'inline-flex', flexDirection: 'column', gap: 10, alignItems: 'flex-start' }}>
                     {items.map(item => (
                       <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7A9E7E', flexShrink: 0 }} />
@@ -160,7 +160,7 @@ export default function AboutPage() {
         <div style={{ maxWidth: 480, margin: '0 auto' }}>
           <FadeUp>
             <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.9rem,3.5vw,3rem)', color: '#1C2E1E', lineHeight: 1.15, marginBottom: '1.5rem' }}>
-              Let's make something great.
+              Let's brew ideas and ship.
             </h2>
           </FadeUp>
           <FadeUp delay={100}>
