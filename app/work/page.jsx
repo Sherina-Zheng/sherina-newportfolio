@@ -7,6 +7,17 @@ const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5v
 const projects = [
   {
     num: '01',
+    title: 'CodePay Ops',
+    subtitle: 'Streamlining product operations at scale',
+    year: '2025',
+    tags: ['Product Ops', 'FinTech', 'Strategy', 'Cross-functional'],
+    desc: 'Led product operations initiatives at CodePay — building internal tooling, streamlining cross-team workflows, and translating ambiguous business problems into structured execution plans that shipped.',
+    role: 'Product Operations Manager',
+    accent: '#5E7A8A',
+    bg: '#EAF0F4',
+  },
+  {
+    num: '02',
     title: 'Salon Connect',
     subtitle: 'Redefining how beauty businesses operate',
     year: '2024',
@@ -17,7 +28,7 @@ const projects = [
     bg: '#E8F0E9',
   },
   {
-    num: '02',
+    num: '03',
     title: 'FinFlow Dashboard',
     subtitle: 'Data made legible, decisions made faster',
     year: '2024',
@@ -28,7 +39,7 @@ const projects = [
     bg: '#EDF4F2',
   },
   {
-    num: '03',
+    num: '04',
     title: 'Bloom Mobile',
     subtitle: 'An iOS experience built around calm',
     year: '2023',
