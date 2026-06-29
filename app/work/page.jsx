@@ -2,6 +2,8 @@
 import Link from 'next/link'
 import { FadeUp, RevealText } from '../../components/ScrollReveal'
 
+const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5vw,3.5rem)' }
+
 const projects = [
   {
     num: '01',
@@ -31,7 +33,7 @@ const projects = [
     subtitle: 'An iOS experience built around calm',
     year: '2023',
     tags: ['Mobile', 'iOS', 'Interaction Design', 'Consumer'],
-    desc: 'A wellness tracking app with an emphasis on gentle interaction patterns and zero-guilt design. Explored how micro-animations and thoughtful copy can shift a user\'s emotional state.',
+    desc: "A wellness tracking app with an emphasis on gentle interaction patterns and zero-guilt design. Explored how micro-animations and thoughtful copy can shift a user's emotional state.",
     role: 'UI/UX Designer',
     accent: '#8BAF7C',
     bg: '#EEF3EC',
@@ -41,66 +43,67 @@ const projects = [
 export default function WorkPage() {
   return (
     <>
-      {/* Header */}
-      <section className="pt-56 pb-20" style={{ paddingLeft: "clamp(2rem,5vw,3.5rem)", paddingRight: "clamp(2rem,5vw,3.5rem)" }}>
+      {/* ── Header ── */}
+      <section style={{ ...px, paddingTop: 'calc(16px + 36px + 16px + 0.25rem)', paddingBottom: '2rem' }}>
         <div className="max-w-7xl mx-auto">
-          <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem, 7vw, 6.5rem)', lineHeight: 1.05, color: '#0C0C0A' }}>
+          <FadeUp>
+            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
+              Work
+            </span>
+          </FadeUp>
+          <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(2.8rem,6.5vw,6rem)', lineHeight: 1.05, color: '#0C0C0A', marginTop: '0.5rem' }}>
             <RevealText>Case Studies</RevealText>
           </h1>
-          <FadeUp delay={200}>
-            <p className="mt-6 text-base md:text-lg text-[#0C0C0A]/45 max-w-lg font-sans font-light leading-relaxed">
+          <FadeUp delay={160}>
+            <p style={{ marginTop: '1rem', fontFamily: 'var(--font-inter)', fontSize: 15, color: 'rgba(12,12,10,0.45)', maxWidth: 440, lineHeight: 1.7, fontWeight: 300 }}>
               A collection of work spanning product design, UX research, and systems thinking. Each project is a problem I cared about solving.
             </p>
           </FadeUp>
         </div>
       </section>
 
-      {/* Project list */}
-      <section className="px-8 md:px-14 pb-32">
-        <div className="max-w-7xl mx-auto flex flex-col gap-6">
+      {/* ── Project list ── */}
+      <section style={{ ...px, paddingTop: '2rem', paddingBottom: '5rem' }}>
+        <div className="max-w-7xl mx-auto" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {projects.map(({ num, title, subtitle, year, tags, desc, role, accent, bg }, i) => (
             <FadeUp key={num} delay={i * 100}>
-              <div
-                className="group rounded-3xl p-10 md:p-14 transition-all duration-500 cursor-pointer hover:scale-[1.01]"
-                style={{ backgroundColor: bg }}
-                data-cursor
-              >
-                <div className="flex flex-col md:flex-row md:items-start gap-10">
+              <div style={{ backgroundColor: bg, borderRadius: 28, padding: 'clamp(2rem,4vw,3.5rem)', transition: 'transform 0.4s ease, box-shadow 0.4s ease', cursor: 'pointer' }}
+                className="work-card">
+                <div className="work-card-inner">
                   {/* Left: info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-6">
-                      <span className="text-xs tracking-widest font-sans" style={{ color: accent, opacity: 0.8 }}>{num}</span>
-                      <span className="text-xs text-[#0C0C0A]/30 font-sans">{year}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '1.25rem' }}>
+                      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.18em', color: accent, opacity: 0.9 }}>{num}</span>
+                      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, color: 'rgba(12,12,10,0.3)' }}>{year}</span>
                     </div>
-                    <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', color: '#0C0C0A', lineHeight: 1.15 }}>
+                    <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.8rem,3.5vw,3rem)', color: '#0C0C0A', lineHeight: 1.1, marginBottom: '0.4rem' }}>
                       {title}
                     </h2>
-                    <p className="mt-2 text-sm font-sans italic" style={{ color: accent }}>{subtitle}</p>
-                    <p className="mt-5 text-sm text-[#0C0C0A]/55 leading-relaxed max-w-md font-sans font-light">{desc}</p>
+                    <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, fontStyle: 'italic', color: accent, marginBottom: '1.25rem' }}>{subtitle}</p>
+                    <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'rgba(12,12,10,0.55)', lineHeight: 1.75, fontWeight: 300, maxWidth: 480, marginBottom: '1.75rem' }}>{desc}</p>
 
-                    <div className="mt-8 flex flex-wrap gap-2">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {tags.map(tag => (
-                        <span key={tag} className="px-3 py-1 rounded-full text-xs font-sans border" style={{ borderColor: accent + '40', color: '#0C0C0A', opacity: 0.65 }}>
+                        <span key={tag} style={{ padding: '5px 14px', borderRadius: 9999, fontSize: 11, fontFamily: 'var(--font-inter)', border: `1px solid ${accent}50`, color: 'rgba(12,12,10,0.6)' }}>
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  {/* Right: placeholder image */}
-                  <div className="md:w-64 lg:w-80">
-                    <div
-                      className="w-full h-52 md:h-64 rounded-2xl flex items-center justify-center relative overflow-hidden"
-                      style={{ background: `linear-gradient(135deg, ${accent}22 0%, ${accent}08 100%)`, border: `1px solid ${accent}20` }}
-                    >
-                      <div className="absolute top-4 right-4 w-14 h-14 rounded-full" style={{ border: `1px solid ${accent}30` }} />
-                      <div className="absolute bottom-4 left-4 w-8 h-8 rounded-full" style={{ background: accent + '20' }} />
-                      <div className="text-center">
-                        <p className="text-xs tracking-widest font-sans uppercase" style={{ color: accent, opacity: 0.5 }}>Coming soon</p>
-                        <p className="text-[10px] text-[#0C0C0A]/25 mt-1 font-sans">Case study in progress</p>
+                  {/* Right: preview card */}
+                  <div style={{ width: 260, flexShrink: 0 }}>
+                    <div style={{ width: '100%', height: 200, borderRadius: 18, position: 'relative', overflow: 'hidden',
+                      background: `linear-gradient(135deg, ${accent}28 0%, ${accent}0A 100%)`,
+                      border: `1px solid ${accent}25` }}>
+                      <div style={{ position: 'absolute', top: 14, right: 14, width: 52, height: 52, borderRadius: '50%', border: `1px solid ${accent}30` }} />
+                      <div style={{ position: 'absolute', bottom: 14, left: 14, width: 28, height: 28, borderRadius: '50%', background: accent + '25' }} />
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: accent, opacity: 0.6 }}>Coming soon</p>
+                        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 10, color: 'rgba(12,12,10,0.25)' }}>Case study in progress</p>
                       </div>
                     </div>
-                    <p className="mt-3 text-xs text-[#0C0C0A]/35 font-sans">Role: {role}</p>
+                    <p style={{ marginTop: 10, fontFamily: 'var(--font-inter)', fontSize: 11, color: 'rgba(12,12,10,0.35)' }}>Role: {role}</p>
                   </div>
                 </div>
               </div>
@@ -109,20 +112,34 @@ export default function WorkPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-8 md:px-14 py-28 text-center border-t" style={{ borderColor: '#E8F0E9' }}>
-        <div className="max-w-xl mx-auto">
-          <h2 className="text-3xl md:text-5xl text-[#0C0C0A] mb-8" style={{ fontFamily: 'var(--font-dm-serif)' }}>
-            <RevealText>Want to collaborate?</RevealText>
-          </h2>
-          <FadeUp delay={150}>
-            <Link href="/contact"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#0C0C0A] text-[#E8E3D5] rounded-full text-sm tracking-wide hover:bg-[#7A9E7E] transition-all duration-300 font-sans">
-              Get in touch <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      {/* ── CTA ── */}
+      <section style={{ ...px, paddingTop: '3.5rem', paddingBottom: '3.5rem', background: '#E8F0E9', textAlign: 'center' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto' }}>
+          <FadeUp>
+            <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.9rem,3.5vw,3rem)', color: '#1C2E1E', lineHeight: 1.15, marginBottom: '1.5rem' }}>
+              Want to collaborate?
+            </h2>
+          </FadeUp>
+          <FadeUp delay={120}>
+            <Link href="/contact" className="work-cta">
+              Get in touch →
             </Link>
           </FadeUp>
         </div>
       </section>
+
+      <style>{`
+        .work-card:hover { transform: scale(1.005); box-shadow: 0 8px 40px rgba(0,0,0,0.07); }
+        .work-card-inner { display: flex; flex-direction: column; gap: 2rem; }
+        @media (min-width: 768px) { .work-card-inner { flex-direction: row; align-items: flex-start; gap: 3rem; } }
+        .work-cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 11px 26px; background: #4A7A52; color: #fff;
+          border-radius: 9999px; font-family: var(--font-inter); font-size: 13px;
+          letter-spacing: 0.04em; text-decoration: none; transition: background 0.3s;
+        }
+        .work-cta:hover { background: #3A6040; }
+      `}</style>
     </>
   )
 }
