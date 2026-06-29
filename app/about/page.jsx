@@ -78,12 +78,12 @@ export default function AboutPage() {
           <div>
             <FadeUp>
               <p style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.4rem,2.2vw,1.9rem)', color: '#0C0C0A', lineHeight: 1.4, marginBottom: '1.5rem' }}>
-                Product Operations Manager at CodePay — where systems thinking meets shipping things that actually work.
+                Systems thinker. Builder. Somewhere between design and code.
               </p>
             </FadeUp>
             <FadeUp delay={100}>
               <p style={{ fontFamily: 'var(--font-inter)', fontSize: 15, color: 'rgba(12,12,10,0.55)', lineHeight: 1.75, fontWeight: 300, marginBottom: '1.25rem' }}>
-                At CodePay, Sherina sits at the intersection of product and operations — bridging the gap between strategy and execution. She drives cross-functional initiatives, streamlines product workflows, and translates ambiguous problems into clear, actionable outcomes that move the team forward.
+                Sherina sits at the intersection of product and operations — bridging the gap between strategy and execution. She drives cross-functional initiatives, streamlines product workflows, and translates ambiguous problems into clear, actionable outcomes that move the team forward.
               </p>
             </FadeUp>
             <FadeUp delay={180}>
@@ -130,7 +130,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Skills / Capabilities ── */}
-      <section style={{ ...px, paddingTop: '4rem', paddingBottom: '5rem', textAlign: 'center' }}>
+      <section style={{ ...px, paddingTop: '4rem', paddingBottom: '5rem' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.22em', color: '#7A9E7E', textTransform: 'uppercase', display: 'block', marginBottom: '2.5rem' }}>Capabilities</span>
@@ -138,7 +138,7 @@ export default function AboutPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '2.5rem' }}>
             {skills.map(({ cat, items }, i) => (
               <FadeUp key={cat} delay={i * 70}>
-                <div>
+                <div style={{ textAlign: 'center' }}>
                   <h4 style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.4)', textTransform: 'uppercase', marginBottom: '1rem' }}>{cat}</h4>
                   <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
                     {items.map(item => (
