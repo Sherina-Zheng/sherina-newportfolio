@@ -44,7 +44,7 @@ export default function WorkPage() {
   return (
     <>
       {/* ── Header ── */}
-      <section style={{ ...px, paddingTop: 'calc(16px + 36px + 16px + 0.25rem)', paddingBottom: '2rem' }}>
+      <section style={{ ...px, paddingTop: 'calc(16px + 36px + 16px)', paddingBottom: '2rem' }}>
         <div className="max-w-7xl mx-auto">
           <FadeUp>
             <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
@@ -55,7 +55,7 @@ export default function WorkPage() {
             <RevealText>Case Studies</RevealText>
           </h1>
           <FadeUp delay={160}>
-            <p style={{ marginTop: '1rem', fontFamily: 'var(--font-inter)', fontSize: 15, color: 'rgba(12,12,10,0.45)', maxWidth: 440, lineHeight: 1.7, fontWeight: 300 }}>
+            <p style={{ marginTop: '1rem', fontFamily: 'var(--font-inter)', fontSize: 'clamp(1rem,1.4vw,1.2rem)', color: 'rgba(12,12,10,0.45)', maxWidth: 500, lineHeight: 1.7, fontWeight: 300 }}>
               A collection of work spanning product design, UX research, and systems thinking. Each project is a problem I cared about solving.
             </p>
           </FadeUp>
