@@ -16,11 +16,17 @@ function useInView(ref, threshold = 0.35) {
 }
 
 /* ── Portrait ── */
-function ScrollPortrait() {
+function ScrollPortrait({ ready }) {
   return (
     <div className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1 }}>
       <Image src="/sherina.png" alt="Sherina Zheng" fill priority className="object-contain object-right-top"
-        style={{ mixBlendMode: 'multiply', maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)', WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)' }} />
+        style={{
+          mixBlendMode: 'multiply',
+          maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
+          WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
+          filter: ready ? 'grayscale(0%) brightness(1)' : 'grayscale(100%) brightness(0.85)',
+          transition: 'filter 1.6s cubic-bezier(0.25,0.46,0.45,0.94) 0.9s',
+        }} />
     </div>
   )
 }
@@ -220,7 +226,7 @@ export default function Home() {
           <div key={id} style={{position:'fixed',left:`${x}vw`,top:'8vh',zIndex:90,fontFamily:'var(--font-dm-serif)',fontSize:`${size}px`,color,opacity:0,transform:`rotate(${rot}deg)`,animation:`letterFall 3.6s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms forwards`,pointerEvents:'none'}}>{ch}</div>
         ))}
 
-        <ScrollPortrait/>
+        <ScrollPortrait ready={ready}/>
 
         <div className="relative z-10 max-w-7xl w-full mx-auto">
           {/* Available badge */}
@@ -245,11 +251,13 @@ export default function Home() {
 
           <HeroName ready={ready}/>
 
-          <div style={{marginTop:'1.75rem',opacity:ready?1:0,transform:ready?'none':'translateY(18px)',transition:'all 0.8s ease 0.55s'}}>
-            <p style={{fontFamily:'var(--font-inter)',fontWeight:300,fontSize:'1.1rem',color:'rgba(12,12,10,0.55)',marginBottom:6}}>
+          <div style={{marginTop:'1.75rem'}}>
+            <p style={{fontFamily:'var(--font-inter)',fontWeight:300,fontSize:'1.1rem',color:'rgba(12,12,10,0.55)',marginBottom:6,
+              opacity:ready?1:0,transform:ready?'none':'translateY(14px)',transition:'opacity 0.7s ease 0.55s, transform 0.7s ease 0.55s'}}>
               <RoleRotator/> — Based in NYC
             </p>
-            <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'1rem',color:'rgba(12,12,10,0.35)',fontStyle:'italic'}}>
+            <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'1rem',color:'rgba(12,12,10,0.35)',fontStyle:'italic',
+              opacity:ready?1:0,transform:ready?'none':'translateY(14px)',transition:'opacity 0.7s ease 0.82s, transform 0.7s ease 0.82s'}}>
               "I design user experiences that feel inevitable."
             </p>
           </div>
