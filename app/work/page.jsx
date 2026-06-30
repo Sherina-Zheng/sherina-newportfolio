@@ -128,7 +128,7 @@ export default function WorkPage() {
         <div style={{ maxWidth: 480, margin: '0 auto' }}>
           <FadeUp>
             <h2 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(1.9rem,3.5vw,3rem)', color: '#1C2E1E', lineHeight: 1.15, marginBottom: '1.5rem' }}>
-              Want to collaborate?
+              Open to collabs, always.
             </h2>
           </FadeUp>
           <FadeUp delay={120}>
