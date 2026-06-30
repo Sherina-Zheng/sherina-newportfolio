@@ -265,33 +265,33 @@ export default function Home() {
       </section>
 
       {/* ─────────────── SCENE 2: SELECTED WORK ─────────────── */}
-      <section ref={workRef} className="scene flex flex-col justify-center" style={{background:'#0C0C0A',paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)'}}>
+      <section ref={workRef} className="scene flex flex-col justify-center" style={{background:'#E8E3D5',paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)'}}>
         <div style={{maxWidth:1280,margin:'0 auto',width:'100%'}}>
           <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:'3rem',opacity:workInView?1:0,transform:workInView?'none':'translateY(32px)',transition:'all 0.7s ease'}}>
             <div>
               <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.22em',color:'#7A9E7E',textTransform:'uppercase',display:'block',marginBottom:10}}>Selected Work</span>
-              <h2 style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(2.2rem,5vw,4rem)',color:'#E8E3D5',lineHeight:1.1}}>Case Studies</h2>
+              <h2 style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(2.2rem,5vw,4rem)',color:'#0C0C0A',lineHeight:1.1}}>Case Studies</h2>
             </div>
-            <Link href="/work" style={{fontFamily:'var(--font-inter)',fontSize:13,color:'rgba(232,227,213,0.35)',textDecoration:'none',transition:'color 0.2s'}}
-              onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='rgba(232,227,213,0.35)'}>
+            <Link href="/work" style={{fontFamily:'var(--font-inter)',fontSize:13,color:'rgba(12,12,10,0.35)',textDecoration:'none',transition:'color 0.2s'}}
+              onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='rgba(12,12,10,0.35)'}>
               All projects ↗
             </Link>
           </div>
 
-          <div style={{display:'flex',flexDirection:'column',borderTop:'1px solid rgba(232,227,213,0.08)'}}>
+          <div style={{display:'flex',flexDirection:'column',borderTop:'1px solid #D5CFC0'}}>
             {projects.map(({num,title,tags},i)=>(
-              <Link key={num} href="/work" style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'2rem 0',borderBottom:'1px solid rgba(232,227,213,0.08)',transition:'padding-left 0.4s ease',opacity:workInView?1:0,transform:workInView?'none':'translateY(24px)',transitionDelay:`${i*100+200}ms`,transitionProperty:'opacity, transform, padding-left'}}
+              <Link key={num} href="/work" style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'2rem 0',borderBottom:'1px solid #D5CFC0',transition:'padding-left 0.4s ease',opacity:workInView?1:0,transform:workInView?'none':'translateY(24px)',transitionDelay:`${i*100+200}ms`,transitionProperty:'opacity, transform, padding-left'}}
                 onMouseEnter={e=>e.currentTarget.style.paddingLeft='20px'} onMouseLeave={e=>e.currentTarget.style.paddingLeft='0'}>
                 <div style={{display:'flex',alignItems:'center',gap:'clamp(2rem,4vw,3rem)'}}>
-                  <span style={{fontFamily:'var(--font-inter)',fontSize:11,color:'rgba(232,227,213,0.2)',letterSpacing:'0.2em'}}>{num}</span>
-                  <span style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1.5rem,3vw,2.5rem)',color:'#E8E3D5',transition:'color 0.3s'}}
-                    onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='#E8E3D5'}>{title}</span>
+                  <span style={{fontFamily:'var(--font-inter)',fontSize:11,color:'rgba(12,12,10,0.25)',letterSpacing:'0.2em'}}>{num}</span>
+                  <span style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1.5rem,3vw,2.5rem)',color:'#0C0C0A',transition:'color 0.3s'}}
+                    onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='#0C0C0A'}>{title}</span>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
                   <div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'flex-end'}}>
-                    {tags.map(tag=><span key={tag} style={{padding:'4px 12px',borderRadius:9999,border:'1px solid rgba(232,227,213,0.15)',fontSize:11,color:'rgba(232,227,213,0.4)',fontFamily:'var(--font-inter)'}}>{tag}</span>)}
+                    {tags.map(tag=><span key={tag} style={{padding:'4px 12px',borderRadius:9999,border:'1px solid #8B8578',fontSize:11,color:'#4A4540',fontFamily:'var(--font-inter)'}}>{tag}</span>)}
                   </div>
-                  <span style={{color:'rgba(232,227,213,0.2)',fontSize:18}}>→</span>
+                  <span style={{color:'rgba(12,12,10,0.25)',fontSize:18}}>→</span>
                 </div>
               </Link>
             ))}
@@ -399,7 +399,7 @@ export default function Home() {
       </section>
 
       <style>{`
-        html { scroll-snap-type: y mandatory; }
+        html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
         .scene { scroll-snap-align: start; height: 100vh; min-height: 100vh; }
         @keyframes scrollLine  { 0%{transform:translateY(-100%)} 100%{transform:translateY(200%)} }
         @keyframes pulse       { 0%,100%{opacity:1} 50%{opacity:0.35} }
