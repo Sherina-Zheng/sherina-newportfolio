@@ -1,11 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const hideTimer = useRef(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -13,6 +16,17 @@ export default function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Hide nav after scroll settles, show on hover
+  useEffect(() => {
+    function onWheel() {
+      if (hovered) return
+      setHidden(true)
+      clearTimeout(hideTimer.current)
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [hovered])
 
   useEffect(() => setMenuOpen(false), [pathname])
 
@@ -28,8 +42,15 @@ export default function Nav() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? 'py-4 nav-blur bg-[#E8E3D5]/80 border-b border-[#D5CFC0]' : 'py-7'
         }`}
-        /* Match section horizontal padding exactly */
-        style={{ paddingLeft: 'clamp(2rem, 5vw, 3.5rem)', paddingRight: 'clamp(2rem, 5vw, 3.5rem)' }}
+        style={{
+          paddingLeft: 'clamp(2rem, 5vw, 3.5rem)',
+          paddingRight: 'clamp(2rem, 5vw, 3.5rem)',
+          opacity: (hidden && !hovered) ? 0 : 1,
+          transform: (hidden && !hovered) ? 'translateY(-100%)' : 'translateY(0)',
+          transition: 'opacity 0.4s ease, transform 0.4s ease, padding 0.5s, background 0.5s, border-color 0.5s',
+        }}
+        onMouseEnter={() => { setHovered(true); setHidden(false) }}
+        onMouseLeave={() => setHovered(false)}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
 
