@@ -19,12 +19,16 @@ export default function Nav() {
 
   // Listen for section-change events dispatched by the scroll controller
   useEffect(() => {
-    function onSectionChange() {
-      if (hovered) return
-      setHidden(true)
+    function onSectionChange(e) {
+      const idx = e.detail?.index ?? 1
       clearTimeout(revealTimer.current)
-      // Auto-reveal after 2.5s of no scrolling so nav doesn't stay gone forever
-      revealTimer.current = setTimeout(() => setHidden(false), 2500)
+      if (idx === 0) {
+        setHidden(false)
+      } else {
+        if (hovered) return
+        setHidden(true)
+        revealTimer.current = setTimeout(() => setHidden(false), 2500)
+      }
     }
     window.addEventListener('sectionChange', onSectionChange)
     return () => {
