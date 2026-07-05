@@ -148,6 +148,7 @@ const projects = [
 /* ── Full-page scroll controller ── */
 function useFullPageScroll(numSections) {
   const current = useRef(0)
+  const [currentIdx, setCurrentIdx] = useState(0)
   const locked = useRef(false)
   const accDelta = useRef(0)
   const resetTimer = useRef(null)
@@ -157,6 +158,7 @@ function useFullPageScroll(numSections) {
       const scenes = document.querySelectorAll('.scene')
       if (!scenes[next] || next === current.current) return
       current.current = next
+      setCurrentIdx(next)
       scenes[next].scrollIntoView({ behavior: 'smooth' })
       window.dispatchEvent(new CustomEvent('sectionChange', { detail: { index: next } }))
     }
@@ -207,13 +209,15 @@ function useFullPageScroll(numSections) {
       clearTimeout(resetTimer.current)
     }
   }, [numSections])
+
+  return currentIdx
 }
 
 export default function Home() {
   const [ready,setReady]=useState(false)
   useEffect(()=>{const t=setTimeout(()=>setReady(true),80);return()=>clearTimeout(t)},[])
   const {state:weatherState,temp}=useNYCWeather()
-  useFullPageScroll(4)
+  const currentSection = useFullPageScroll(4)
 
   const [noteOpen,setNoteOpen]=useState(false)
   const [noteMsg,setNoteMsg]=useState('')
@@ -484,6 +488,32 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Back to top ── */}
+      <button
+        onClick={() => {
+          document.querySelectorAll('.scene')[0]?.scrollIntoView({ behavior: 'smooth' })
+          window.dispatchEvent(new CustomEvent('sectionChange', { detail: { index: 0 } }))
+        }}
+        aria-label="Back to top"
+        style={{
+          position: 'fixed', bottom: 28, right: 28, zIndex: 50,
+          width: 48, height: 48, borderRadius: '50%',
+          background: 'rgba(232,227,213,0.9)', border: '1px solid #D5CFC0',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', backdropFilter: 'blur(8px)',
+          opacity: currentSection > 0 ? 1 : 0,
+          transform: currentSection > 0 ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 0.4s ease, transform 0.4s ease, background 0.2s',
+          pointerEvents: currentSection > 0 ? 'auto' : 'none',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.borderColor = '#B8D4BC' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(232,227,213,0.9)'; e.currentTarget.style.borderColor = '#D5CFC0' }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7A52" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 12V4M4 7l4-4 4 4"/>
+        </svg>
+      </button>
 
       <style>{`
         html { overflow: hidden; }
