@@ -17,15 +17,29 @@ function useInView(ref, threshold = 0.35) {
 
 /* ── Portrait ── */
 function ScrollPortrait({ ready }) {
+  const [scale, setScale] = useState(1)
+  useEffect(() => {
+    function onScroll() {
+      const scene = document.querySelector('.scene')
+      if (!scene) return
+      const h = scene.offsetHeight
+      const s = window.scrollY
+      const progress = Math.min(s / h, 1)
+      setScale(1 + progress * 0.12)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
   return (
-    <div className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1 }}>
+    <div className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1, overflow: 'hidden' }}>
       <Image src="/sherina.png" alt="Sherina Zheng" fill priority className="object-contain object-right-top"
         style={{
           mixBlendMode: 'multiply',
           maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
           WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
-          filter: ready ? 'grayscale(0%) brightness(1)' : 'grayscale(100%) brightness(0.85)',
-          transition: 'filter 1.6s cubic-bezier(0.25,0.46,0.45,0.94) 0.9s',
+          transform: `scale(${scale})`,
+          transformOrigin: 'center top',
+          transition: 'transform 0.1s linear',
         }} />
     </div>
   )
@@ -131,10 +145,70 @@ const projects = [
   { num:'03', title:'Bloom Mobile',      tags:['Mobile','iOS','Interaction Design'] },
 ]
 
+/* ── Full-page scroll controller ── */
+function useFullPageScroll(numSections) {
+  const [current, setCurrent] = useState(0)
+  const locked = useRef(false)
+
+  useEffect(() => {
+    function scrollTo(idx) {
+      const scenes = document.querySelectorAll('.scene')
+      if (!scenes[idx]) return
+      scenes[idx].scrollIntoView({ behavior: 'smooth' })
+      setCurrent(idx)
+    }
+
+    function onWheel(e) {
+      e.preventDefault()
+      if (locked.current) return
+      locked.current = true
+      setCurrent(prev => {
+        const next = e.deltaY > 0
+          ? Math.min(prev + 1, numSections - 1)
+          : Math.max(prev - 1, 0)
+        const scenes = document.querySelectorAll('.scene')
+        if (scenes[next]) scenes[next].scrollIntoView({ behavior: 'smooth' })
+        return next
+      })
+      setTimeout(() => { locked.current = false }, 900)
+    }
+
+    let touchStartY = 0
+    function onTouchStart(e) { touchStartY = e.touches[0].clientY }
+    function onTouchEnd(e) {
+      if (locked.current) return
+      const diff = touchStartY - e.changedTouches[0].clientY
+      if (Math.abs(diff) < 40) return
+      locked.current = true
+      setCurrent(prev => {
+        const next = diff > 0
+          ? Math.min(prev + 1, numSections - 1)
+          : Math.max(prev - 1, 0)
+        const scenes = document.querySelectorAll('.scene')
+        if (scenes[next]) scenes[next].scrollIntoView({ behavior: 'smooth' })
+        return next
+      })
+      setTimeout(() => { locked.current = false }, 900)
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [numSections])
+
+  return current
+}
+
 export default function Home() {
   const [ready,setReady]=useState(false)
   useEffect(()=>{const t=setTimeout(()=>setReady(true),80);return()=>clearTimeout(t)},[])
   const {state:weatherState,temp}=useNYCWeather()
+  useFullPageScroll(4)
 
   const [noteOpen,setNoteOpen]=useState(false)
   const [noteMsg,setNoteMsg]=useState('')
@@ -181,7 +255,7 @@ export default function Home() {
 
         {/* Speech bubble */}
         <button onClick={()=>setNoteOpen(true)} className="absolute hidden md:block"
-          style={{right:'calc(46% + 22px)',top:'18%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
+          style={{right:'calc(46% + 22px)',top:'58%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
           onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06) translateY(-3px)'}
           onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}>
           <div style={{position:'relative'}}>
@@ -407,8 +481,9 @@ export default function Home() {
       </section>
 
       <style>{`
-        html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
-        .scene { scroll-snap-align: start; height: 100vh; min-height: 100vh; }
+        html { overflow: hidden; }
+        body { overflow: hidden; }
+        .scene { height: 100vh; min-height: 100vh; }
         @keyframes scrollLine  { 0%{transform:translateY(-100%)} 100%{transform:translateY(200%)} }
         @keyframes pulse       { 0%,100%{opacity:1} 50%{opacity:0.35} }
         @keyframes spinBadge   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
