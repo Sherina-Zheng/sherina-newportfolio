@@ -8,6 +8,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [hovered, setHovered] = useState(false)
+  const hoveredRef = useRef(false)
   const revealTimer = useRef(null)
   const pathname = usePathname()
 
@@ -17,6 +18,9 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Keep ref in sync so event listener always reads latest value
+  useEffect(() => { hoveredRef.current = hovered }, [hovered])
+
   // Listen for section-change events dispatched by the scroll controller
   useEffect(() => {
     function onSectionChange(e) {
@@ -24,8 +28,7 @@ export default function Nav() {
       clearTimeout(revealTimer.current)
       if (idx === 0) {
         setHidden(false)
-      } else {
-        if (hovered) return
+      } else if (!hoveredRef.current) {
         setHidden(true)
         revealTimer.current = setTimeout(() => setHidden(false), 2500)
       }
@@ -35,7 +38,7 @@ export default function Nav() {
       window.removeEventListener('sectionChange', onSectionChange)
       clearTimeout(revealTimer.current)
     }
-  }, [hovered])
+  }, [])
 
   useEffect(() => setMenuOpen(false), [pathname])
 

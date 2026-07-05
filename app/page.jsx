@@ -149,6 +149,8 @@ const projects = [
 function useFullPageScroll(numSections) {
   const current = useRef(0)
   const locked = useRef(false)
+  const accDelta = useRef(0)
+  const resetTimer = useRef(null)
 
   useEffect(() => {
     function goTo(next) {
@@ -162,14 +164,23 @@ function useFullPageScroll(numSections) {
     function onWheel(e) {
       e.preventDefault()
       if (locked.current) return
-      // ignore tiny trackpad momentum ticks
-      if (Math.abs(e.deltaY) < 8) return
+
+      // Accumulate delta — only fire once threshold is crossed per gesture
+      accDelta.current += e.deltaY
+      clearTimeout(resetTimer.current)
+      resetTimer.current = setTimeout(() => { accDelta.current = 0 }, 150)
+
+      if (Math.abs(accDelta.current) < 50) return
+
+      const direction = accDelta.current > 0 ? 1 : -1
+      accDelta.current = 0
       locked.current = true
-      const next = e.deltaY > 0
+
+      const next = direction > 0
         ? Math.min(current.current + 1, numSections - 1)
         : Math.max(current.current - 1, 0)
       goTo(next)
-      setTimeout(() => { locked.current = false }, 1100)
+      setTimeout(() => { locked.current = false }, 1200)
     }
 
     let touchStartY = 0
@@ -183,7 +194,7 @@ function useFullPageScroll(numSections) {
         ? Math.min(current.current + 1, numSections - 1)
         : Math.max(current.current - 1, 0)
       goTo(next)
-      setTimeout(() => { locked.current = false }, 1100)
+      setTimeout(() => { locked.current = false }, 1200)
     }
 
     window.addEventListener('wheel', onWheel, { passive: false })
@@ -193,6 +204,7 @@ function useFullPageScroll(numSections) {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchend', onTouchEnd)
+      clearTimeout(resetTimer.current)
     }
   }, [numSections])
 }
@@ -248,7 +260,7 @@ export default function Home() {
 
         {/* Speech bubble */}
         <button onClick={()=>setNoteOpen(true)} className="absolute hidden md:block"
-          style={{right:'28%',top:'72%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
+          style={{right:'18%',top:'75%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
           onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06) translateY(-3px)'}
           onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}>
           <div style={{position:'relative'}}>
