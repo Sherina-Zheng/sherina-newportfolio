@@ -8,7 +8,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [hovered, setHovered] = useState(false)
-  const hideTimer = useRef(null)
+  const revealTimer = useRef(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -17,15 +17,20 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Hide nav after scroll settles, show on hover
+  // Listen for section-change events dispatched by the scroll controller
   useEffect(() => {
-    function onWheel() {
+    function onSectionChange() {
       if (hovered) return
       setHidden(true)
-      clearTimeout(hideTimer.current)
+      clearTimeout(revealTimer.current)
+      // Auto-reveal after 2.5s of no scrolling so nav doesn't stay gone forever
+      revealTimer.current = setTimeout(() => setHidden(false), 2500)
     }
-    window.addEventListener('wheel', onWheel, { passive: true })
-    return () => window.removeEventListener('wheel', onWheel)
+    window.addEventListener('sectionChange', onSectionChange)
+    return () => {
+      window.removeEventListener('sectionChange', onSectionChange)
+      clearTimeout(revealTimer.current)
+    }
   }, [hovered])
 
   useEffect(() => setMenuOpen(false), [pathname])
@@ -39,7 +44,7 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 ${
           scrolled ? 'py-4 nav-blur bg-[#E8E3D5]/80 border-b border-[#D5CFC0]' : 'py-7'
         }`}
         style={{

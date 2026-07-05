@@ -168,6 +168,7 @@ function useFullPageScroll(numSections) {
           : Math.max(prev - 1, 0)
         const scenes = document.querySelectorAll('.scene')
         if (scenes[next]) scenes[next].scrollIntoView({ behavior: 'smooth' })
+        window.dispatchEvent(new Event('sectionChange'))
         return next
       })
       setTimeout(() => { locked.current = false }, 900)
@@ -186,6 +187,7 @@ function useFullPageScroll(numSections) {
           : Math.max(prev - 1, 0)
         const scenes = document.querySelectorAll('.scene')
         if (scenes[next]) scenes[next].scrollIntoView({ behavior: 'smooth' })
+        window.dispatchEvent(new Event('sectionChange'))
         return next
       })
       setTimeout(() => { locked.current = false }, 900)
@@ -255,7 +257,7 @@ export default function Home() {
 
         {/* Speech bubble */}
         <button onClick={()=>setNoteOpen(true)} className="absolute hidden md:block"
-          style={{right:'calc(46% + 22px)',top:'58%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
+          style={{right:'calc(46% + 80px)',top:'65%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
           onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06) translateY(-3px)'}
           onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}>
           <div style={{position:'relative'}}>
