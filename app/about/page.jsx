@@ -185,7 +185,11 @@ export default function AboutPage() {
           align-items: start;
         }
         @media (max-width: 768px) {
-          .about-intro-grid { grid-template-columns: 1fr; }
+          .about-intro-grid { grid-template-columns: 1fr; gap: 2rem; }
+          .about-intro-grid > :first-child { max-width: 240px; margin: 0 auto; aspect-ratio: 1/1 !important; }
+        }
+        @media (max-width: 640px) {
+          .about-cta-primary, .about-cta-secondary { padding: 10px 18px !important; font-size: 12px !important; }
         }
         .about-cta-primary {
           display: inline-flex; align-items: center; gap: 8px;

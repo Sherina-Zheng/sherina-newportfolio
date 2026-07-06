@@ -31,7 +31,7 @@ function ScrollPortrait({ ready }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
   return (
-    <div className="absolute inset-y-0 right-0 w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1, overflow: 'hidden' }}>
+    <div className="hero-portrait absolute inset-y-0 right-0 w-[70%] sm:w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1, overflow: 'hidden' }}>
       <Image src="/sherina.png" alt="Sherina Zheng" fill priority className="object-contain object-right-top"
         style={{
           mixBlendMode: 'multiply',
@@ -395,9 +395,9 @@ export default function Home() {
         <div style={{maxWidth:1280,margin:'0 auto',width:'100%'}}>
           <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.22em',color:'#7A9E7E',textTransform:'uppercase',display:'block',marginBottom:'1.5rem',opacity:aboutInView?1:0,transition:'opacity 0.6s ease'}}>About</span>
 
-          <div style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:12,height:'calc(100vh - 14rem)',maxHeight:520}}>
+          <div className="bento-grid" style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:12,height:'calc(100vh - 14rem)',maxHeight:520}}>
             {/* Quote card */}
-            <div className="col-span-12 md:col-span-7" style={{gridColumn:'span 7',background:'#7A9E7E',borderRadius:24,padding:'clamp(1.5rem,3vw,2.5rem)',display:'flex',flexDirection:'column',justifyContent:'space-between',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.1s',cursor:'pointer'}}
+            <div className="bento-quote col-span-12 md:col-span-7" style={{gridColumn:'span 7',background:'#7A9E7E',borderRadius:24,padding:'clamp(1.5rem,3vw,2.5rem)',display:'flex',flexDirection:'column',justifyContent:'space-between',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.1s',cursor:'pointer'}}
               onMouseEnter={e=>{setHoveredBento(0);e.currentTarget.style.transform='scale(1.02)'}} onMouseLeave={e=>{setHoveredBento(null);e.currentTarget.style.transform='scale(1)'}}>
               <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(232,227,213,0.6)',textTransform:'uppercase'}}>Philosophy</span>
               <div>
@@ -410,12 +410,12 @@ export default function Home() {
             </div>
 
             {/* Role card */}
-            <div className="col-span-12 md:col-span-5" style={{gridColumn:'span 5',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.18s'}}>
+            <div className="bento-role col-span-12 md:col-span-5" style={{gridColumn:'span 5',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.18s'}}>
               <RoleBentoCard/>
             </div>
 
             {/* Toolkit */}
-            <div className="col-span-12 md:col-span-4" style={{gridColumn:'span 4',background:'#B8D4BC',borderRadius:24,padding:'clamp(1.2rem,2.5vw,2rem)',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.25s'}}>
+            <div className="bento-toolkit col-span-12 md:col-span-4" style={{gridColumn:'span 4',background:'#B8D4BC',borderRadius:24,padding:'clamp(1.2rem,2.5vw,2rem)',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.25s'}}>
               <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(12,12,10,0.45)',textTransform:'uppercase',display:'block',marginBottom:14}}>Toolkit</span>
               <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
                 {['Figma','UX Research','SQL','React','Prototyping','Jira','Design Systems'].map(s=><span key={s} style={{padding:'5px 12px',borderRadius:9999,background:'rgba(12,12,10,0.08)',fontSize:11,fontFamily:'var(--font-inter)',color:'#0C0C0A'}}>{s}</span>)}
@@ -519,6 +519,27 @@ export default function Home() {
         html { overflow: hidden; }
         body { overflow: hidden; }
         .scene { height: 100vh; min-height: 100vh; }
+
+        /* ── Hero: stack text below portrait on mobile ── */
+        .hero-content { position: relative; z-index: 10; width: 100%; }
+        @media (max-width: 640px) {
+          .hero-portrait { width: 70% !important; opacity: 0.35 !important; }
+          .hero-name { font-size: clamp(3rem, 15vw, 5rem) !important; }
+          .hero-tagline { font-size: 0.9rem !important; }
+          .bento-grid { grid-template-columns: 1fr !important; height: auto !important; max-height: none !important; overflow-y: auto; }
+          .bento-grid > div { grid-column: span 1 !important; }
+          .work-row { flex-direction: column !important; gap: 0.5rem !important; }
+          .work-row-tags { display: none !important; }
+          .cta-title { font-size: clamp(2rem,10vw,3.5rem) !important; }
+          .scene-about { overflow-y: auto !important; }
+        }
+        @media (max-width: 768px) {
+          .bento-grid { grid-template-columns: 1fr 1fr !important; height: auto !important; max-height: none !important; padding-bottom: 2rem; }
+          .bento-quote { grid-column: span 2 !important; }
+          .bento-role { grid-column: span 2 !important; }
+          .bento-toolkit { grid-column: span 2 !important; }
+        }
+
         @keyframes scrollLine  { 0%{transform:translateY(-100%)} 100%{transform:translateY(200%)} }
         @keyframes pulse       { 0%,100%{opacity:1} 50%{opacity:0.35} }
         @keyframes spinBadge   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }

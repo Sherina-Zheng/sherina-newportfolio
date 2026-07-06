@@ -103,7 +103,7 @@ export default function WorkPage() {
                   </div>
 
                   {/* Right: preview card */}
-                  <div style={{ width: 260, flexShrink: 0 }}>
+                  <div className="work-card-preview" style={{ width: 260, flexShrink: 0 }}>
                     <div style={{ width: '100%', height: 200, borderRadius: 18, position: 'relative', overflow: 'hidden',
                       background: `linear-gradient(135deg, ${accent}28 0%, ${accent}0A 100%)`,
                       border: `1px solid ${accent}25` }}>
@@ -143,6 +143,10 @@ export default function WorkPage() {
         .work-card:hover { transform: scale(1.005); box-shadow: 0 8px 40px rgba(0,0,0,0.07); }
         .work-card-inner { display: flex; flex-direction: column; gap: 2rem; }
         @media (min-width: 768px) { .work-card-inner { flex-direction: row; align-items: flex-start; gap: 3rem; } }
+        @media (max-width: 640px) {
+          .work-card { padding: 1.4rem !important; border-radius: 20px !important; }
+          .work-card-preview { display: none !important; }
+        }
         .work-cta {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 11px 26px; background: #4A7A52; color: #fff;
