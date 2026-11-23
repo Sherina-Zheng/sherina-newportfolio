@@ -197,7 +197,7 @@ export default function Home() {
           <motion.h2 className="sec-title light" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>Transfer here</motion.h2>
           <div className="board">
             {[
-              ['L', '#FCCC0A', 'Languages', 'English · 中文 · 粵語'],
+              ['L', '#A7A9AC', 'Languages', 'English · 中文 · 粵語'],
               ['T', '#00933C', 'Toolkit', 'Notion · Jira · Figma · SQL · React'],
               ['F', '#FF6319', 'Focus', 'B2B products · FinTech & payments · Manufacturing software'],
               ['E', '#0039A6', 'Education', 'BBA, Computer Information Systems & Data Analytics — Baruch College'],
@@ -225,7 +225,7 @@ export default function Home() {
             <button className="note-link" onClick={() => { setNoteState('idle'); setNoteOpen(true) }}>Or leave a note at the station</button>
           </div>
         </motion.div>
-        <p className="colophon">© {new Date().getFullYear()} Sherina Zheng · Queens, New York</p>
+        <p className="colophon">© {new Date().getFullYear()} Sherina Zheng · All rights reserved</p>
       </section>
 
       {noteOpen && (

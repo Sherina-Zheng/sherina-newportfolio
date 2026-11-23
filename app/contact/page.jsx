@@ -4,7 +4,7 @@ import { SignHeader, Bullet } from '../../components/Station'
 
 const socials = [
   { letter: 'E', color: '#B933AD', label: 'Email',    value: 'zhengsherina@gmail.com', href: 'mailto:zhengsherina@gmail.com' },
-  { letter: 'L', color: '#0039A6', label: 'LinkedIn', value: '/in/sherina-zheng',      href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
+  { letter: 'L', color: '#A7A9AC', label: 'LinkedIn', value: '/in/sherina-zheng',      href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
   { letter: 'T', color: '#00933C', label: 'Phone',    value: '+1 (347) 506-7548',      href: 'tel:+13475067548' },
 ]
 
