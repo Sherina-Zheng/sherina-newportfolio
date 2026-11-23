@@ -2,8 +2,8 @@
 
 // Yellow and orange lines take a black letter so it stays readable (MTA does the same on yellow lines).
 const DARK_TEXT = ['#FCCC0A', '#FF6319']
-export function Bullet({ letter, color, size = 'md' }) {
-  return <span className={`bul bul-${size}`} style={{ background: color, color: DARK_TEXT.includes(color) ? '#0F0F0F' : '#fff' }}>{letter}</span>
+export function Bullet({ letter, color, size = 'md', text }) {
+  return <span className={`bul bul-${size}`} style={{ background: color, color: text || (DARK_TEXT.includes(color) ? '#0F0F0F' : '#fff') }}>{letter}</span>
 }
 
 // Black station sign used as the header of every inner page.

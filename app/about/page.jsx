@@ -6,19 +6,19 @@ export const metadata = { title: 'About — Sherina Zheng' }
 
 const skills = [
   { letter: 'P', color: '#EE352E', cat: 'Product',   items: 'Product strategy · Roadmapping · User stories · Sprint planning · Stakeholder management' },
-  { letter: 'D', color: '#B933AD', cat: 'Design',    items: 'UX research · UI design · Prototyping · Interaction design · Design systems' },
+  { letter: 'D', color: '#FF6319', text: '#fff', cat: 'Design',    items: 'UX research · UI design · Prototyping · Interaction design · Design systems' },
   { letter: 'T', color: '#00933C', cat: 'Tools',     items: 'Notion · Jira · Figma · FigJam · Supabase' },
   { letter: 'A', color: '#0039A6', cat: 'Technical', items: 'Data analytics · SQL · React / Next.js · Python (basics) · A/B testing' },
-  { letter: 'L', color: '#FCCC0A', cat: 'Languages', items: 'English · 中文 · 粵語' },
+  { letter: 'L', color: '#A7A9AC', cat: 'Languages', items: 'English · 中文 · 粵語' },
 ]
 
 // Journey runs newest first, like reading a line from the current stop back.
 const timeline = [
-  { year: 'Now',  color: '#B933AD', title: 'Product Owner — CognitMES', org: 'Ranial Systems · Long Island City',
+  { year: 'Now',  color: '#FCCC0A', title: 'Product Owner — CognitMES', org: 'Ranial Systems · Long Island City',
     desc: 'Own CognitMES, a manufacturing execution system heading toward pilot: setting feature priorities with the dev team, running the weekly product sync, and writing the manual and onboarding materials.' },
   { year: '2025', color: '#0039A6', title: 'Product Operations Manager', org: 'CodePay',
     desc: 'Ran merchant onboarding, payment terminal logistics and bilingual partner communications for a B2B payments business.' },
-  { year: '2024', color: '#FF6319', title: 'ISO Boarding Associate', org: 'Financial Technology',
+  { year: '2024', color: '#808183', title: 'ISO Boarding Associate', org: 'Financial Technology',
     desc: 'Worked with the product team on an online booking system for beauty salons, connecting merchants, staff and customers.' },
   { year: '2024', color: '#00933C', title: 'BBA, CIS & Data Analytics', org: 'Baruch College, Zicklin School of Business',
     desc: 'Computer Information Systems and Data Analytics, minor in Mathematics. The habit of turning numbers into product decisions started here.' },
@@ -80,7 +80,7 @@ export default function AboutPage() {
           <Reveal className="board">
             {skills.map((s, i) => (
               <div key={s.cat} className="board-row rv" style={{ '--i': i }}>
-                <Bullet letter={s.letter} color={s.color} size="lg" />
+                <Bullet letter={s.letter} color={s.color} text={s.text} size="lg" />
                 <span className="board-k">{s.cat}</span>
                 <span className="board-v">{s.items}</span>
               </div>
