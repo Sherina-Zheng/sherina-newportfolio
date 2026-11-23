@@ -3,25 +3,28 @@ import { useEffect, useRef } from 'react'
 
 export function RevealText({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
+  const wrapRef = useRef(null)
 
+  // Observe the wrapper: the text itself starts clipped out of view, so watching it never fires.
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    const wrap = wrapRef.current
+    if (!el || !wrap) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setTimeout(() => el.classList.add('visible'), delay)
-          observer.unobserve(el)
+          observer.unobserve(wrap)
         }
       },
       { threshold: 0.1 }
     )
-    observer.observe(el)
+    observer.observe(wrap)
     return () => observer.disconnect()
   }, [delay])
 
   return (
-    <span className="reveal-wrap">
+    <span ref={wrapRef} className="reveal-wrap">
       <span ref={ref} className={`reveal-text ${className}`}>
         {children}
       </span>

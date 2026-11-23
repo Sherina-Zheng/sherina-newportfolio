@@ -42,6 +42,8 @@ export default function Nav() {
 
   useEffect(() => setMenuOpen(false), [pathname])
 
+  if (pathname === '/') return null // the homepage draws its own station-sign nav
+
   const navLinks = [
     { href: '/about',   label: 'About' },
     { href: '/work',    label: 'Work' },
@@ -51,80 +53,41 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 ${
-          scrolled ? 'py-4 nav-blur bg-[#E8E3D5]/80 border-b border-[#D5CFC0]' : 'py-7'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50"
         style={{
-          paddingLeft: 'clamp(2rem, 5vw, 3.5rem)',
-          paddingRight: 'clamp(2rem, 5vw, 3.5rem)',
           opacity: (hidden && !hovered) ? 0 : 1,
           transform: (hidden && !hovered) ? 'translateY(-100%)' : 'translateY(0)',
-          transition: 'opacity 0.4s ease, transform 0.4s ease, padding 0.5s, background 0.5s, border-color 0.5s',
+          transition: 'opacity 0.4s ease, transform 0.4s ease',
         }}
         onMouseEnter={() => { setHovered(true); setHidden(false) }}
         onMouseLeave={() => setHovered(false)}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-
-          {/* Left: SZ icon | divider | About · Work · Contact */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/" className="group flex-shrink-0 block" style={{ transition: 'transform 0.3s ease', display: 'inline-block' }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Dark forest bg */}
-                <rect width="36" height="36" rx="9" fill="#0C1F18"/>
-                {/* Outer glow ring */}
-                <rect x="1" y="1" width="34" height="34" rx="8" stroke="#7A9E7E" strokeWidth="0.8" strokeOpacity="0.45"/>
-                {/* Subtle scan line */}
-                <rect x="0" y="17" width="36" height="0.6" fill="#7A9E7E" fillOpacity="0.07" rx="1"/>
-                {/* Square-bracket left */}
-                <path d="M 10 9 L 7 9 L 7 27 L 10 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
-                {/* Square-bracket right */}
-                <path d="M 26 9 L 29 9 L 29 27 L 26 27" stroke="#7A9E7E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.75"/>
-                {/* SZ monogram in mint — italic serif for creative flair */}
-                {/* S — drawn as a stroke path */}
-                <path d="M 15 11 C 10 11, 8.5 13, 8.5 15 C 8.5 17, 10.5 17.5, 13 18 C 15.5 18.5, 17.5 19, 17.5 21 C 17.5 23.5, 15 25, 11 25" fill="none" stroke="#A8E6CF" strokeWidth="1.7" strokeLinecap="round"/>
-                {/* Z — drawn as a stroke path */}
-                <path d="M 20 11 L 27 11 L 20 25 L 27 25" fill="none" stroke="#A8E6CF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-            {/* thin separator */}
-            <span className="w-px h-4 bg-[#0C0C0A]/15 flex-shrink-0" />
-            <div className="flex items-center gap-8">
-              {navLinks.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`text-sm tracking-wide hover-line transition-colors duration-200 ${
-                    pathname === href ? 'text-[#7A9E7E]' : 'text-[#0C0C0A]/65 hover:text-[#0C0C0A]'
-                  }`}
-                  style={{ fontFamily: 'var(--font-inter)' }}
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
+        {/* station-sign bar, same as the homepage once its name has docked */}
+        <div style={{ background: '#0F0F0F', height: 64, position: 'relative', paddingLeft: 'clamp(20px,3.1vw,44px)', paddingRight: 'clamp(20px,3.1vw,44px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ position: 'absolute', left: 0, right: 0, top: 10, height: 2, background: '#fff', opacity: 0.9 }} />
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', textDecoration: 'none' }} aria-label="Sherina Zheng, home">
+            <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#B933AD', display: 'grid', placeItems: 'center', fontFamily: 'var(--font-inter)', fontWeight: 800, fontSize: 16 }}>S</span>
+            <span style={{ fontFamily: 'var(--font-inter)', fontWeight: 900, fontSize: 20, letterSpacing: '-0.03em' }}>Sherina Zheng</span>
+          </Link>
+          <div className="hidden md:flex" style={{ gap: 26 }}>
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href}
+                style={{ fontFamily: 'var(--font-inter)', fontWeight: 800, fontSize: 15, textDecoration: 'none', color: pathname === href ? '#FCCC0A' : '#fff' }}>
+                {label}
+              </Link>
+            ))}
           </div>
-
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-[5px] p-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-          >
-            <span className={`block w-6 h-[1.5px] bg-[#0C0C0A] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
-            <span className={`block w-6 h-[1.5px] bg-[#0C0C0A] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-            <span className={`block w-6 h-[1.5px] bg-[#0C0C0A] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[6.5px]' : ''}`} />
+          <button className="md:hidden flex flex-col gap-[5px] p-3" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+            <span className={`block w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+            <span className={`block w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
           </button>
         </div>
       </nav>
 
       {/* Mobile full-screen menu */}
       <div
-        className={`fixed inset-0 z-40 bg-[#E8E3D5] flex flex-col justify-center px-10 transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-40 bg-[#F3F1EA] flex flex-col justify-center px-10 transition-all duration-500 md:hidden ${
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
@@ -133,7 +96,7 @@ export default function Nav() {
             <li key={href} style={{ transitionDelay: `${i * 60}ms` }}>
               <Link
                 href={href}
-                className="text-5xl font-light text-[#0C0C0A] hover:text-[#7A9E7E] transition-colors duration-200"
+                className="text-5xl text-[#0C0C0A] hover:text-[#B933AD] transition-colors duration-200"
                 style={{ fontFamily: 'var(--font-dm-serif)' }}
               >
                 {label}

@@ -1,21 +1,18 @@
 'use client'
 import { useState } from 'react'
-import { FadeUp, RevealText } from '../../components/ScrollReveal'
+import { SignHeader, Bullet } from '../../components/Station'
 
 const socials = [
-  { label: 'Email',    value: 'zhengsherina@gmail.com',  href: 'mailto:zhengsherina@gmail.com' },
-  { label: 'LinkedIn', value: '/in/sherina-zheng',        href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
-  { label: 'Phone',    value: '+1 (347) 506-7548',        href: 'tel:+13475067548' },
+  { letter: 'E', color: '#B933AD', label: 'Email',    value: 'zhengsherina@gmail.com', href: 'mailto:zhengsherina@gmail.com' },
+  { letter: 'L', color: '#0039A6', label: 'LinkedIn', value: '/in/sherina-zheng',      href: 'https://www.linkedin.com/in/sherina-zheng-48b287224/' },
+  { letter: 'T', color: '#00933C', label: 'Phone',    value: '+1 (347) 506-7548',      href: 'tel:+13475067548' },
 ]
-
-const px = { paddingLeft: 'clamp(2rem,5vw,3.5rem)', paddingRight: 'clamp(2rem,5vw,3.5rem)' }
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
-  const [focused, setFocused] = useState(null)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,174 +28,88 @@ export default function ContactPage() {
       setSent(true)
       setForm({ name: '', email: '', message: '' })
     } catch {
-      setError('Something went wrong — please try emailing directly.')
+      setError('That didn’t go through. Please email me directly at zhengsherina@gmail.com.')
     } finally {
       setSending(false)
     }
   }
 
-  const borderColor = (field) => focused === field ? '#7A9E7E' : 'rgba(12,12,10,0.12)'
-
   return (
     <>
-      {/* ── Page wrapper ── */}
-      <div className="max-w-7xl mx-auto" style={{ ...px, paddingTop: '8rem', paddingBottom: '6rem' }}>
+      <SignHeader
+        where="Contact · Long Island City, Queens"
+        title="Let’s talk."
+        bullet="S"
+        lede="Hiring a Product Owner, want to collaborate, or just want to say hi? My inbox is open."
+      />
 
-        {/* ── Header ── */}
-        <div className="mb-16">
-          <FadeUp>
-            <span style={{ fontFamily: 'var(--font-inter)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase' }}>
-              Contact
-            </span>
-          </FadeUp>
-          <h1 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 'clamp(3rem,7vw,6rem)', lineHeight: 1.05, color: '#0C0C0A', marginTop: '0.5rem' }}>
-            <RevealText>Let's talk.</RevealText>
-          </h1>
-          <FadeUp delay={160}>
-            <p style={{ marginTop: '1.25rem', fontFamily: 'var(--font-inter)', fontSize: '1rem', color: 'rgba(12,12,10,0.45)', maxWidth: 440, lineHeight: 1.7, fontWeight: 300 }}>
-              Whether you have a project in mind, want to collaborate, or just want to say hi — my inbox is always open.
-            </p>
-          </FadeUp>
-        </div>
-
-        {/* ── Two columns ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '5rem', alignItems: 'start' }}
-          className="flex flex-col lg:grid">
-
-          {/* Left: form */}
+      <section className="contact-sec">
+        <div className="wrap contact-grid">
           <div>
-            <FadeUp>
-              <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '2rem' }}>
-                Send a message
-              </span>
-            </FadeUp>
-
+            <h2 className="contact-h">Send a message</h2>
             {sent ? (
-              <FadeUp>
-                <div style={{ padding: '4rem 0', textAlign: 'center' }}>
-                  <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#E8F0E9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', fontSize: 20 }}>✓</div>
-                  <h3 style={{ fontFamily: 'var(--font-dm-serif)', fontSize: '1.5rem', color: '#0C0C0A', marginBottom: '0.5rem' }}>Message sent!</h3>
-                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.45)', fontWeight: 300 }}>Your email is sent! I'll get back to you shortly.</p>
-                  <button onClick={() => setSent(false)} style={{ marginTop: '1.5rem', fontFamily: 'var(--font-inter)', fontSize: 12, color: '#7A9E7E', background: 'none', border: 'none', cursor: 'pointer' }}>
-                    Send another →
-                  </button>
+              <div className="sent" role="status">
+                <span className="bul bul-lg" style={{ background: '#00933C' }}>✓</span>
+                <div>
+                  <p className="sent-t">Message sent.</p>
+                  <p className="sent-p">Thanks! I&rsquo;ll get back to you within a day or two.</p>
+                  <button className="ride ghost" onClick={() => setSent(false)}>Send another</button>
                 </div>
-              </FadeUp>
+              </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                {[
-                  { key: 'name',    label: 'Name',    type: 'text',  placeholder: 'Your name' },
-                  { key: 'email',   label: 'Email',   type: 'email', placeholder: 'your@email.com' },
-                ].map(({ key, label, type, placeholder }, i) => (
-                  <FadeUp key={key} delay={80 + i * 60}>
-                    <div>
-                      <label style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>{label}</label>
-                      <input
-                        type={type}
-                        required
-                        placeholder={placeholder}
-                        value={form[key]}
-                        onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                        onFocus={() => setFocused(key)}
-                        onBlur={() => setFocused(null)}
-                        style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: `1px solid ${borderColor(key)}`, padding: '0.75rem 0', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', outline: 'none', fontWeight: 300, transition: 'border-color 0.25s' }}
-                        className="placeholder:text-[#0C0C0A]/25"
-                      />
-                    </div>
-                  </FadeUp>
-                ))}
-
-                <FadeUp delay={200}>
-                  <div>
-                    <label style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>Message</label>
-                    <textarea
-                      required
-                      rows={6}
-                      placeholder="Tell me about your project..."
-                      value={form.message}
-                      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                      onFocus={() => setFocused('message')}
-                      onBlur={() => setFocused(null)}
-                      style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: `1px solid ${borderColor('message')}`, padding: '0.75rem 0', fontFamily: 'var(--font-inter)', fontSize: 14, color: '#0C0C0A', outline: 'none', fontWeight: 300, resize: 'none', transition: 'border-color 0.25s' }}
-                      className="placeholder:text-[#0C0C0A]/25"
-                    />
-                  </div>
-                </FadeUp>
-
-                <FadeUp delay={260}>
-                  <div>
-                    <button
-                      type="submit"
-                      disabled={sending}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: sending ? '#7A9E7E' : '#0C0C0A', color: '#E8E3D5', borderRadius: 9999, fontFamily: 'var(--font-inter)', fontSize: 13, letterSpacing: '0.04em', border: 'none', cursor: sending ? 'default' : 'pointer', transition: 'background 0.3s', opacity: sending ? 0.7 : 1 }}
-                      onMouseEnter={e => { if (!sending) e.currentTarget.style.background = '#7A9E7E' }}
-                      onMouseLeave={e => { if (!sending) e.currentTarget.style.background = '#0C0C0A' }}
-                    >
-                      {sending ? 'Sending…' : 'Send message'} {!sending && <span>→</span>}
-                    </button>
-                    {error && <p style={{ marginTop: '0.75rem', fontFamily: 'var(--font-inter)', fontSize: 12, color: '#C0392B' }}>{error}</p>}
-                  </div>
-                </FadeUp>
+              <form onSubmit={handleSubmit} className="contact-form">
+                <label className="field"><span>Name</span>
+                  <input type="text" required autoComplete="name" placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+                </label>
+                <label className="field"><span>Email</span>
+                  <input type="email" required autoComplete="email" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                </label>
+                <label className="field"><span>Message</span>
+                  <textarea required rows={6} placeholder="What are you hiring for or working on?" value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
+                </label>
+                <div className="form-row">
+                  <button type="submit" className="ride" disabled={sending}>{sending ? 'Sending…' : 'Send message'}</button>
+                  {error && <p className="form-error" role="alert">{error}</p>}
+                </div>
               </form>
             )}
           </div>
 
-          {/* Right: info sidebar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-
-            {/* Social links */}
-            <FadeUp delay={120}>
-              <div>
-                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '1.25rem' }}>Find me here</span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {socials.map(({ label, value, href }) => (
-                    <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
-                      style={{ display: 'flex', flexDirection: 'column', gap: 3, textDecoration: 'none' }}
-                      className="group">
-                      <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.18em', color: '#7A9E7E', textTransform: 'uppercase' }}>{label}</span>
-                      <span className="hover-line" style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.55)', transition: 'color 0.2s' }}
-                        onMouseEnter={e => e.currentTarget.style.color = '#0C0C0A'}
-                        onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.55)'}>
-                        {value} ↗
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(12,12,10,0.08)' }} />
-
-            {/* Availability card */}
-            <FadeUp delay={200}>
-              <div style={{ background: '#E8F0E9', borderRadius: 20, padding: '1.5rem' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: '#6B7B6C', lineHeight: 1.65, fontWeight: 300, marginBottom: '0.75rem' }}>
-                  Currently open to freelance projects, full-time design roles, and interesting collaborations.
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#7A9E7E', flexShrink: 0, animation: 'pulse 2s infinite' }} />
-                  <span style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: '#7A9E7E' }}>Available for work</span>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Response time */}
-            <FadeUp delay={270}>
-              <div>
-                <span style={{ fontFamily: 'var(--font-inter)', fontSize: 10, letterSpacing: '0.2em', color: 'rgba(12,12,10,0.35)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>Response time</span>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'rgba(12,12,10,0.5)', fontWeight: 300 }}>Usually within 24–48 hours.</p>
-              </div>
-            </FadeUp>
-
-          </div>
+          <aside>
+            <h2 className="contact-h">Find me here</h2>
+            <div className="board">
+              {socials.map(s => (
+                <a key={s.label} href={s.href} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" className="board-row contact-row">
+                  <Bullet letter={s.letter} color={s.color} size="lg" />
+                  <span className="board-k">{s.label}</span>
+                  <span className="contact-v">{s.value}{s.href.startsWith('http') ? ' ↗' : ''}</span>
+                </a>
+              ))}
+            </div>
+            <div className="status-card">
+              <span className="here">Now boarding</span>
+              <p>Open to full-time product roles and interesting collaborations. I usually reply within 24–48 hours.</p>
+            </div>
+          </aside>
         </div>
-      </div>
+      </section>
 
       <style>{`
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .flex.flex-col.lg\\:grid { display: flex; flex-direction: column; }
-        @media (min-width: 1024px) { .flex.flex-col.lg\\:grid { display: grid; } }
+        .contact-sec { padding: clamp(56px, 9vh, 104px) 0; }
+        .contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(36px, 6vw, 96px); align-items: start; }
+        .contact-h { font: 900 clamp(28px, 2.6vw, 40px)/1 var(--sans); letter-spacing: -.04em; margin-bottom: 24px; }
+        .contact-form { display: grid; gap: 20px; }
+        .form-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+        .form-error { font: 800 15px/1.4 var(--sans); color: #B3261E; }
+        .contact-row { grid-template-columns: 52px 110px 1fr; color: var(--ink); text-decoration: none; }
+        .contact-row:hover .contact-v { text-decoration: underline; text-underline-offset: 5px; }
+        .contact-v { font: 800 clamp(17px, 1.5vw, 21px)/1.3 var(--sans); overflow-wrap: anywhere; }
+        .status-card { margin-top: 28px; background: var(--black); color: #fff; padding: 22px 24px; }
+        .status-card p { margin-top: 12px; font: 500 17px/1.55 var(--sans); }
+        .sent { display: flex; gap: 18px; align-items: flex-start; border: 2px solid var(--ink); background: #fff; padding: 24px; }
+        .sent-t { font: 900 30px/1 var(--sans); letter-spacing: -.03em; }
+        .sent-p { font: 500 17px/1.5 var(--sans); margin: 8px 0 18px; }
+        @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } .contact-row { grid-template-columns: 52px 1fr; } }
       `}</style>
     </>
   )

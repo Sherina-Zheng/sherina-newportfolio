@@ -1,36 +1,31 @@
-import { DM_Serif_Display, Inter } from 'next/font/google'
+import { Inter_Tight } from 'next/font/google'
 import './globals.css'
+import './queens.css'
 import Nav from '../components/Nav'
-import CustomCursor from '../components/CustomCursor'
 import Footer from '../components/Footer'
 
-const dmSerif = DM_Serif_Display({
-  weight: ['400'],
-  subsets: ['latin'],
-  variable: '--font-dm-serif',
-  display: 'swap',
-})
-
-const inter = Inter({
+// Queens Line type: one grotesque, like MTA station signage (Helvetica). Inter Tight is the closest free cut.
+// The old --font-dm-serif / --font-anton variables are pointed at it in queens.css.
+const inter = Inter_Tight({
+  weight: ['400', '500', '800', '900'],
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
 })
 
 export const metadata = {
-  title: 'Sherina Zheng — Product Designer',
-  description: 'I design user experiences that feel inevitable.',
+  title: 'Sherina Zheng — Product Owner',
+  description: 'Product Owner in New York. Currently owning CognitMES at Ranial Systems.',
   openGraph: {
-    title: 'Sherina Zheng — Product Designer',
-    description: 'I design user experiences that feel inevitable.',
+    title: 'Sherina Zheng — Product Owner',
+    description: 'Product Owner in New York. Currently owning CognitMES at Ranial Systems.',
   },
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${dmSerif.variable} ${inter.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
-        <CustomCursor />
         <Nav />
         <main>{children}</main>
         <Footer />

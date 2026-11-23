@@ -1,555 +1,362 @@
 'use client'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { motion, useScroll, useTransform, useReducedMotion, useMotionValueEvent } from 'framer-motion'
+import { projects } from '../lib/projects'
+import { Bullet, Poster } from '../components/Station'
+import Weather from '../components/Weather'
 
-/* ── useInView: fires once when element crosses threshold ── */
-function useInView(ref, threshold = 0.35) {
-  const [inView, setInView] = useState(false)
-  useEffect(() => {
-    if (!ref.current) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold })
-    obs.observe(ref.current)
-    return () => obs.disconnect()
-  }, [threshold])
-  return inView
-}
+const EMAIL = 'zhengsherina@gmail.com'
+const LINKEDIN = 'https://www.linkedin.com/in/sherina-zheng-48b287224/'
+const stops = projects.slice(0, 3)
+const earlier = projects.slice(3)
+const BAR = 64 // height of the sign bar the name docks into
 
-/* ── Portrait ── */
-function ScrollPortrait({ ready }) {
-  const [scale, setScale] = useState(1)
+/* ── the station sign: full-width name that docks into the top bar as you scroll ── */
+function StationSign() {
+  const reduce = useReducedMotion()
+  const { scrollY } = useScroll()
+  const [vh, setVh] = useState(900)
+  const [vw, setVw] = useState(1440)
   useEffect(() => {
-    function onScroll() {
-      const scene = document.querySelector('.scene')
-      if (!scene) return
-      const h = scene.offsetHeight
-      const s = window.scrollY
-      const progress = Math.min(s / h, 1)
-      setScale(1 + progress * 0.12)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const on = () => { setVh(window.innerHeight); setVw(window.innerWidth) }
+    on(); window.addEventListener('resize', on)
+    return () => window.removeEventListener('resize', on)
   }, [])
-  return (
-    <div className="hero-portrait absolute inset-y-0 right-0 w-[70%] sm:w-[52%] md:w-[46%] pointer-events-none select-none" style={{ zIndex: 1, overflow: 'hidden' }}>
-      <Image src="/sherina.png" alt="Sherina Zheng" fill priority className="object-contain object-right-top"
-        style={{
-          mixBlendMode: 'multiply',
-          maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
-          WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
-          transform: `scale(${scale})`,
-          transformOrigin: 'center top',
-          transition: 'transform 0.1s linear',
-        }} />
-    </div>
-  )
-}
+  const mobile = vw < 720
+  const signH = Math.round(vh * 0.5)
+  const travel = Math.max(1, signH - BAR)
+  const p = useTransform(scrollY, v => reduce ? 0 : Math.min(1, Math.max(0, v / travel)))
 
-/* ── Weather ── */
-const WMO_MAP = { sunny:[0,1], cloudy:[2,3], windy:[45,48,51,53,55], rainy:[56,57,61,63,65,66,67,80,81,82,95,96,99], snowy:[71,73,75,77,85,86] }
-const WEATHER_META = { sunny:{label:'Sunny in NYC',color:'#FFCA28'}, cloudy:{label:'Cloudy in NYC',color:'#A29BFE'}, windy:{label:'Windy in NYC',color:'#A29BFE'}, rainy:{label:'Rainy in NYC',color:'#74B9FF'}, snowy:{label:'Snowy in NYC',color:'#A8E6CF'} }
-function codeToState(code) { for (const [s,codes] of Object.entries(WMO_MAP)) if (codes.includes(code)) return s; return 'sunny' }
-function useNYCWeather() {
-  const [state,setState]=useState('sunny'); const [temp,setTemp]=useState(null)
-  useEffect(()=>{ fetch('https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74.01&current=weather_code,temperature_2m&temperature_unit=fahrenheit&timezone=America%2FNew_York').then(r=>r.json()).then(d=>{setState(codeToState(d.current.weather_code));setTemp(Math.round(d.current.temperature_2m))}).catch(()=>{}) },[])
-  return {state,temp}
-}
-function WeatherArt({ weatherState }) {
-  if (weatherState==='cloudy') return null
-  if (weatherState==='sunny') return (
-    <div className="absolute pointer-events-none select-none" style={{top:'-12%',left:'-10%',zIndex:0}}>
-      <svg viewBox="0 0 600 600" width="600" height="600" style={{animation:'spinSlow 40s linear infinite',opacity:0.11}}>
-        <circle cx="300" cy="300" r="90" fill="#FFCA28"/>
-        {[...Array(18)].map((_,i)=>{const a=(i*20)*Math.PI/180;return<line key={i} x1={300+115*Math.cos(a)} y1={300+115*Math.sin(a)} x2={300+270*Math.cos(a)} y2={300+270*Math.sin(a)} stroke="#FFCA28" strokeWidth={i%3===0?5:2.5} strokeLinecap="round"/>})}
-      </svg>
-    </div>
-  )
-  if (weatherState==='rainy') return (
-    <div className="absolute pointer-events-none select-none" style={{inset:0,zIndex:0,overflow:'hidden'}}>
-      <svg width="100%" height="100%" viewBox="0 0 700 900" preserveAspectRatio="xMidYMid slice" style={{opacity:0.13}}>
-        {[...Array(20)].map((_,i)=><line key={i} x1={i*38-60} y1="-40" x2={i*38+160} y2="940" stroke="#74B9FF" strokeWidth={i%3===0?2.5:1.5} strokeLinecap="round" style={{animation:`rainFall ${1.4+(i%4)*0.25}s linear infinite ${(i*0.17)%1.4}s`}}/>)}
-      </svg>
-    </div>
-  )
-  if (weatherState==='snowy') return (
-    <div className="absolute pointer-events-none select-none" style={{inset:0,zIndex:0,overflow:'hidden'}}>
-      {[...Array(14)].map((_,i)=>{const size=28+(i%3)*14;return(<div key={i} style={{position:'absolute',left:`${(i*7.1)%60}%`,top:`${(i*13.7)%90}%`,opacity:0.14,animation:`snowDrift ${5+(i%4)*1.5}s ease-in-out infinite ${i*0.6}s`}}><svg width={size} height={size} viewBox="0 0 40 40" style={{animation:`spinSlow ${10+i*3}s linear infinite`}}>{[0,45,90,135].map(deg=>{const r=deg*Math.PI/180;return<line key={deg} x1={20-18*Math.cos(r)} y1={20-18*Math.sin(r)} x2={20+18*Math.cos(r)} y2={20+18*Math.sin(r)} stroke="#A8E6CF" strokeWidth="2.5" strokeLinecap="round"/>})}<circle cx="20" cy="20" r="3" fill="#A8E6CF"/></svg></div>)})}
-    </div>
-  )
-  return (
-    <div className="absolute pointer-events-none select-none" style={{inset:0,zIndex:0}}>
-      <svg viewBox="0 0 900 700" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style={{opacity:0.13}}>
-        {[0.15,0.3,0.45,0.6,0.75].map((yF,i)=><path key={i} d={`M -80 ${yF*700} C 150 ${(yF-0.1)*700}, 300 ${(yF+0.1)*700}, 450 ${yF*700} C 600 ${(yF-0.1)*700}, 750 ${(yF+0.1)*700}, 980 ${yF*700}`} fill="none" stroke="#A29BFE" strokeWidth={4-i*0.5} strokeLinecap="round" style={{animation:`windSway ${2.2+i*0.4}s ease-in-out infinite ${i*0.35}s`}}/>)}
-      </svg>
-    </div>
-  )
-}
-function WeatherPill({ weatherState, temp, ready }) {
-  const meta = WEATHER_META[weatherState]||WEATHER_META.sunny
-  return (
-    <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'7px 14px',borderRadius:9999,border:`1px solid ${meta.color}55`,background:`${meta.color}18`,marginBottom:14,opacity:ready?1:0,transform:ready?'translateY(0)':'translateY(-6px)',transition:'opacity 0.35s ease, transform 0.35s ease, border-color 0.6s ease, background 0.6s ease'}}>
-      <span style={{width:7,height:7,borderRadius:'50%',background:meta.color,animation:'pulse 2s infinite',flexShrink:0}}/>
-      <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.08em',color:meta.color}}>{meta.label}{temp!==null?` · ${temp}°F`:''}</span>
-    </div>
-  )
-}
+  const pad = mobile ? 20 : Math.min(44, Math.max(20, vw * 0.031))
+  const bulStart = mobile ? 64 : 150
+  const bulEnd = 32
+  const nameSize = mobile ? Math.min(vw * 0.215, 104) : Math.min(vw * 0.118, 176)
+  const nameEnd = 22
+  const nameTop = mobile ? 100 : 100
+  const nameLeft = mobile ? pad : pad + bulStart + 30
+  const bulTop = mobile ? nameTop - bulStart - 14 : nameTop + nameSize * 0.02
 
-/* ── Name ── */
-function HeroName({ ready }) {
-  const words = ['Sherina','Zheng']
-  return (
-    <h1 style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(3.8rem,10.5vw,10.5rem)',lineHeight:1,letterSpacing:'-0.01em',color:'#0C0C0A'}}>
-      {words.map((word,wi)=>(
-        <span key={word} className="block overflow-hidden">
-          <span style={{display:'inline-block',transform:ready?'translateY(0)':'translateY(112%)',transition:`transform 1s cubic-bezier(0.16,1,0.3,1) ${wi*130+100}ms`}}>
-            {word}
-          </span>
-        </span>
-      ))}
-    </h1>
-  )
-}
+  const bulScale = useTransform(p, [0, 1], [1, bulEnd / bulStart])
+  const bulY = useTransform(p, [0, 1], [0, (BAR - bulEnd) / 2 - bulTop])
+  const nameScale = useTransform(p, [0, 1], [1, nameEnd / nameSize])
+  const nameX = useTransform(p, [0, 1], [0, pad + bulEnd + 12 - nameLeft])
+  const nameY = useTransform(p, [0, 1], [0, (BAR - nameEnd * (mobile ? 1.72 : 0.86)) / 2 - nameTop])
+  const panelY = useTransform(p, v => -v * travel)
+  const fade = useTransform(p, [0, 0.45], [1, 0])
 
-/* ── Role rotator ── */
-const roles = ['Product Designer','UI/UX Designer','Product Manager']
-function RoleRotator() {
-  const [idx,setIdx]=useState(0); const [fade,setFade]=useState(true)
-  useEffect(()=>{const t=setInterval(()=>{setFade(false);setTimeout(()=>{setIdx(i=>(i+1)%roles.length);setFade(true)},300)},2800);return()=>clearInterval(t)},[])
-  return <span style={{color:'#7A9E7E',transition:'opacity 0.3s',opacity:fade?1:0}}>{roles[idx]}</span>
-}
-
-/* ── Bento role card ── */
-const bentoRoles = ['Product Designer','UI/UX Designer','Product Manager']
-function RoleBentoCard() {
-  const [active,setActive]=useState(0)
-  useEffect(()=>{const t=setInterval(()=>setActive(i=>(i+1)%bentoRoles.length),1800);return()=>clearInterval(t)},[])
   return (
-    <div style={{background:'#0C0C0A',borderRadius:20,padding:'1.5rem',height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between',minHeight:0}}>
-      <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(184,212,188,0.5)',textTransform:'uppercase'}}>I am a</span>
-      <div style={{display:'flex',flexDirection:'column',gap:4}}>
-        {bentoRoles.map((role,i)=>(
-          <div key={role} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 12px',borderRadius:12,background:active===i?'rgba(122,158,126,0.2)':'transparent',border:active===i?'1px solid rgba(122,158,126,0.35)':'1px solid transparent',transition:'all 0.5s cubic-bezier(0.16,1,0.3,1)'}}>
-            <span style={{width:6,height:6,borderRadius:'50%',flexShrink:0,background:active===i?'#7A9E7E':'rgba(122,158,126,0.2)',boxShadow:active===i?'0 0 8px #7A9E7E':'none',transition:'all 0.5s ease'}}/>
-            <span style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1rem,1.6vw,1.35rem)',color:active===i?'#E8E3D5':'rgba(232,227,213,0.25)',transition:'color 0.5s ease'}}>{role}</span>
+    <div className={`sign-layer ${reduce ? 'static' : ''}`}>
+      <motion.div className="sign-panel" style={{ height: signH, y: panelY }} />
+      <div className="sign-rule" />
+      <nav className="sign-nav" aria-label="Main">
+        <motion.span className="sign-where" style={{ opacity: fade }}>Long Island City · Queens · NYC</motion.span>
+        <div className="sign-right">
+          <Weather className="weather-bar" />
+          <div className="sign-links">
+            <Link href="/work">Work</Link><Link href="/about">About</Link><Link href="/contact">Contact</Link>
           </div>
-        ))}
-      </div>
-      <p style={{fontFamily:'var(--font-inter)',fontSize:11,color:'rgba(232,227,213,0.25)',lineHeight:1.5}}>NYC-based · FinTech · Data → Design</p>
+        </div>
+      </nav>
+      <motion.span className="sign-bullet" style={{ top: bulTop, left: pad, width: bulStart, height: bulStart, fontSize: bulStart * 0.62, scale: bulScale, y: bulY }}>S</motion.span>
+      <motion.h1 className="sign-name" style={{ top: nameTop, left: nameLeft, fontSize: nameSize, scale: nameScale, x: nameX, y: nameY }}>
+        <a href="#top" aria-label="Sherina Zheng, back to top">Sherina{mobile ? <br /> : ' '}Zheng</a>
+      </motion.h1>
+      <motion.div className="sign-tags" style={{ top: signH - (mobile ? 128 : 88), left: pad, opacity: fade, y: panelY }}>
+        <span><Bullet letter="P" color="#EE352E" />Product Owner</span>
+        <span><Bullet letter="D" color="#00933C" />Data</span>
+        <span><Bullet letter="3" color="#0039A6" />EN · 中文 · 粵語</span>
+        <Weather className="weather-tag" />
+      </motion.div>
     </div>
   )
 }
 
-const projects = [
-  { num:'01', title:'Salon Connect',     tags:['UX Design','FinTech','Mobile'] },
-  { num:'02', title:'FinFlow Dashboard', tags:['Data Analytics','Dashboard','B2B'] },
-  { num:'03', title:'Bloom Mobile',      tags:['Mobile','iOS','Interaction Design'] },
-]
+const rise = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 30 } } }
 
-/* ── Full-page scroll controller ── */
-function useFullPageScroll(numSections) {
-  const current = useRef(0)
-  const [currentIdx, setCurrentIdx] = useState(0)
-  const locked = useRef(false)
-  const accDelta = useRef(0)
-  const resetTimer = useRef(null)
-
-  useEffect(() => {
-    function goTo(next) {
-      const scenes = document.querySelectorAll('.scene')
-      if (!scenes[next] || next === current.current) return
-      current.current = next
-      setCurrentIdx(next)
-      scenes[next].scrollIntoView({ behavior: 'smooth' })
-      window.dispatchEvent(new CustomEvent('sectionChange', { detail: { index: next } }))
-    }
-
-    function onWheel(e) {
-      e.preventDefault()
-      if (locked.current) return
-
-      // Accumulate delta — only fire once threshold is crossed per gesture
-      accDelta.current += e.deltaY
-      clearTimeout(resetTimer.current)
-      resetTimer.current = setTimeout(() => { accDelta.current = 0 }, 150)
-
-      if (Math.abs(accDelta.current) < 50) return
-
-      const direction = accDelta.current > 0 ? 1 : -1
-      accDelta.current = 0
-      locked.current = true
-
-      const next = direction > 0
-        ? Math.min(current.current + 1, numSections - 1)
-        : Math.max(current.current - 1, 0)
-      goTo(next)
-      setTimeout(() => { locked.current = false }, 1200)
-    }
-
-    let touchStartY = 0
-    function onTouchStart(e) { touchStartY = e.touches[0].clientY }
-    function onTouchEnd(e) {
-      if (locked.current) return
-      const diff = touchStartY - e.changedTouches[0].clientY
-      if (Math.abs(diff) < 40) return
-      locked.current = true
-      const next = diff > 0
-        ? Math.min(current.current + 1, numSections - 1)
-        : Math.max(current.current - 1, 0)
-      goTo(next)
-      setTimeout(() => { locked.current = false }, 1200)
-    }
-
-    window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchend', onTouchEnd, { passive: true })
-    return () => {
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchend', onTouchEnd)
-      clearTimeout(resetTimer.current)
-    }
-  }, [numSections])
-
-  return currentIdx
+function Stop({ p, i }) {
+  const now = i === 0
+  return (
+    <motion.article id={p.slug} className="stop" style={{ '--line': p.line }}
+      initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}>
+      <motion.span className={`stop-dot ${now ? 'now' : ''}`}
+        variants={{ hidden: { scale: 0.2, y: -24, opacity: 0 }, show: { scale: 1, y: 0, opacity: 1, transition: { type: 'spring', stiffness: 520, damping: 18 } } }} />
+      <motion.div className="stop-meta" variants={rise}>
+        <Bullet letter={p.bullet} color={p.line} size="sm" />
+        <span>{[p.org, p.year].filter(Boolean).join(' · ')}</span>
+        {now && <span className="here">You are here</span>}
+      </motion.div>
+      <motion.h3 className="stop-title" variants={rise}>
+        <Link href={`/work/${p.slug}`}>{p.title}</Link>
+      </motion.h3>
+      <motion.p className="stop-sub" variants={rise}>{p.subtitle}</motion.p>
+      <motion.div className="stop-body" variants={rise}>
+        <p>{p.summary}</p>
+        <div>
+          <span className="label">What I owned</span>
+          <ul>{p.owned.map(o => <li key={o}>{o}</li>)}</ul>
+          <div className="stop-links">
+            <Link className="stop-link" href={`/work/${p.slug}`}>Go to this stop →</Link>
+            {p.brochure && <Link className="stop-link" href={`/work/${p.slug}#brochure`}>See the brochure →</Link>}
+          </div>
+        </div>
+      </motion.div>
+    </motion.article>
+  )
 }
 
 export default function Home() {
-  const [ready,setReady]=useState(false)
-  useEffect(()=>{const t=setTimeout(()=>setReady(true),80);return()=>clearTimeout(t)},[])
-  const {state:weatherState,temp}=useNYCWeather()
-  const currentSection = useFullPageScroll(4)
+  const reduce = useReducedMotion()
 
-  const [noteOpen,setNoteOpen]=useState(false)
-  const [noteMsg,setNoteMsg]=useState('')
-  const [fallingLetters,setFallingLetters]=useState([])
-  const [pastNotes,setPastNotes]=useState([])
-  useEffect(()=>{fetch('/api/notes').then(r=>r.json()).then(setPastNotes).catch(()=>{})},[])
+  /* route line draws itself and the train rides it */
+  const routeRef = useRef(null)
+  const { scrollYProgress: routeP } = useScroll({ target: routeRef, offset: ['start 75%', 'end 70%'] })
+  const lineClip = useTransform(routeP, v => `inset(0 0 ${(reduce ? 0 : 1 - v) * 100}% 0 round 8px)`)
+  const trainTop = useTransform(routeP, v => `${(reduce ? 0 : v) * 100}%`)
 
-  function handleNoteSubmit(e) {
+  const { scrollY } = useScroll()
+  const [deep, setDeep] = useState(false)
+  useMotionValueEvent(scrollY, 'change', v => setDeep(v > 1200))
+
+  /* notes wall (kept from the original site) */
+  const [noteOpen, setNoteOpen] = useState(false)
+  const [noteMsg, setNoteMsg] = useState('')
+  const [noteState, setNoteState] = useState('idle')
+  const [pastNotes, setPastNotes] = useState([])
+  useEffect(() => { fetch('/api/notes').then(r => r.json()).then(d => Array.isArray(d) && setPastNotes(d)).catch(() => {}) }, [])
+  useEffect(() => {
+    if (!noteOpen) return
+    const k = e => { if (e.key === 'Escape') setNoteOpen(false) }
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
+  }, [noteOpen])
+  async function submitNote(e) {
     e.preventDefault()
-    const text=noteMsg.trim(); if(!text) return
-    const letters=text.split('').map((ch,i)=>({ch,id:i,x:30+Math.random()*40,rot:Math.random()*30-15,delay:i*55,color:['#7A9E7E','#A8E6CF','#4A7C6F','#0C1F18','#D5CFC0'][i%5],size:Math.random()*14+20}))
-    setFallingLetters(letters); setNoteOpen(false); setNoteMsg('')
-    fetch('/api/notes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})}).then(()=>fetch('/api/notes').then(r=>r.json()).then(setPastNotes)).catch(()=>{})
-    setTimeout(()=>setFallingLetters([]),4000)
+    const text = noteMsg.trim(); if (!text) return
+    setNoteState('sending')
+    try {
+      const r = await fetch('/api/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) })
+      if (!r.ok) throw new Error()
+      setNoteMsg(''); setNoteState('sent')
+      fetch('/api/notes').then(r => r.json()).then(d => Array.isArray(d) && setPastNotes(d)).catch(() => {})
+    } catch { setNoteState('error') }
   }
 
-  /* section refs for IntersectionObserver */
-  const workRef   = useRef(null)
-  const aboutRef  = useRef(null)
-  const ctaRef    = useRef(null)
-  const workInView  = useInView(workRef)
-  const aboutInView = useInView(aboutRef)
-  const ctaInView   = useInView(ctaRef)
-
-  const [hoveredBento,setHoveredBento]=useState(null)
-  const getBentoScale = i => hoveredBento===i?'scale(1.04)':hoveredBento!==null?'scale(0.97)':'scale(1)'
+  const trackGradient = `linear-gradient(${stops.map((p, i) => `${p.line} ${Math.round(i / stops.length * 100)}% ${Math.round((i + 1) / stops.length * 100)}%`).join(',')})`
 
   return (
-    <>
-      {/* ─────────────── SCENE 1: HERO ─────────────── */}
-      <section className="scene relative overflow-hidden flex flex-col justify-end"
-        style={{paddingBottom:'5rem',paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)'}}>
+    <div className="home" id="top">
+      <StationSign />
 
-        <WeatherArt weatherState={weatherState}/>
-
-        {/* Rainbow */}
-        <div className="absolute pointer-events-none select-none" style={{inset:0,zIndex:-1}}>
-          <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet" style={{position:'absolute',right:0,bottom:0,width:'75%',height:'90%',opacity:0.72}}>
-            {[{r:420,color:'#FF6B6B'},{r:396,color:'#FF9F43'},{r:372,color:'#FFEAA7'},{r:348,color:'#A8E6CF'},{r:324,color:'#74B9FF'},{r:300,color:'#A29BFE'}].map(({r,color})=>(
-              <path key={r} d={`M ${450-r} 580 A ${r} ${r} 0 0 1 ${450+r} 580`} fill="none" stroke={color} strokeWidth={18} strokeLinecap="round" opacity="0.75"/>
-            ))}
-          </svg>
+      {/* ── NEXT STOP ── */}
+      <section className="next">
+        <div className="wrap next-grid">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 28 }}>
+            <p className="kicker">Next stop</p>
+            <p className="next-dest">A full-time product role</p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32, type: 'spring', stiffness: 200, damping: 28 }}>
+            <p className="next-copy">I&rsquo;m the person between the business and the dev team who keeps the train on schedule. Currently owning <b>CognitMES</b> at Ranial Systems.</p>
+            <a href="#line" className="ride">Ride the line <span aria-hidden="true">↓</span></a>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Speech bubble */}
-        <button onClick={()=>setNoteOpen(true)} className="absolute hidden md:block"
-          style={{right:'18%',top:'75%',zIndex:12,background:'none',border:'none',cursor:'pointer',padding:0,opacity:ready?1:0,transition:'opacity 0.8s ease 1.2s, transform 0.25s ease'}}
-          onMouseEnter={e=>e.currentTarget.style.transform='scale(1.06) translateY(-3px)'}
-          onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}>
-          <div style={{position:'relative'}}>
-            <svg width="168" height="78" viewBox="0 0 168 78" fill="none">
-              <rect x="2" y="2" width="164" height="58" rx="18" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4"/>
-              <path d="M 138 60 L 155 74 L 148 60" fill="rgba(232,227,213,0.97)" stroke="#7A9E7E" strokeWidth="1.4" strokeLinejoin="round"/>
-            </svg>
-            <div style={{position:'absolute',top:0,left:0,width:168,height:62,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',pointerEvents:'none'}}>
-              <p style={{fontFamily:'var(--font-inter)',fontSize:11,color:'#0C0C0A',lineHeight:1.5,margin:0,textAlign:'center'}}>Leave your footprint here</p>
-              <p style={{fontFamily:'var(--font-inter)',fontSize:10,color:'#7A9E7E',fontWeight:600,margin:'4px 0 0'}}>✦ click to write ✦</p>
-            </div>
-          </div>
-        </button>
-
-        {/* Note modal */}
-        {noteOpen&&(
-          <div style={{position:'fixed',inset:0,zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(12,12,10,0.5)',backdropFilter:'blur(8px)'}} onClick={e=>{if(e.target===e.currentTarget)setNoteOpen(false)}}>
-            <div style={{background:'#E8E3D5',borderRadius:28,padding:'44px 48px',width:'min(520px,92vw)',boxShadow:'0 32px 80px rgba(0,0,0,0.2)',position:'relative',maxHeight:'85vh',overflowY:'auto'}}>
-              <button onClick={()=>setNoteOpen(false)} style={{position:'absolute',top:18,right:22,background:'none',border:'none',fontSize:22,cursor:'pointer',color:'#0C0C0A',opacity:0.3}}>×</button>
-              <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'1.6rem',color:'#0C0C0A',marginBottom:6}}>Leave your footprint ✦</p>
-              <p style={{fontFamily:'var(--font-inter)',fontSize:12,color:'rgba(12,12,10,0.4)',marginBottom:20}}>Your note will be visible here.</p>
-              <form onSubmit={handleNoteSubmit}>
-                <textarea autoFocus value={noteMsg} onChange={e=>setNoteMsg(e.target.value)} placeholder="Say anything..." maxLength={160}
-                  style={{width:'100%',minHeight:90,background:'rgba(12,12,10,0.05)',border:'1px solid rgba(122,158,126,0.45)',borderRadius:14,padding:'14px 16px',fontFamily:'var(--font-inter)',fontSize:14,color:'#0C0C0A',resize:'none',outline:'none',lineHeight:1.6,boxSizing:'border-box'}}/>
-                <button type="submit" style={{marginTop:14,padding:'12px 28px',background:'#0C0C0A',color:'#E8E3D5',borderRadius:9999,fontFamily:'var(--font-inter)',fontSize:13,border:'none',cursor:'pointer'}}
-                  onMouseEnter={e=>e.currentTarget.style.background='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.background='#0C0C0A'}>Drop it ↓</button>
-              </form>
-              {pastNotes.length>0&&(
-                <div style={{marginTop:28,borderTop:'1px solid rgba(12,12,10,0.1)',paddingTop:20}}>
-                  <p style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.18em',color:'rgba(12,12,10,0.35)',textTransform:'uppercase',marginBottom:14}}>Footprints left behind</p>
-                  <div style={{display:'flex',flexDirection:'column',gap:10}}>
-                    {pastNotes.map((n,i)=><div key={i} style={{background:'rgba(122,158,126,0.1)',borderRadius:10,padding:'10px 14px',fontFamily:'var(--font-inter)',fontSize:13,color:'rgba(12,12,10,0.7)',lineHeight:1.5}}>{n.text}</div>)}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Falling letters */}
-        {fallingLetters.map(({ch,id,x,rot,delay,color,size})=>(
-          <div key={id} style={{position:'fixed',left:`${x}vw`,top:'8vh',zIndex:90,fontFamily:'var(--font-dm-serif)',fontSize:`${size}px`,color,opacity:0,transform:`rotate(${rot}deg)`,animation:`letterFall 3.6s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms forwards`,pointerEvents:'none'}}>{ch}</div>
-        ))}
-
-        <ScrollPortrait ready={ready}/>
-
-        <div className="relative z-10 max-w-7xl w-full mx-auto">
-          {/* Available badge */}
-          <div className="absolute" style={{top:'calc(-100vh + 7rem)',left:0,display:'flex',alignItems:'center',gap:8,padding:'8px 16px',borderRadius:9999,border:'1px solid #D5CFC0',background:'rgba(213,207,192,0.35)',opacity:ready?1:0,transition:'opacity 0.7s ease 0.6s'}}>
-            <span style={{width:6,height:6,borderRadius:'50%',background:'#7A9E7E',animation:'pulse 2s infinite'}}/>
-            <span style={{fontFamily:'var(--font-inter)',fontSize:11,color:'#6B7B6C',letterSpacing:'0.05em'}}>Available for work</span>
-          </div>
-
-          {/* Cloud + weather pill */}
-          <div style={{display:'flex',flexDirection:'column',alignItems:'flex-start'}}>
-            {weatherState==='cloudy'&&(
-              <div style={{marginBottom:-6,animation:'cloudBob 5s ease-in-out infinite',opacity:0.82}}>
-                <svg width="160" height="76" viewBox="0 0 110 54" fill="none">
-                  <rect x="8" y="30" width="94" height="22" rx="11" fill="#3A4A40"/>
-                  <circle cx="22" cy="30" r="13" fill="#3A4A40"/><circle cx="42" cy="22" r="17" fill="#3A4A40"/>
-                  <circle cx="66" cy="20" r="18" fill="#3A4A40"/><circle cx="88" cy="26" r="13" fill="#3A4A40"/>
-                </svg>
+      {/* ── THE LINE + PLATFORM POSTER ── */}
+      <section id="line" className="line-sec">
+        <div className="wrap">
+          <motion.h2 className="sec-title" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
+            The line so far
+          </motion.h2>
+          <div className="line-grid">
+            <div className="route" ref={routeRef}>
+              <div className="track" aria-hidden="true">
+                <div className="track-ghost" />
+                <motion.div className="track-fill" style={{ clipPath: lineClip, background: trackGradient }} />
+                <motion.span className="train" style={{ top: trainTop }}>S</motion.span>
               </div>
-            )}
-            <WeatherPill weatherState={weatherState} temp={temp} ready={ready}/>
+              {stops.map((p, i) => <Stop key={p.slug} p={p} i={i} />)}
+            </div>
+            <aside className="poster-rail">
+              <motion.div initial={{ opacity: 0, y: 40, rotate: -1.5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ type: 'spring', stiffness: 160, damping: 22 }}>
+                <Poster />
+              </motion.div>
+            </aside>
           </div>
-
-          <HeroName ready={ready}/>
-
-          <div style={{marginTop:'1.75rem'}}>
-            <p style={{fontFamily:'var(--font-inter)',fontWeight:300,fontSize:'1.1rem',color:'rgba(12,12,10,0.55)',marginBottom:6,
-              opacity:ready?1:0,transform:ready?'none':'translateY(14px)',transition:'opacity 0.7s ease 0.55s, transform 0.7s ease 0.55s'}}>
-              <RoleRotator/> — Based in NYC
-            </p>
-            <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'1rem',color:'rgba(12,12,10,0.35)',fontStyle:'italic',
-              opacity:ready?1:0,transform:ready?'none':'translateY(14px)',transition:'opacity 0.7s ease 0.82s, transform 0.7s ease 0.82s'}}>
-              "I design user experiences that feel inevitable."
-            </p>
-          </div>
-        </div>
-
-        {/* Scroll cue */}
-        <div className="absolute left-1/2 -translate-x-1/2" style={{bottom:28,display:'flex',flexDirection:'column',alignItems:'center',gap:8,opacity:ready?0.35:0,transition:'opacity 0.8s ease 1s'}}>
-          <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.3em',color:'#0C0C0A',textTransform:'uppercase'}}>Scroll</span>
-          <div style={{width:1,height:36,background:'rgba(12,12,10,0.2)',overflow:'hidden'}}>
-            <div style={{width:'100%',height:'100%',background:'#7A9E7E',animation:'scrollLine 2s ease-in-out infinite'}}/>
+          <div className="earlier">
+            <span className="label">Earlier stops</span>
+            {earlier.map(p => <Link key={p.slug} href={`/work/${p.slug}`}><Bullet letter={p.bullet} color={p.line} size="sm" />{p.title}</Link>)}
+            <Link href="/work" className="all">Full line map →</Link>
           </div>
         </div>
       </section>
 
-      {/* ─────────────── SCENE 2: SELECTED WORK ─────────────── */}
-      <section ref={workRef} className="scene flex flex-col justify-center" style={{background:'#E8E3D5',paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)'}}>
-        <div style={{maxWidth:1280,margin:'0 auto',width:'100%'}}>
-          <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:'3rem',opacity:workInView?1:0,transform:workInView?'none':'translateY(32px)',transition:'all 0.7s ease'}}>
-            <div>
-              <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.22em',color:'#7A9E7E',textTransform:'uppercase',display:'block',marginBottom:10}}>Selected Work</span>
-              <h2 style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(2.2rem,5vw,4rem)',color:'#0C0C0A',lineHeight:1.1}}>Case Studies</h2>
-            </div>
-            <Link href="/work" style={{fontFamily:'var(--font-inter)',fontSize:13,color:'rgba(12,12,10,0.35)',textDecoration:'none',transition:'color 0.2s'}}
-              onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='rgba(12,12,10,0.35)'}>
-              All projects ↗
-            </Link>
-          </div>
-
-          <div style={{display:'flex',flexDirection:'column',borderTop:'1px solid #D5CFC0'}}>
-            {projects.map(({num,title,tags},i)=>(
-              <Link key={num} href="/work" style={{textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'2rem 0',borderBottom:'1px solid #D5CFC0',transition:'padding-left 0.4s ease',opacity:workInView?1:0,transform:workInView?'none':'translateY(24px)',transitionDelay:`${i*100+200}ms`,transitionProperty:'opacity, transform, padding-left'}}
-                onMouseEnter={e=>e.currentTarget.style.paddingLeft='20px'} onMouseLeave={e=>e.currentTarget.style.paddingLeft='0'}>
-                <div style={{display:'flex',alignItems:'center',gap:'clamp(2rem,4vw,3rem)'}}>
-                  <span style={{fontFamily:'var(--font-inter)',fontSize:11,color:'rgba(12,12,10,0.25)',letterSpacing:'0.2em'}}>{num}</span>
-                  <span style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1.5rem,3vw,2.5rem)',color:'#0C0C0A',transition:'color 0.3s'}}
-                    onMouseEnter={e=>e.currentTarget.style.color='#7A9E7E'} onMouseLeave={e=>e.currentTarget.style.color='#0C0C0A'}>{title}</span>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'flex-end'}}>
-                    {tags.map(tag=><span key={tag} style={{padding:'4px 12px',borderRadius:9999,border:'1px solid #8B8578',fontSize:11,color:'#4A4540',fontFamily:'var(--font-inter)'}}>{tag}</span>)}
-                  </div>
-                  <span style={{color:'rgba(12,12,10,0.25)',fontSize:18}}>→</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────── SCENE 3: ABOUT / BENTO ─────────────── */}
-      <section ref={aboutRef} className="scene flex flex-col justify-center" style={{background:'#E0DDD0',paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)'}}>
-        <div style={{maxWidth:1280,margin:'0 auto',width:'100%'}}>
-          <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.22em',color:'#7A9E7E',textTransform:'uppercase',display:'block',marginBottom:'1.5rem',opacity:aboutInView?1:0,transition:'opacity 0.6s ease'}}>About</span>
-
-          <div className="bento-grid" style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:12,height:'calc(100vh - 14rem)',maxHeight:520}}>
-            {/* Quote card */}
-            <div className="bento-quote col-span-12 md:col-span-7" style={{gridColumn:'span 7',background:'#7A9E7E',borderRadius:24,padding:'clamp(1.5rem,3vw,2.5rem)',display:'flex',flexDirection:'column',justifyContent:'space-between',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.1s',cursor:'pointer'}}
-              onMouseEnter={e=>{setHoveredBento(0);e.currentTarget.style.transform='scale(1.02)'}} onMouseLeave={e=>{setHoveredBento(null);e.currentTarget.style.transform='scale(1)'}}>
-              <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(232,227,213,0.6)',textTransform:'uppercase'}}>Philosophy</span>
-              <div>
-                <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1.5rem,2.8vw,2.5rem)',color:'#E8E3D5',lineHeight:1.25,marginBottom:20}}>"Progress begins<br/>with bare bones."</p>
-                <Link href="/about" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'10px 20px',background:'rgba(232,227,213,0.15)',border:'1px solid rgba(232,227,213,0.25)',color:'#E8E3D5',borderRadius:9999,fontSize:13,fontFamily:'var(--font-inter)',textDecoration:'none',transition:'all 0.3s'}}
-                  onMouseEnter={e=>{e.currentTarget.style.background='#E8E3D5';e.currentTarget.style.color='#0C0C0A'}} onMouseLeave={e=>{e.currentTarget.style.background='rgba(232,227,213,0.15)';e.currentTarget.style.color='#E8E3D5'}}>
-                  Read my story →
-                </Link>
-              </div>
-            </div>
-
-            {/* Role card */}
-            <div className="bento-role col-span-12 md:col-span-5" style={{gridColumn:'span 5',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.18s'}}>
-              <RoleBentoCard/>
-            </div>
-
-            {/* Toolkit */}
-            <div className="bento-toolkit col-span-12 md:col-span-4" style={{gridColumn:'span 4',background:'#B8D4BC',borderRadius:24,padding:'clamp(1.2rem,2.5vw,2rem)',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.25s'}}>
-              <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(12,12,10,0.45)',textTransform:'uppercase',display:'block',marginBottom:14}}>Toolkit</span>
-              <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-                {['Figma','UX Research','SQL','React','Prototyping','Jira','Design Systems'].map(s=><span key={s} style={{padding:'5px 12px',borderRadius:9999,background:'rgba(12,12,10,0.08)',fontSize:11,fontFamily:'var(--font-inter)',color:'#0C0C0A'}}>{s}</span>)}
-              </div>
-            </div>
-
-            {/* Stat */}
-            <div className="col-span-6 md:col-span-4" style={{gridColumn:'span 4',background:'#E8E3D5',border:'1px solid #D5CFC0',borderRadius:24,padding:'clamp(1.2rem,2.5vw,2rem)',display:'flex',flexDirection:'column',justifyContent:'space-between',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.32s'}}>
-              <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(12,12,10,0.4)',textTransform:'uppercase'}}>Background</span>
-              <div>
-                <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(2rem,3.5vw,3rem)',color:'#7A9E7E',lineHeight:1}}>3×</p>
-                <p style={{fontFamily:'var(--font-inter)',fontSize:12,color:'rgba(12,12,10,0.5)',marginTop:4}}>disciplines combined into one practice</p>
-              </div>
-            </div>
-
-            {/* Driven by */}
-            <div className="col-span-6 md:col-span-4" style={{gridColumn:'span 4',background:'#E8F0E9',borderRadius:24,padding:'clamp(1.2rem,2.5vw,2rem)',display:'flex',flexDirection:'column',justifyContent:'space-between',opacity:aboutInView?1:0,transform:aboutInView?'none':'translateY(28px)',transition:'all 0.6s ease 0.38s'}}>
-              <span style={{fontFamily:'var(--font-inter)',fontSize:10,letterSpacing:'0.2em',color:'rgba(12,12,10,0.4)',textTransform:'uppercase'}}>Driven by</span>
-              <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1rem,1.8vw,1.35rem)',color:'#0C0C0A',lineHeight:1.4}}>Building systems from the ground up.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────── SCENE 4: CTA ─────────────── */}
-      <section ref={ctaRef} className="scene flex flex-col items-center justify-center" style={{paddingLeft:'clamp(2rem,5vw,3.5rem)',paddingRight:'clamp(2rem,5vw,3.5rem)',textAlign:'center',position:'relative',overflow:'hidden'}}>
-
-        {/* Spinning badge */}
-        <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',width:580,height:580,marginLeft:-290,marginTop:-290}}>
-          <svg viewBox="0 0 580 580" width="580" height="580" style={{animation:'spinBadge 18s linear infinite',display:'block',opacity:0.22}}>
-            <defs><path id="circlePath2" d="M 290,290 m -250,0 a 250,250 0 1,1 500,0 a 250,250 0 1,1 -500,0"/></defs>
-            <text style={{fontFamily:'var(--font-inter)',fontSize:28,fill:'#7A9E7E',letterSpacing:'0.22em'}}>
-              <textPath href="#circlePath2">✦ OnenOnlyShereena ✦ OnenOnlyShereena ✦ OnenOnlyShereena ✦&nbsp;</textPath>
-            </text>
-          </svg>
-        </div>
-
-        <div style={{position:'relative',zIndex:1,maxWidth:600}}>
-          <span style={{fontFamily:'var(--font-inter)',fontSize:11,letterSpacing:'0.22em',color:'#7A9E7E',textTransform:'uppercase',display:'block',marginBottom:20,opacity:ctaInView?1:0,transition:'opacity 0.6s ease'}}>Let's Connect</span>
-          <h2 style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(2.8rem,6vw,5.5rem)',color:'#0C0C0A',lineHeight:1.1,marginBottom:8,opacity:ctaInView?1:0,transform:ctaInView?'none':'translateY(24px)',transition:'all 0.7s ease 0.1s'}}>
-            Have a project<br/>in mind?
-          </h2>
-          <p style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(1rem,2vw,1.5rem)',color:'rgba(12,12,10,0.38)',fontStyle:'italic',marginBottom:36,opacity:ctaInView?1:0,transition:'opacity 0.7s ease 0.2s'}}>
-            Data brain. Design heart. Ships things 0→1.
-          </p>
-
-          <div style={{display:'flex',justifyContent:'center',gap:16,marginBottom:28,opacity:ctaInView?1:0,transition:'opacity 0.7s ease 0.3s'}}>
+      {/* ── TRANSFER BOARD ── */}
+      <section className="dark-band">
+        <div className="wrap">
+          <motion.h2 className="sec-title light" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>Transfer here</motion.h2>
+          <div className="board">
             {[
-              {href:'mailto:zhengsherina@gmail.com',label:'Email',icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>},
-              {href:'https://www.linkedin.com/in/sherina-zheng-48b287224/',label:'LinkedIn',icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>},
-            ].map(({href,label,icon})=>(
-              <a key={label} href={href} target={href.startsWith('http')?'_blank':undefined} rel="noreferrer" aria-label={label}
-                style={{width:56,height:56,borderRadius:'50%',border:'1px solid rgba(12,12,10,0.12)',display:'flex',alignItems:'center',justifyContent:'center',color:'rgba(12,12,10,0.3)',textDecoration:'none',transition:'all 0.3s'}}
-                onMouseEnter={e=>{e.currentTarget.style.background='#E8F0E9';e.currentTarget.style.color='#7A9E7E';e.currentTarget.style.borderColor='#B8D4BC';e.currentTarget.style.transform='scale(1.12)'}}
-                onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='rgba(12,12,10,0.3)';e.currentTarget.style.borderColor='rgba(12,12,10,0.12)';e.currentTarget.style.transform='scale(1)'}}>
-                {icon}
-              </a>
+              ['L', '#FCCC0A', 'Languages', 'English · 中文 · 粵語'],
+              ['T', '#00933C', 'Toolkit', 'Notion · Jira · Figma · SQL · React'],
+              ['F', '#FF6319', 'Focus', 'B2B products · FinTech & payments · Manufacturing software'],
+              ['E', '#0039A6', 'Education', 'BBA, Computer Information Systems & Data Analytics — Baruch College'],
+            ].map(([l, c, k, v], i) => (
+              <motion.div key={k} className="board-row" initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ delay: i * 0.06, type: 'spring', stiffness: 420, damping: 32 }}>
+                <Bullet letter={l} color={c} size="lg" /><span className="board-k">{k}</span><span className="board-v">{v}</span>
+              </motion.div>
             ))}
           </div>
-
-          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12,opacity:ctaInView?1:0,transition:'opacity 0.7s ease 0.4s'}}>
-            {[{href:'mailto:zhengsherina@gmail.com',text:'zhengsherina@gmail.com ↗'},{href:'https://www.linkedin.com/in/sherina-zheng-48b287224/',text:'linkedin.com/in/sherina-zheng ↗'}].map(({href,text})=>(
-              <a key={href} href={href} target={href.startsWith('http')?'_blank':undefined} rel="noreferrer"
-                style={{fontFamily:'var(--font-dm-serif)',fontSize:'clamp(0.95rem,1.6vw,1.2rem)',color:'rgba(12,12,10,0.4)',textDecoration:'none',transition:'all 0.3s'}}
-                onMouseEnter={e=>{e.currentTarget.style.color='#7A9E7E';e.currentTarget.style.transform='scale(1.04)'}}
-                onMouseLeave={e=>{e.currentTarget.style.color='rgba(12,12,10,0.4)';e.currentTarget.style.transform='scale(1)'}}>
-                {text}
-              </a>
-            ))}
-          </div>
+          <blockquote className="motto">&ldquo;Progress begins with bare bones.&rdquo;</blockquote>
+          <Link href="/about" className="motto-link">Read my story →</Link>
         </div>
       </section>
 
-      {/* ── Back to top ── */}
-      <button
-        onClick={() => {
-          document.querySelectorAll('.scene')[0]?.scrollIntoView({ behavior: 'smooth' })
-          window.dispatchEvent(new CustomEvent('sectionChange', { detail: { index: 0 } }))
-        }}
-        aria-label="Back to top"
-        style={{
-          position: 'fixed', bottom: 28, right: 28, zIndex: 50,
-          width: 48, height: 48, borderRadius: '50%',
-          background: 'rgba(232,227,213,0.9)', border: '1px solid #D5CFC0',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', backdropFilter: 'blur(8px)',
-          opacity: currentSection > 0 ? 1 : 0,
-          transform: currentSection > 0 ? 'translateY(0)' : 'translateY(12px)',
-          transition: 'opacity 0.4s ease, transform 0.4s ease, background 0.2s',
-          pointerEvents: currentSection > 0 ? 'auto' : 'none',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = '#E8F0E9'; e.currentTarget.style.borderColor = '#B8D4BC' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(232,227,213,0.9)'; e.currentTarget.style.borderColor = '#D5CFC0' }}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4A7A52" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 12V4M4 7l4-4 4 4"/>
-        </svg>
-      </button>
+      {/* ── TERMINAL: the contact sign ── */}
+      <section className="terminal">
+        <motion.div className="tablet" initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.4 }} transition={{ type: 'spring', stiffness: 220, damping: 26 }}>
+          <div className="tablet-face">
+            <p className="kicker dark">Hiring a Product Owner?</p>
+            <p className="tablet-name">Let&rsquo;s talk.</p>
+            <div className="tablet-actions">
+              <a href={`mailto:${EMAIL}`} className="ride">{EMAIL}</a>
+              <a href={LINKEDIN} target="_blank" rel="noreferrer" className="ride ghost">LinkedIn ↗</a>
+            </div>
+            <button className="note-link" onClick={() => { setNoteState('idle'); setNoteOpen(true) }}>Or leave a note at the station</button>
+          </div>
+        </motion.div>
+        <p className="colophon">© {new Date().getFullYear()} Sherina Zheng · Queens, New York</p>
+      </section>
+
+      {noteOpen && (
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="note-title" onClick={e => { if (e.target === e.currentTarget) setNoteOpen(false) }}>
+          <div className="modal-card">
+            <button className="modal-x" onClick={() => setNoteOpen(false)} aria-label="Close">×</button>
+            <p id="note-title" className="modal-title">Leave a note</p>
+            <p className="modal-sub">Everyone who passes through can read it. 160 characters max.</p>
+            <form onSubmit={submitNote}>
+              <label className="field"><span>Your note</span>
+                <textarea autoFocus rows={4} value={noteMsg} maxLength={160} placeholder="Say hi…"
+                  onChange={e => { setNoteMsg(e.target.value); if (noteState !== 'sending') setNoteState('idle') }} />
+              </label>
+              <div className="modal-row">
+                <button type="submit" className="ride" disabled={!noteMsg.trim() || noteState === 'sending'}>{noteState === 'sending' ? 'Posting…' : 'Post note'}</button>
+                <span className="modal-status">{noteState === 'sent' && 'Posted. Thank you!'}{noteState === 'error' && 'Could not post. Try again.'}</span>
+              </div>
+            </form>
+            {pastNotes.length > 0 && <div className="notes"><span className="label">On the wall</span>{pastNotes.map((n, i) => <p key={i}>{n.text}</p>)}</div>}
+          </div>
+        </div>
+      )}
+
+      <button className="to-top" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        style={{ opacity: deep ? 1 : 0, pointerEvents: deep ? 'auto' : 'none' }}>↑</button>
 
       <style>{`
-        html { overflow: hidden; }
-        body { overflow: hidden; }
-        .scene { height: 100vh; min-height: 100vh; }
+        .home { overflow-x: clip; }
 
-        /* ── Hero: stack text below portrait on mobile ── */
-        .hero-content { position: relative; z-index: 10; width: 100%; }
-        @media (max-width: 640px) {
-          .hero-portrait { width: 70% !important; opacity: 0.35 !important; }
-          .hero-name { font-size: clamp(3rem, 15vw, 5rem) !important; }
-          .hero-tagline { font-size: 0.9rem !important; }
-          .bento-grid { grid-template-columns: 1fr !important; height: auto !important; max-height: none !important; overflow-y: auto; }
-          .bento-grid > div { grid-column: span 1 !important; }
-          .work-row { flex-direction: column !important; gap: 0.5rem !important; }
-          .work-row-tags { display: none !important; }
-          .cta-title { font-size: clamp(2rem,10vw,3.5rem) !important; }
-          .scene-about { overflow-y: auto !important; }
-        }
-        @media (max-width: 768px) {
-          .bento-grid { grid-template-columns: 1fr 1fr !important; height: auto !important; max-height: none !important; padding-bottom: 2rem; }
-          .bento-quote { grid-column: span 2 !important; }
-          .bento-role { grid-column: span 2 !important; }
-          .bento-toolkit { grid-column: span 2 !important; }
-        }
+        /* sign */
+        .sign-layer { position:fixed; inset:0 0 auto 0; height:0; z-index:40; pointer-events:none; }
+        .sign-layer.static { position:absolute; }
+        .sign-layer a { pointer-events:auto; }
+        .sign-panel { position:absolute; left:0; right:0; top:0; background:var(--black); box-shadow:0 10px 30px rgba(0,0,0,.18); }
+        .sign-rule { position:absolute; left:0; right:0; top:10px; height:2px; background:#fff; opacity:.9; }
+        .sign-nav { position:absolute; left:var(--pad); right:var(--pad); top:0; height:${BAR}px; display:flex; align-items:center; justify-content:space-between; color:#fff; z-index:2; }
+        .sign-where { font: 500 14px var(--sans); color:#cfcfcf; padding-left:44px; }
+        .sign-right { display:flex; align-items:center; gap:28px; }
+        .weather-bar { padding-right:28px; border-right:1px solid rgba(255,255,255,.3); }
+        .sign-tags .weather-tag { display:none; }
+        .sign-links { display:flex; gap:26px; }
+        .sign-links a { color:#fff; text-decoration:none; font:800 15px var(--sans); padding:10px 0; }
+        .sign-links a:hover { color:var(--yellow); }
+        .sign-bullet { position:absolute; display:grid; place-items:center; border-radius:50%; background:var(--purple); color:#fff; font-family:var(--sans); font-weight:800; transform-origin:0 0; line-height:1; }
+        .sign-name { position:absolute; margin:0; font-family:var(--sans); font-weight:900; line-height:.86; letter-spacing:-.035em; color:#fff; transform-origin:0 0; white-space:nowrap; }
+        .sign-name a { color:inherit; text-decoration:none; }
+        .sign-tags { position:absolute; display:flex; flex-wrap:wrap; gap:14px 30px; color:#fff; font:800 clamp(17px,1.7vw,24px) var(--sans); }
+        .sign-tags > span { display:inline-flex; align-items:center; gap:12px; }
+        .sign-tags .bul { width:42px; height:42px; font-size:24px; }
 
-        @keyframes scrollLine  { 0%{transform:translateY(-100%)} 100%{transform:translateY(200%)} }
-        @keyframes pulse       { 0%,100%{opacity:1} 50%{opacity:0.35} }
-        @keyframes spinBadge   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes spinSlow    { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes rainFall    { 0%{opacity:0;transform:translateY(-60px)} 60%{opacity:1} 100%{opacity:0;transform:translateY(80px)} }
-        @keyframes windSway    { 0%,100%{transform:translateX(0)} 50%{transform:translateX(12px)} }
-        @keyframes snowDrift   { 0%,100%{transform:translateY(0) translateX(0)} 33%{transform:translateY(14px) translateX(8px)} 66%{transform:translateY(6px) translateX(-6px)} }
-        @keyframes cloudBob    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        @keyframes letterFall  { 0%{opacity:0;transform:translateY(0)} 8%{opacity:1} 80%{opacity:1;transform:translateY(72vh)} 100%{opacity:0;transform:translateY(74vh)} }
+        /* next stop */
+        .next { padding-top: 50svh; min-height: 100svh; display:flex; align-items:center; }
+        .next-grid { display:grid; grid-template-columns: 1.15fr 1fr; gap: clamp(24px,5vw,80px); align-items:end; padding-top: clamp(28px,5vh,56px); padding-bottom: clamp(36px,6vh,64px); }
+        .kicker { font: 800 clamp(20px,1.8vw,26px)/1 var(--sans); letter-spacing:-.01em; color: var(--purple); margin-bottom: 12px; }
+        .kicker.dark { color: var(--ink); }
+        .next-dest { font: 900 clamp(52px,6.6vw,104px)/.92 var(--sans); letter-spacing:-.045em; max-width: 9.5em; }
+        .next-copy { font: 500 clamp(18px,1.5vw,21px)/1.5 var(--sans); max-width: 34rem; margin-bottom: 24px; }
+        .next-copy b { font-weight: 800; }
+
+        /* the line */
+        .line-sec { padding: clamp(64px,10vh,120px) 0 clamp(56px,8vh,96px); background-color: var(--tile);
+          background-image: linear-gradient(rgba(15,15,15,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,15,15,.06) 1px, transparent 1px); background-size: 120px 60px; }
+        .line-grid { display:grid; grid-template-columns: minmax(0,1fr) clamp(280px,24vw,360px); gap: clamp(32px,4vw,72px); align-items:start; }
+        .poster-rail { position: sticky; top: 112px; }
+        .train { position:absolute; left:50%; width: 44px; height: 30px; margin: -15px 0 0 -22px; border-radius: 10px; background: var(--ink); color:#fff; display:grid; place-items:center; font:800 15px var(--sans); box-shadow: 0 0 0 4px var(--tile); }
+        .stop-title a { color: inherit; text-decoration: none; }
+        .stop-title a:hover { text-decoration: underline; text-decoration-thickness: 6px; text-underline-offset: 8px; text-decoration-color: var(--line); }
+        .stop-body { display:grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,3vw,48px); margin-top: 26px; }
+        .stop-body > p { font: 500 17px/1.6 var(--sans); color:#2b2b2b; }
+        .stop-body ul { list-style:none; display:grid; gap: 8px; margin-bottom: 16px; }
+        .stop-body li { font: 500 16px/1.45 var(--sans); padding-left: 18px; position:relative; }
+        .stop-body li::before { content:''; position:absolute; left:0; top:.5em; width:8px; height:8px; border-radius:50%; background: var(--line); }
+        .stop-links { display:flex; flex-wrap:wrap; gap: 10px 22px; }
+        .stop-link { font: 800 15px var(--sans); color: var(--ink); text-decoration: none; border-bottom: 3px solid var(--line); padding-bottom: 2px; }
+        .earlier { display:flex; flex-wrap:wrap; align-items:center; gap: 12px 24px; padding: 28px 0 0 clamp(64px,8vw,120px); border-top: 3px solid var(--ink); margin-top: 8px; }
+        .earlier .label { margin:0; }
+        .earlier a { display:inline-flex; align-items:center; gap:10px; color: var(--ink); text-decoration:none; font: 800 18px var(--sans); min-height:44px; }
+        .earlier a:hover { text-decoration: underline; }
+        .earlier .all { margin-left:auto; }
+
+        /* transfer */
+        .motto { margin-top: clamp(56px,9vh,96px); font: 900 clamp(40px,5.4vw,80px)/1 var(--sans); letter-spacing:-.045em; max-width: 13em; }
+        .motto-link { display:inline-block; margin-top: 22px; color: var(--yellow); font: 800 17px var(--sans); text-decoration:none; border-bottom: 2px solid currentColor; padding-bottom: 3px; }
+
+        /* terminal */
+        .terminal { padding: clamp(72px,11vh,128px) var(--pad) 40px; background-color:#E9E6DC;
+          background-image: linear-gradient(#d6d2c5 2px, transparent 2px), linear-gradient(90deg, #d6d2c5 2px, transparent 2px); background-size: 96px 48px; }
+        .tablet { max-width: 980px; margin: 0 auto; background:var(--black); padding: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.18); }
+        .tablet-face { background: var(--tile); margin: 0; padding: clamp(40px,7vh,72px) clamp(24px,5vw,64px); text-align:center; }
+        .tablet-name { font: 900 clamp(64px,9vw,140px)/.9 var(--sans); letter-spacing:-.05em; margin: 6px 0 30px; }
+        .tablet-actions { display:flex; flex-wrap:wrap; justify-content:center; gap: 12px; }
+        .note-link { margin-top: 22px; background:none; border:none; font: 800 15px var(--sans); color: var(--ink); text-decoration: underline; text-underline-offset: 5px; cursor:pointer; min-height:44px; }
+        .colophon { text-align:center; margin-top: 40px; font: 500 14px var(--sans); color:#444; }
+
+        /* modal */
+        .modal { position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(15,15,15,.6); }
+        .modal-card { position:relative; width:min(520px,100%); max-height:85vh; overflow-y:auto; background: var(--tile); padding: clamp(24px,5vw,40px); border-top: 10px solid var(--purple); }
+        .modal-x { position:absolute; top:8px; right:8px; width:44px; height:44px; background:none; border:none; font-size:26px; cursor:pointer; }
+        .modal-title { font: 900 34px/1 var(--sans); letter-spacing:-.03em; }
+        .modal-sub { font: 500 15px var(--sans); color:#444; margin: 8px 0 18px; }
+        .modal-row { margin-top: 14px; display:flex; align-items:center; gap:14px; }
+        .modal-status { font: 800 14px var(--sans); }
+        .notes { margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--ink); display:grid; gap:8px; }
+        .notes p { background:#fff; padding:10px 12px; font: 500 15px/1.45 var(--sans); }
+
+        .to-top { position:fixed; right:20px; bottom:20px; z-index:50; width:52px; height:52px; border-radius:50%; background: var(--ink); color:#fff; border:none; font: 800 22px var(--sans); cursor:pointer; transition: opacity .3s; }
+
+        @media (max-width: 1100px) {
+          .line-grid { grid-template-columns: 1fr; }
+          .poster-rail { position: static; max-width: 420px; order: -1; margin: 0 0 56px clamp(64px,8vw,120px); }
+        }
+        @media (max-width: 900px) {
+          .next-grid { grid-template-columns: 1fr; align-items:start; }
+          .stop-body { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+          .next { min-height: auto; }
+          .sign-where { display:none; }
+          .sign-links { margin-left:auto; gap: 18px; }
+          .sign-right { margin-left:auto; }
+          .weather-bar { display:none !important; }
+          .sign-tags .weather-tag { display:inline-flex; font-size:15px; }
+          .sign-links a { font-size: 14px; }
+          .sign-tags { gap: 10px 18px; }
+          .sign-tags .bul { width:30px; height:30px; font-size:17px; }
+          .earlier .all { margin-left: 0; }
+          .tablet { padding: 10px; }
+          .terminal { padding-bottom: 96px; }
+          .poster-rail { margin-left: 0; }
+        }
       `}</style>
-    </>
+    </div>
   )
 }
