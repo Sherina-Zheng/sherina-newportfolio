@@ -103,14 +103,23 @@ export default async function CasePage({ params }) {
         .case-tags span { font: 800 13px var(--sans); letter-spacing: .06em; text-transform: uppercase; border: 2px solid var(--ink); padding: 6px 10px; }
         .owned { list-style: none; border-top: 2px solid var(--ink); }
         .owned li { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(15,15,15,.2); font: 800 clamp(18px, 1.6vw, 22px)/1.35 var(--sans); letter-spacing: -.01em; }
-        .owned-n { width: 44px; height: 44px; display: grid; place-items: center; background: var(--line); color: #fff; font: 900 20px var(--sans); }
+        .owned li { transition: padding .45s var(--spring), background .3s ease; }
+        .owned li > span:last-child { transform-origin: left center; transition: transform .45s var(--spring); }
+        @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+          .owned li:hover { padding-left: 12px; background: color-mix(in srgb, var(--line) 10%, transparent); }
+          .owned li:hover .owned-n { transform: scale(1.2) rotate(-8deg); }
+          .owned li:hover > span:last-child { transform: scale(1.04); }
+          .case-nav-link .bul { transition: transform .45s var(--spring); }
+          .case-nav-link:hover .bul { transform: scale(1.3) rotate(-10deg); }
+        }
+        .owned-n { transition: transform .45s var(--spring); width: 44px; height: 44px; display: grid; place-items: center; background: var(--line); color: #fff; font: 900 20px var(--sans); }
         .brochure { background: var(--black); color: #fff; padding: clamp(64px, 10vh, 112px) 0 clamp(48px, 8vh, 88px); border-bottom: 2px solid rgba(255,255,255,.2); }
         .brochure-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; }
         .brochure-head .sec-title { margin-bottom: 14px; }
         .brochure-note { font: 500 18px/1.55 var(--sans); color: #ddd; max-width: 40rem; }
         .brochure-pages { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-        .brochure-pages a { display: block; background: #fff; padding: 6px; transition: transform .25s cubic-bezier(.3,1.6,.5,1); }
-        .brochure-pages a:hover { transform: translateY(-6px); }
+        .brochure-pages a { display: block; background: #fff; padding: 6px; transition: transform .5s var(--spring), box-shadow .3s ease; }
+        .brochure-pages a:hover { transform: translateY(-8px) scale(1.06) rotate(-1deg); position: relative; z-index: 2; box-shadow: 0 30px 60px rgba(0,0,0,.45); }
         .brochure-pages img { display: block; width: 100%; height: auto; }
         .page-n { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font: 800 14px var(--sans); letter-spacing: .06em; text-transform: uppercase; }
         .case-nav { background: var(--black); color: #fff; }

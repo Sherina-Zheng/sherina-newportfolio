@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { SignHeader, Bullet, Poster } from '../../components/Station'
+import Reveal from '../../components/Reveal'
 
 export const metadata = { title: 'About — Sherina Zheng' }
 
@@ -39,50 +40,52 @@ export default function AboutPage() {
       />
 
       <section className="about-intro">
-        <div className="wrap about-grid">
-          <Poster caption="Platform poster" />
-          <div>
+        <Reveal className="wrap about-grid">
+          <div className="rv" style={{ '--i': 0 }}><Poster caption="Platform poster" /></div>
+          <div className="rv" style={{ '--i': 2 }}>
             <p className="about-big">Systems thinker. Builder. Somewhere between the business and the code.</p>
             <p className="about-p">I sit at the intersection of product and operations, bridging strategy and execution. I drive cross-functional work, streamline product workflows, and turn ambiguous problems into clear, shippable steps.</p>
             <p className="about-p">With a background in data analytics and a growing edge in UI/UX and front-end development, I bring analytical rigor and a designer&rsquo;s eye to everything I build.</p>
             <blockquote className="about-quote">&ldquo;Progress begins with bare bones.&rdquo;</blockquote>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <section className="journey">
         <div className="wrap">
           <h2 className="sec-title">Journey</h2>
-          <div className="route">
+          <Reveal className="route">
             <div className="track" aria-hidden="true"><div className="track-fill" style={{ background: gradient }} /></div>
             {timeline.map((t, i) => (
-              <div key={t.title} className="stop">
+              <div key={t.title} className="stop rv" style={{ '--line': t.color, '--i': i + 1 }}>
                 <span className={`stop-dot ${i === 0 ? 'now' : ''}`} aria-hidden="true" />
                 <div className="stop-meta">
                   <Bullet letter={t.year === 'Now' ? 'N' : t.year.slice(2)} color={t.color} size="sm" />
                   <span>{t.year} · {t.org}</span>
                   {i === 0 && <span className="here">You are here</span>}
                 </div>
-                <h3 className="journey-title">{t.title}</h3>
-                <p className="journey-desc">{t.desc}</p>
+                <div className="journey-card">
+                  <h3 className="journey-title">{t.title}</h3>
+                  <p className="journey-desc">{t.desc}</p>
+                </div>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="dark-band">
         <div className="wrap">
           <h2 className="sec-title light">Transfer here</h2>
-          <div className="board">
-            {skills.map(s => (
-              <div key={s.cat} className="board-row">
+          <Reveal className="board">
+            {skills.map((s, i) => (
+              <div key={s.cat} className="board-row rv" style={{ '--i': i }}>
                 <Bullet letter={s.letter} color={s.color} size="lg" />
                 <span className="board-k">{s.cat}</span>
                 <span className="board-v">{s.items}</span>
               </div>
             ))}
-          </div>
+          </Reveal>
           <div className="about-actions">
             <Link href="/contact" className="ride">Work with me</Link>
             <Link href="/work" className="ride ghost on-black">See the line map</Link>
@@ -93,13 +96,27 @@ export default function AboutPage() {
       <style>{`
         .about-intro { padding: clamp(56px, 9vh, 104px) 0; }
         .about-grid { display: grid; grid-template-columns: minmax(260px, 380px) 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
-        .about-big { font: 900 clamp(32px, 3.6vw, 56px)/1.1 var(--sans); letter-spacing: -.04em; margin-bottom: 28px; }
+        .about-big { font: 900 clamp(32px, 3.6vw, 56px)/1.2 var(--sans); letter-spacing: -.04em; margin-bottom: 28px; }
         .about-p { font: 500 18px/1.6 var(--sans); color: #2b2b2b; max-width: 40rem; margin-bottom: 16px; }
         .about-quote { margin-top: 36px; padding-left: 20px; border-left: 10px solid var(--purple); font: 900 clamp(26px, 2.6vw, 38px)/1.1 var(--sans); letter-spacing: -.03em; }
         .journey { padding: clamp(56px, 9vh, 104px) 0; background-image: linear-gradient(rgba(15,15,15,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,15,15,.06) 1px, transparent 1px); background-size: 120px 60px; border-top: 3px solid var(--ink); }
         .journey .stop { padding-bottom: clamp(40px, 6vh, 64px); }
         .journey-title { font: 900 clamp(30px, 3.4vw, 52px)/1 var(--sans); letter-spacing: -.04em; margin: 12px 0 10px; }
         .journey-desc { font: 500 17px/1.6 var(--sans); color: #2b2b2b; max-width: 44rem; }
+        /* journey: line draws down, stops pop in; hover enlarges the stop */
+        .reveal.armed .track-fill { clip-path: inset(0 0 100% 0 round 8px); transition: clip-path 1.4s cubic-bezier(.65,0,.35,1); }
+        .reveal.in .track-fill { clip-path: inset(0 0 0 0 round 8px); }
+        .journey .stop-dot { transition: transform .45s var(--spring), background .3s ease; }
+        .journey-card { transform-origin: left top; transition: transform .5s var(--spring), opacity .3s ease; }
+        .journey .stop-meta { transition: opacity .3s ease; }
+        @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+          .journey .route:hover .stop:not(:hover) .journey-card, .journey .route:hover .stop:not(:hover) .stop-meta { opacity: .45; }
+          .journey .stop:hover .stop-dot { transform: scale(1.45); background: var(--line); }
+          .journey .stop:hover .journey-card { transform: scale(1.06); }
+          .journey .stop:hover .stop-meta .bul { transform: scale(1.3) rotate(-10deg); }
+          .about-quote { transition: transform .5s var(--spring), border-left-width .4s var(--spring); transform-origin: left center; }
+          .about-quote:hover { transform: scale(1.04); border-left-width: 18px; }
+        }
         .about-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 48px; }
         @media (max-width: 860px) {
           .about-grid { grid-template-columns: 1fr; }

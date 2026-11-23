@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { projects } from '../../lib/projects'
 import { SignHeader, Bullet } from '../../components/Station'
+import Reveal from '../../components/Reveal'
 
 export const metadata = { title: 'Line map — Sherina Zheng' }
 
@@ -21,11 +22,11 @@ export default function WorkPage() {
 
       <section className="strip-sec">
         <div className="wrap">
-          <div className="strip" style={{ '--n': projects.length }}>
+          <Reveal className="strip" style={{ '--n': projects.length }}>
             <div className="strip-track" style={{ '--g': gradient, '--vg': vGradient }} aria-hidden="true" />
             <ol className="strip-stops">
               {projects.map((p, i) => (
-                <li key={p.slug} className="strip-stop" style={{ '--line': p.line }}>
+                <li key={p.slug} className="strip-stop rv" style={{ '--line': p.line, '--i': i + 1 }}>
                   <span className={`strip-dot ${i === 0 ? 'now' : ''}`} aria-hidden="true" />
                   <Link href={`/work/${p.slug}`} className="strip-card">
                     <span className="strip-meta"><Bullet letter={p.bullet} color={p.line} size="sm" />{p.year}</span>
@@ -38,7 +39,7 @@ export default function WorkPage() {
                 </li>
               ))}
             </ol>
-          </div>
+          </Reveal>
           <p className="strip-note">Direction of travel: newest stop first. CognitMES is in progress; the others have shipped.</p>
         </div>
       </section>
@@ -67,6 +68,22 @@ export default function WorkPage() {
         .strip-role { font: 800 14px var(--sans); color: var(--ink); border-left: 4px solid var(--line); padding-left: 8px; }
         .strip-go { margin-top: 6px; font: 800 15px var(--sans); border-bottom: 3px solid var(--line); padding-bottom: 2px; }
         .strip-card:hover .strip-title { text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 6px; text-decoration-color: var(--line); }
+        /* arrival: the line draws left to right, then each stop pops on */
+        .reveal.armed .strip-track { clip-path: inset(0 100% 0 0 round 8px); transition: clip-path 1.1s cubic-bezier(.65,0,.35,1); }
+        .reveal.in .strip-track { clip-path: inset(0 0 0 0 round 8px); }
+
+        /* hover: the stop you point at grows, the others step back */
+        .strip-stop { position: relative; }
+        .strip-dot { transition: transform .45s var(--spring), background .3s ease, opacity .3s ease; }
+        .strip-card { transform-origin: top left; transition: transform .5s var(--spring), opacity .3s ease; }
+        @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+          .strip-stops:hover .strip-stop:not(:hover) .strip-card, .strip-stops:hover .strip-stop:not(:hover) .strip-dot { opacity: .4; }
+          .strip-stop:hover { z-index: 2; }
+          .strip-stop:hover .strip-dot { transform: scale(1.45); background: var(--line); }
+          .strip-stop:hover .strip-card { transform: scale(1.1) translateY(-4px); }
+          .strip-stop:hover .strip-meta .bul { transform: scale(1.3) rotate(-10deg); }
+          .strip-stop:hover .strip-go { border-bottom-width: 6px; }
+        }
         .strip-note { margin-top: 48px; font: 500 15px/1.5 var(--sans); color: #444; }
         .work-cta { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; }
         .work-cta .sec-title { margin: 0; }
@@ -76,6 +93,8 @@ export default function WorkPage() {
           .strip-stops { grid-template-columns: 1fr; gap: 44px; }
           .strip-stop { display: grid; grid-template-columns: 42px 1fr; gap: 20px; }
           .strip-dot { margin: 0; }
+          .reveal.armed .strip-track { clip-path: inset(0 0 100% 0 round 8px); }
+          .reveal.in .strip-track { clip-path: inset(0 0 0 0 round 8px); }
         }
       `}</style>
     </>

@@ -106,3 +106,41 @@ body { background: var(--tile); color: var(--ink); font-family: var(--sans); }
   .bul-xl { width: 56px; height: 56px; font-size: 32px; }
 }
 @media (prefers-reduced-motion: reduce) { .ride { transition: none; } }
+
+/* ─────────────────────────────────────────────────────────────
+   Bubbly motion: springy hovers that enlarge, and scroll arrivals.
+   ───────────────────────────────────────────────────────────── */
+:root { --spring: cubic-bezier(.34, 1.56, .64, 1); }
+
+/* arrivals (see components/Reveal.jsx) */
+.reveal.armed:not(.in) .rv { opacity: 0; transform: translateY(28px) scale(.94); }
+.reveal .rv { transition: opacity .5s ease, transform .8s var(--spring); transition-delay: calc(var(--i, 0) * 90ms); }
+
+/* bullets bounce whenever their row or card is hovered */
+.bul { transition: transform .45s var(--spring); }
+
+/* transfer boards (home, about, contact) */
+.board-row { transition: background .3s ease, padding .45s var(--spring); border-radius: 4px; }
+.board-row .board-v, .board-row .contact-v { display: inline-block; transform-origin: left center; transition: transform .45s var(--spring); }
+
+/* platform poster */
+.poster { transition: transform .55s var(--spring), box-shadow .4s ease; }
+
+/* sign header tags */
+.sign-head .tags > span { transition: transform .4s var(--spring); }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .board-row:hover { background: color-mix(in srgb, currentColor 8%, transparent); padding-left: 16px; padding-right: 16px; }
+  .board-row:hover .bul { transform: scale(1.3) rotate(-10deg); }
+  .board-row:hover .board-v, .board-row:hover .contact-v { transform: scale(1.05); }
+  .poster:hover { transform: scale(1.05) rotate(-1.5deg); box-shadow: 0 36px 80px rgba(0,0,0,.28); }
+  .sign-head .title-row > .bul:hover { transform: scale(1.15) rotate(-12deg); }
+  .sign-head .tags > span:hover { transform: translateY(-3px); }
+  .sign-head .tags > span:hover .bul { transform: scale(1.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal .rv, .bul, .board-row, .board-row .board-v, .poster { transition: none; }
+}
+/* board rows that also arrive on scroll keep their hover springs undelayed */
+.reveal .board-row.rv { transition: opacity .5s ease, transform .8s var(--spring), background .3s ease, padding .45s var(--spring);
+  transition-delay: calc(var(--i, 0) * 90ms), calc(var(--i, 0) * 90ms), 0s, 0s; }
