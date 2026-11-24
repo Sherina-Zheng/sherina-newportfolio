@@ -123,6 +123,7 @@ export default function Home() {
   const [noteOpen, setNoteOpen] = useState(false)
   const [noteMsg, setNoteMsg] = useState('')
   const [noteState, setNoteState] = useState('idle')
+  const [noteError, setNoteError] = useState('')
   const [pastNotes, setPastNotes] = useState([])
   useEffect(() => { fetch('/api/notes').then(r => r.json()).then(d => Array.isArray(d) && setPastNotes(d)).catch(() => {}) }, [])
   useEffect(() => {
@@ -136,7 +137,7 @@ export default function Home() {
     setNoteState('sending')
     try {
       const r = await fetch('/api/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) })
-      if (!r.ok) throw new Error()
+      if (!r.ok) { const d = await r.json().catch(() => ({})); setNoteError(d.error || ''); throw new Error() }
       setNoteMsg(''); setNoteState('sent')
       fetch('/api/notes').then(r => r.json()).then(d => Array.isArray(d) && setPastNotes(d)).catch(() => {})
     } catch { setNoteState('error') }
@@ -241,7 +242,7 @@ export default function Home() {
               </label>
               <div className="modal-row">
                 <button type="submit" className="ride" disabled={!noteMsg.trim() || noteState === 'sending'}>{noteState === 'sending' ? 'Posting…' : 'Post note'}</button>
-                <span className="modal-status">{noteState === 'sent' && 'Posted. Thank you!'}{noteState === 'error' && 'Could not post. Try again.'}</span>
+                <span className="modal-status">{noteState === 'sent' && 'Posted. Thank you!'}{noteState === 'error' && (noteError || 'Could not post. Try again.')}</span>
               </div>
             </form>
             {pastNotes.length > 0 && <div className="notes"><span className="label">On the wall</span>{pastNotes.map((n, i) => <p key={i}>{n.text}</p>)}</div>}
